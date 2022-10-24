@@ -16,7 +16,7 @@ This repository contains the package descriptor for NuMaker UNO boards
 | **NUC131**     | ✔️                | ❌                                               |
 | **M032BT**     | ✔️                | ✔️                                               |
 | **M252**       | ✔️                | ❌                                               |
-
+| **M480**       | ✔️                | ❌                                               |
 
 # Board Package Installation Steps
 1. Download and Install Arduino IDE from https://www.arduino.cc/en/Main/Software
