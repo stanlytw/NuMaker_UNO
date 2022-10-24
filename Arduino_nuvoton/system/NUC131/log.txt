@@ -1,0 +1,61 @@
+------------------------------------------------------------
+ARM_GCC_TOOLCHAIN=C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\..\g++_arm_none_eabi\bin
+PROJECT_BASE_PATH=C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data
+CORE =cortex-m0
+CHIP=NUC131
+OUTPUT_BIN=C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data
+------------------------------------------------------------	
+Compiler Information :
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c: In function 'BPWM_ConfigCaptureChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c:69: warning: comparison between signed and unsigned integer expressions
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c: In function 'BPWM_ConfigOutputChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c:115: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c: In function 'BPWM_ConfigCaptureChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/bpwm.c:52: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:60: warning: no previous prototype for 'CAN_EnterInitMode'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:74: warning: no previous prototype for 'CAN_LeaveInitMode'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:87: warning: no previous prototype for 'CAN_WaitMsg'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:115: warning: no previous prototype for 'CAN_GetCANBitRate'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:140: warning: no previous prototype for 'CAN_EnterTestMode'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:153: warning: no previous prototype for 'CAN_LeaveTestMode'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:168: warning: no previous prototype for 'CAN_IsNewDataReceived'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:184: warning: no previous prototype for 'CAN_BasicSendMsg'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:251: warning: no previous prototype for 'CAN_BasicReceiveMsg'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:313: warning: no previous prototype for 'CAN_SetRxMsgObjAndMsk'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:373: warning: no previous prototype for 'CAN_SetRxMsgObj'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/can.c:425: warning: no previous prototype for 'CAN_ReadMsgObj'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/fmc.c: In function 'FMC_ReadConfig':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/fmc.c:237: warning: comparison between signed and unsigned integer expressions
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/fmc.c: In function 'FMC_WriteConfig':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/fmc.c:262: warning: comparison between signed and unsigned integer expressions
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c: In function 'PWM_ConfigCaptureChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c:69: warning: comparison between signed and unsigned integer expressions
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c: In function 'PWM_SetClockSource':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c:850: warning: suggest parentheses around arithmetic in operand of '|'
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c: In function 'PWM_ConfigOutputChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c:115: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c: In function 'PWM_ConfigCaptureChannel':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/pwm.c:52: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c: In function 'SPI_GetBusClock':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c:324: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c: In function 'SPI_SetBusClock':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c:228: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c: In function 'SPI_Open':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/spi.c:73: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c: In function 'UART_Open':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c:247: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c: In function 'UART_SetLine_Config':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c:336: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c: In function 'UART_SelectIrDAMode':
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/inc/CLK.h:290: warning: inlining failed in call to 'CLK_GetPLLClockFreq': optimizing for size and code size would grow
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/StdDriver/src/uart.c:404: warning: called from here
+C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\..\g++_arm_none_eabi\bin/arm-none-eabi-ar: creating C:\Nuvoton-work\Arduino\MCU-Arduino\BSP_For_Nuduino\BSP_DriverTolibrary-20131230\BSP_DriverTolibrary\Debug\compiler\data/libchip_NUC131_gcc_rel.a

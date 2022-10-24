@@ -1,0 +1,180 @@
+2018-07-23 13:42:47 834ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:42:47 834ms [INFO] Revision: 6725r
+2018-07-23 13:42:47 834ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:42:47 902ms [INFO] @FW OpenPort: success
+2018-07-23 13:42:47 902ms [INFO] @FW Sync
+2018-07-23 13:42:47 902ms [INFO] @FW Device: version = 6674, pid = 0x00012009
+2018-07-23 13:42:47 917ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP.bin => success
+2018-07-23 13:42:47 917ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => success
+2018-07-23 13:42:47 917ms [INFO] @FW CompareISP: file = C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP.bin
+2018-07-23 13:42:47 948ms [INFO] @FW CompareISP: read flash 0x00100000-0x00100F14
+2018-07-23 13:42:56 053ms [INFO] @FW CompareISP: UID = 0x18000173
+2018-07-23 13:42:56 053ms [INFO] @FW CompareISP: file[0x00000000-0x00000F14] == flash[0x00100000-0x00100F14] => success
+2018-07-23 13:42:56 053ms [INFO] @FW UpdateISP: skipped
+2018-07-23 13:42:56 053ms [INFO] @FW Reset to ISP
+2018-07-23 13:42:56 053ms [INFO] @FW OpenPort ...
+2018-07-23 13:42:56 290ms [INFO] @FW OpenPort: failed
+2018-07-23 13:42:56 290ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:42:56 290ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP.bin => success
+2018-07-23 13:42:56 290ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => success
+2018-07-23 13:42:56 290ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP_8K.bin => success
+2018-07-23 13:42:56 306ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => success
+2018-07-23 13:42:56 306ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP_M4.bin => success
+2018-07-23 13:42:56 306ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink2FW.bin => success
+2018-07-23 13:42:56 321ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 430ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 540ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 649ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 758ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 867ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:56 977ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 133ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 243ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 353ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 463ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 573ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 693ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 814ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:57 923ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 032ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 142ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 266ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 391ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 500ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 610ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 719ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 844ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:58 953ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 062ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 171ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 281ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 390ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 500ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 603ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 712ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 806ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:42:59 923ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 032ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 142ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 251ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 376ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 485ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 594ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 703ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 812ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:00 922ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 047ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 171ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 281ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 390ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 515ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 624ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 733ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 842ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:01 952ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:02 061ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:02 061ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:03 221ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:03 221ms [INFO] Revision: 6725r
+2018-07-23 13:43:03 221ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:03 237ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:03 237ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:03 237ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:04 379ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:04 379ms [INFO] Revision: 6725r
+2018-07-23 13:43:04 379ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:04 379ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:04 395ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:04 395ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:05 536ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:05 536ms [INFO] Revision: 6725r
+2018-07-23 13:43:05 536ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:05 551ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:05 567ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:05 567ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:06 722ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:06 722ms [INFO] Revision: 6725r
+2018-07-23 13:43:06 722ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:06 737ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:06 753ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:06 753ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:07 912ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:07 912ms [INFO] Revision: 6725r
+2018-07-23 13:43:07 912ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:07 912ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:07 928ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:07 928ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:09 085ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:09 085ms [INFO] Revision: 6725r
+2018-07-23 13:43:09 085ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:09 085ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:09 100ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:09 100ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:10 258ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:10 258ms [INFO] Revision: 6725r
+2018-07-23 13:43:10 258ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:10 258ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:10 273ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:10 273ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:11 403ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:11 403ms [INFO] Revision: 6725r
+2018-07-23 13:43:11 403ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:11 418ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:11 434ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:11 434ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:12 592ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:12 592ms [INFO] Revision: 6725r
+2018-07-23 13:43:12 592ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:12 607ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:12 623ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:12 623ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:13 764ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:13 764ms [INFO] Revision: 6725r
+2018-07-23 13:43:13 764ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:13 780ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:13 795ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:13 795ms [ERROR] IDS_USB_DISCONNECTED
+2018-07-23 13:43:14 942ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:14 942ms [INFO] Revision: 6725r
+2018-07-23 13:43:14 942ms [INFO] $Build: Mar 29 2018 18:02:58 $
+2018-07-23 13:43:14 952ms [INFO] @FW OpenPort: failed
+2018-07-23 13:43:14 962ms [INFO] @ISP OpenPort: success
+2018-07-23 13:43:14 962ms [INFO] >>>>>>>>>>>>>>>>>>>>>>>> STAGE1 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2018-07-23 13:43:14 962ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP.bin => success
+2018-07-23 13:43:14 962ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => success
+2018-07-23 13:43:14 962ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP_8K.bin => success
+2018-07-23 13:43:14 962ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => success
+2018-07-23 13:43:14 962ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\ICE_ISP_M4.bin => success
+2018-07-23 13:43:14 972ms [INFO] @APP LoadFile: C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink2FW.bin => success
+2018-07-23 13:43:14 972ms [INFO] @ISP OpenPort: success
+2018-07-23 13:43:14 972ms [INFO] @ISP Sync
+2018-07-23 13:43:14 982ms [INFO] @ISP Device: pid = 0x00012009
+2018-07-23 13:43:14 982ms [INFO] @ISP Device: version = 0x20
+2018-07-23 13:43:14 982ms [INFO] @ISP ReadConfig ...
+2018-07-23 13:43:14 992ms [INFO] @ISP ReadConfig: on-board config0 = 0xFFFFFF7C, config1 = 0x00012400
+2018-07-23 13:43:14 992ms [INFO] @APP GetInfo: APROM size = 131072 bytes
+2018-07-23 13:43:14 992ms [INFO] @ISP SetAPROMSize
+2018-07-23 13:43:15 002ms [INFO] @ISP UpdateConfig: write config0 = 0xFFFFFF7C, config1 = 0x00012000
+2018-07-23 13:43:17 226ms [INFO] @ISP OpenPort ...
+2018-07-23 13:43:17 226ms [INFO] @ISP OpenPort: success
+2018-07-23 13:43:17 226ms [INFO] @ISP OpenPort: success
+2018-07-23 13:43:17 226ms [INFO] @ISP Sync
+2018-07-23 13:43:17 304ms [INFO] @ISP Device: pid = 0x00012009
+2018-07-23 13:43:17 304ms [INFO] @ISP Device: version = 0x20
+2018-07-23 13:43:17 304ms [INFO] @ISP ReadConfig ...
+2018-07-23 13:43:17 320ms [INFO] @ISP ReadConfig: on-board config0 = 0xFFFFFF7C, config1 = 0x00012000
+2018-07-23 13:43:17 320ms [INFO] @APP GetInfo: APROM size = 131072 bytes
+2018-07-23 13:43:17 320ms [INFO] @ISP SetAPROMSize
+2018-07-23 13:43:17 320ms [INFO] @ISP UpdateConfig: skipped
+2018-07-23 13:43:17 320ms [INFO] @ISP Checksum: file = C:\Users\hphuang\AppData\Local\Arduino15\packages\nuvoton\hardware\nuvoton\1.8.5\tools\Nu_Link\NuLink1FW.bin => checksum = 0x837D
+2018-07-23 13:43:17 320ms [INFO] @ISP UpdateAPROM: flash 0x00000000-0x00011FF8
+2018-07-23 13:43:27 745ms [INFO] @ISP WriteChecksum: size = 0x00011FF8, checksum = 0x837D
+2018-07-23 13:43:27 749ms [INFO] @ISP ReadChecksum ...
+2018-07-23 13:43:27 821ms [INFO] @ISP ReadChecksum: flash 0x00000000-0x00011FF8 => checksum = 0x837D
+2018-07-23 13:43:27 821ms [INFO] @APP CompareChecksum: success
+2018-07-23 13:43:27 821ms [INFO] @ISP OpenPort ...
+2018-07-23 13:43:30 678ms [INFO] @ISP OpenPort: failed
+2018-07-23 13:43:31 708ms [INFO] @FW OpenPort ...
+2018-07-23 13:50:15 256ms [INFO] @FW OpenPort: success
+2018-07-23 13:50:15 302ms [INFO] @FW Sync
+2018-07-23 13:50:15 305ms [INFO] <<<<<<<<<<<<<<<<<<<<<<<< UPDATE END <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
