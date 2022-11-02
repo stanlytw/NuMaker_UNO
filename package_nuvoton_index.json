@@ -20,8 +20,8 @@
                     {"name": "NuMaker NUC131"},
                     {"name": "NuMaker M032BT"},
                     {"name": "NuMaker M252"},
-					{"name": "NuMaker M480"},
-					{"name": "NuMaker M467HJ"},
+		    {"name": "NuMaker M480"},
+		    {"name": "NuMaker M467HJ"}
                   ],
                   "toolsDependencies": [
                     {
