@@ -61,7 +61,7 @@ uint8_t Servo::attach(int ulPin, int min, int max)
 		fixValue[ulPin]=ulValue;
 		//return 0;
 	}
-#elif defined(__M252__) || defined(__M480__)
+#elif defined(__M252__) || defined(__M480__) || defined(__M460__)
 	if(ulValue==0)
 	{  
 		int32_t pin=PWM_Desc[ulPin].pintype.num;

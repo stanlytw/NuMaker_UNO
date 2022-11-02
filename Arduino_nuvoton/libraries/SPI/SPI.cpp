@@ -45,7 +45,7 @@ void SPIClass::begin() {
 	/* Set IP clock divider. SPI clock rate = 4MHz */  
 #if defined(__M032BT__)
 	USPI_Open(uspi, USPI_MASTER, USPI_MODE_0, 8, 4000000); 
-#elif defined(__M252__) || defined(__M480__)
+#elif defined(__M252__) || defined(__M480__) || defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, 4000000); 
@@ -147,7 +147,7 @@ if(init_flag==0) init();
 	SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, 4000000);
     setBitOrder(SS, MSBFIRST);
     SPI_EnableFIFO(spi,12,12); 
-#elif defined(__M252__) || defined(__M480__)
+#elif defined(__M252__) || defined(__M480__)|| defined(__M460__) 
 	 /* Unlock protected registers */
 	SYS_UnlockReg();	
 
@@ -182,7 +182,7 @@ void SPIClass::end(uint8_t _pin) {
 		
 #if defined(__M032BT__)
 		USPI_Close(uspi);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_Close(spi);
@@ -200,7 +200,7 @@ void SPIClass::end() {
 
 #if defined(__M032BT__)
 	USPI_Close(uspi);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_Close(spi);
@@ -229,7 +229,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	USPI_Open(uspi, USPI_MASTER, settings.datmode, 8, settings.clock);	
 	//SPI_EnableFIFO(spi,12,12);	
 	setBitOrder(SS, settings.border);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 
 	if (_vspi == SPI0 )
 	{
@@ -256,7 +256,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 #elif defined(__M451__) || defined(__NANO100__)	
 	SPI_ClearRxFIFO(spi);
 	SPI_TRIGGER(spi);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_ClearRxFIFO(spi);
@@ -281,7 +281,7 @@ void SPIClass::setBitOrder(uint8_t _pin, BitOrder _bitOrder) {
 		USPI_SET_LSB_FIRST(uspi);
 	else
 		USPI_SET_MSB_FIRST(uspi);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		if(_bitOrder==LSBFIRST)
@@ -314,7 +314,7 @@ void SPIClass::setDataMode(uint8_t _pin, uint8_t _mode) {
     spi->CNTRL = (spi->CNTRL & ~SPI_MODE_Msk) | _mode;
 #elif defined(__NANO100__)
     spi->CTL = (spi->CTL & ~SPI_MODE_Msk) | _mode;
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 	    spi->CTL = (spi->CTL & ~SPI_MODE_Msk) | _mode;
@@ -330,7 +330,7 @@ void SPIClass::setClockDivider(uint8_t _pin, uint8_t _divider) {
 #if defined(__M032BT__)
 	uspi->BRGEN &= ~USPI_BRGEN_CLKDIV_Msk;
     uspi->BRGEN |= (_divider << USPI_BRGEN_CLKDIV_Pos);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		spi->CLKDIV = (spi->CLKDIV & ~0xffff) | _divider;
@@ -353,7 +353,7 @@ byte SPIClass::transfer(byte _pin, uint8_t _data, SPITransferMode _mode) {
 	//SPI_TRIGGER(uspi);
 	while(USPI_IS_BUSY(uspi));
 	return (USPI_READ_RX(uspi) & 0xff);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_WRITE_TX(spi, _data);
@@ -387,7 +387,7 @@ uint16_t SPIClass::transfer16(byte _pin, uint16_t _data, SPITransferMode _mode) 
 	// USPI_TRIGGER(uspi);
 	while(USPI_IS_BUSY(uspi));
 	rdata=rdata | ((USPI_READ_RX(uspi) & 0xff)<<8);
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		SPI_WRITE_TX(spi, _data&0xff);
@@ -431,7 +431,7 @@ void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _m
 		//SPI_TRIGGER(spi);
 		while(USPI_IS_BUSY(uspi));
 	}
-#elif defined(__M252__)|| defined(__M480__)
+#elif defined(__M252__)|| defined(__M480__)|| defined(__M460__) 
 	if (_vspi == SPI0 )
 	{
 		for(i=0;i<_count;i++)

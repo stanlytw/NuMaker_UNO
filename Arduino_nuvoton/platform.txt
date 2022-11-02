@@ -103,6 +103,14 @@ tools.nulinkburn.upload.params.verbose=
 tools.nulinkburn.upload.params.quiet=
 tools.nulinkburn.upload.pattern="{path}/{cmd}" "{path}" "{build.path}/{build.project_name}.bin"
 
+tools.nulinkburn_m460.cmd=nulinkburn
+tools.nulinkburn_m460.cmd.windows=nulinkburn_m460.bat
+tools.nulinkburn_m460.path={runtime.platform.path}/tools
+
+tools.nulinkburn_m460.upload.params.verbose=
+tools.nulinkburn_m460.upload.params.quiet=
+tools.nulinkburn_m460.upload.pattern="{path}/{cmd}" "{path}" "{build.path}/{build.project_name}.bin"
+
 
 # Debugger configuration (general options)
 # ----------------------------------------

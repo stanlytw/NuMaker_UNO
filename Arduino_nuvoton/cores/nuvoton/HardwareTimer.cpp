@@ -107,7 +107,7 @@
 	#if(NR_TIMERS>3)
 		HardwareTimer Timer4(3,TMR3_MODULE,CLK_CLKSEL1_TMR3SEL_HIRC);
 	#endif
-#elif  defined(__M480__)
+#elif  defined(__M480__) || defined(__M460__)
 	#if(NR_TIMERS>0)
 		HardwareTimer Timer1(0,TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_HIRC);
 	#endif

@@ -26,6 +26,9 @@
 #elif defined(__M480__)
 #include "Pins_M480_arduino.h"
 
+#elif defined(__M460__)
+#include "Pins_M460_arduino.h"
+
 #else
 
 /* Types used for the tables below */
@@ -83,7 +86,7 @@ typedef struct _GPIOPinDescription
 
 typedef struct _ADCPinDescription
 {
-#if defined(__M451__) || defined(__M480__)
+#if defined(__M451__) || defined(__M480__) || defined(__M460__)
     EADC_T *A;
 #elif defined(__NUC131__) | defined(__NUC240__) | defined(__NANO100__) | defined(__NANO1X2__) |defined(__M032BT__)
     ADC_T *A;

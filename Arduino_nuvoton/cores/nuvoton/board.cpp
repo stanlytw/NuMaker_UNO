@@ -128,11 +128,25 @@ void Enable_All_IPs(void)
     CLK_SetModuleClock(PWM0_MODULE, CLK_CLKSEL2_PWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(PWM1_MODULE, CLK_CLKSEL2_PWM1SEL_PCLK1, 0);
 	
-#elif defined(__M480__)
+#elif defined(__M480__) 
     //Enable ADC module
     CLK_EnableModuleClock(EADC_MODULE);
     /* EADC clock source is 72MHz, set divider to 8, ADC clock is 72/8 MHz */
     CLK_SetModuleClock(EADC_MODULE, 0, CLK_CLKDIV0_EADC(8));
+
+    //Enable PWM0 ~PWM1 module
+    CLK_EnableModuleClock(EPWM0_MODULE);
+    CLK_EnableModuleClock(EPWM1_MODULE);
+
+    CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
+    CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
+
+#elif defined(__M460__) 
+    //Enable ADC module
+    CLK_EnableModuleClock(EADC0_MODULE);
+    /* EADC clock source is 72MHz, set divider to 8, ADC clock is 72/8 MHz */
+    //CLK_SetModuleClock(EADC0_MODULE, 0, CLK_CLKDIV0_EADC0(8));
+    CLK_SetModuleClock(EADC0_MODULE, CLK_CLKSEL0_EADC0SEL_HCLK, CLK_CLKDIV0_EADC0(8));
 
     //Enable PWM0 ~PWM1 module
     CLK_EnableModuleClock(EPWM0_MODULE);
@@ -326,7 +340,17 @@ void init(void)
     /* Set both PCLK0 and PCLK1 as HCLK/2 */
     CLK->PCLKDIV = CLK_PCLKDIV_APB0DIV_DIV2 | CLK_PCLKDIV_APB1DIV_DIV2;
 
-    
+#elif defined(__M460__)
+   /* Enable HIRC clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
+
+    /* Wait for HIRC clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
+
+    /* Set core clock to 192MHz */
+    CLK_SetCoreClock(F_CPU);
+
+
 #endif
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init I/O Multi-function                                                                                 */

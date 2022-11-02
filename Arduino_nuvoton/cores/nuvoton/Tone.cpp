@@ -54,7 +54,7 @@ void tone_ISR(uint8_t num)
 #elif defined(__M032BT__)
     Tone.timer->close();
     pfn_pwmDisableOutput(PWM_Desc[Tone.pin].P, (1 << PWM_Desc[Tone.pin].ch));
-#elif defined(__M480__)
+#elif defined(__M480__) ||defined(__M460__)
     Tone.timer->close();
     EPWM_DisableOutput(PWM_Desc[Tone.pin].P, (1 << PWM_Desc[Tone.pin].ch));
 #else
@@ -143,7 +143,7 @@ void tone(uint8_t ulPin, unsigned int frequency, unsigned long duration)
     {
         //Set Mutifunction pins
         PWM_Config(PWM_Desc[ulPin]);
-#if defined(__M480__)
+#if defined(__M480__) ||defined(__M460__)
         //Config PWMs
         EPWM_ConfigOutputChannel(PWM_Desc[ulPin].P, PWM_Desc[ulPin].ch, frequency, 50);
 
@@ -175,7 +175,7 @@ void tone(uint8_t ulPin, unsigned int frequency, unsigned long duration)
     {
         if (frequency != 0)
         {
-#if defined(__M480__)
+#if defined(__M480__) ||defined(__M460__)
             EPWM_EnableOutput(PWM_Desc[ulPin].P, (1 << PWM_Desc[ulPin].ch));
             EPWM_ConfigOutputChannel(PWM_Desc[ulPin].P, PWM_Desc[ulPin].ch, frequency, 50);
 #else            
@@ -191,7 +191,7 @@ void tone(uint8_t ulPin, unsigned int frequency, unsigned long duration)
         //Config PWMs
         if (frequency != 0)
         {
-#if defined(__M480__)
+#if defined(__M480__) ||defined(__M460__)
             EPWM_EnableOutput(PWM_Desc[ulPin].P, (1 << PWM_Desc[ulPin].ch));
             EPWM_ConfigOutputChannel(PWM_Desc[ulPin].P, PWM_Desc[ulPin].ch, frequency, 50);
 #else            
@@ -250,7 +250,7 @@ void noTone(uint8_t ulPin)
     if (tone->pin == ulPin)
     {
         while (tone->waitISR);
- #if defined(__M480__)
+ #if defined(__M480__) ||defined(__M460__)
         EPWM_DisableOutput(PWM_Desc[tone->pin].P, (1 << PWM_Desc[tone->pin].ch));
  #else       
         PWM_DisableOutput(PWM_Desc[tone->pin].P, (1 << PWM_Desc[tone->pin].ch));

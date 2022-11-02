@@ -41,7 +41,7 @@
 #define I2C_STO 		    I2C_CTL_STO               
 #define I2C_AA 			    I2C_CTL_AA  
 
-#elif defined(__M480__)
+#elif defined(__M480__) || defined(__M460__) 
 #define I2C_STA_SI 	        I2C_CTL_STA_SI           
 #define I2C_STA_SI_AA 	    I2C_CTL_STA_SI_AA  
 #define I2C_SI 			    I2C_CTL_SI                

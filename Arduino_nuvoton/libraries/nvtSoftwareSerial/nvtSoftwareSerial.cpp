@@ -122,7 +122,7 @@ static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
     SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (50-1); 
     
     SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-#elif defined(__M480__)
+#elif defined(__M480__)|| defined(__M460__) 
     SYS_UnlockReg();
     
     #if (SOFTWARE_UART_TIMER_SELECT==(0))
@@ -189,7 +189,7 @@ static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
 static inline void BPS_delay() //using systick
 {
 
-#if defined(__M032BT__) || defined(__M252__)  || defined(__M480__) 
+#if defined(__M032BT__) || defined(__M252__)  || defined(__M480__) || defined(__M460__) 
     SOFTWARE_UART_TIMER->INTSTS = TIMER_INTSTS_TIF_Msk;
     SOFTWARE_UART_TIMER->CTL |= TIMER_CTL_CNTEN_Msk;
     __NOP(); //for 48MHz CPU

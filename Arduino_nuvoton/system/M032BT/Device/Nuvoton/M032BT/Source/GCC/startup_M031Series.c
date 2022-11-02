@@ -192,6 +192,11 @@ void Reset_Handler(void)
 	// Arduino: we must setup hardware before doing this
 	__libc_init_array();
 
+	//Add for M032BT
+	SYS_UnlockReg();
+	SystemInit();
+	SYS_LockReg();
+
 	/* Branch to main function */
 	main();
 

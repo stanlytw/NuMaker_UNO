@@ -73,6 +73,7 @@ nuvoton_nuc131.build.variant_system_lib=../../system/{build.def}/libchip_NUC131_
 nuvoton_nuc131.build.vid=0x2341
 nuvoton_nuc131.build.pid=0x003e
 nuvoton_nuc131.build.def=NUC131
+nuvoton_nuc131.build.openocdscript=openocd_scripts/NUC131.cfg
 
 nuvoton_m252.name=NuMaker UNO M252
 nuvoton_m252.upload.tool=nulinkburn
@@ -93,6 +94,26 @@ nuvoton_m252.build.vid=0x2341
 nuvoton_m252.build.pid=0x003e
 nuvoton_m252.build.def=M252
 nuvoton_m252.build.openocdscript=openocd_scripts/M252.cfg
+
+nuvoton_m460.name=NuMaker UNO M460
+nuvoton_m460.upload.tool=nulinkburn_m460
+nuvoton_m460.upload.protocol=nuc-ba
+nuvoton_m460.upload.maximum_size=524288
+nuvoton_m460.upload.use_1200bps_touch=false
+nuvoton_m460.upload.wait_for_upload_port=false
+nuvoton_m460.upload.native_usb=false
+nuvoton_m460.build.mcu=cortex-m4
+nuvoton_m460.build.f_cpu=192000000L
+nuvoton_m460.build.core=nuvoton
+nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m460.build.board=__NUVOTON__
+nuvoton_m460.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
+nuvoton_m460.build.variant=Nuvoton
+nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+nuvoton_m460.build.vid=0x2341
+nuvoton_m460.build.pid=0x003e
+nuvoton_m460.build.def=M460
+nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
 
 nuvoton_m480.name=NuMaker UNO M487
 nuvoton_m480.upload.tool=nulinkburn
@@ -138,7 +159,7 @@ nuvoton_m480.build.openocdscript=openocd_scripts/M480.cfg
 nuvoton_m032bt.name=NuMaker UNO M032BT
 nuvoton_m032bt.upload.tool=nulinkburn
 nuvoton_m032bt.upload.protocol=nuc-ba
-nuvoton_m032bt.upload.maximum_size=524288
+nuvoton_m032bt.upload.maximum_size=131072
 nuvoton_m032bt.upload.use_1200bps_touch=false
 nuvoton_m032bt.upload.wait_for_upload_port=false
 nuvoton_m032bt.upload.native_usb=false
@@ -147,9 +168,10 @@ nuvoton_m032bt.build.f_cpu=48000000L
 nuvoton_m032bt.build.core=nuvoton
 nuvoton_m032bt.build.extra_flags=-D__M032BT__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m032bt.build.board=__NUVOTON__
-nuvoton_m032bt.build.ldscript=linker_scripts/gcc/512K_96K_flash.ld
+nuvoton_m032bt.build.ldscript=linker_scripts/gcc/128K_16K_flash.ld
 nuvoton_m032bt.build.variant=Nuvoton
 nuvoton_m032bt.build.variant_system_lib=../../system/{build.def}/libchip_M032BT_gcc_rel.a
 nuvoton_m032bt.build.vid=0x2341
 nuvoton_m032bt.build.pid=0x003e
 nuvoton_m032bt.build.def=M032BT
+nuvoton_m032bt.build.openocdscript=openocd_scripts/M032BT.cfg

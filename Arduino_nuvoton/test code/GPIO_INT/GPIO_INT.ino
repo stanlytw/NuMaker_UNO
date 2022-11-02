@@ -21,33 +21,53 @@
 
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink
 */
+
+
+
+//Note: Use Serial1:  
+//Note: Use Serial :M032BT, NUC131, 
+//#define UNO_M032BT
+//#define UNO_NUC131
+//#define UNO_M252
+//#define UNO_M487
+#define UNO_M460
+
+#if defined (UNO_NUC131) || defined (UNO_M032BT) 
+  #define SSER Serial
+#elif defined (UNO_M252) || defined (UNO_M487) || defined (UNO_M460) 
+  #define SSER Serial1
+#endif
+
+#define LED_BUILTIN 13
 #define UNO_PIN2 2    //Also D2, PC.9
 #define UNO_PIN6 6    //Also D6, PE.4
 #define UNO_PIN16 16  //Also A0, PB.6
 #define UNO_A0 0
+int ii;
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  //pinMode(LED_BUILTIN, OUTPUT);
 
   //Test GPIO PWM Functionality and AnalogRead 2022-10-14
   //Short UNO_PIN6 and UNO_PIN6 
-  pinMode(UNO_PIN6, OUTPUT);
-  pinMode(UNO_PIN16, INPUT);
+  //pinMode(UNO_PIN6, OUTPUT);
+  //pinMode(UNO_PIN16, INPUT);
 
   //Test Serial1 Functionality 2022-10-14
-  Serial1.begin(9600);
-  
+  SSER.begin(9600);
+
+  ii=0;
   //Test GPIO Interrupt Functionality 2022-10-14
-  pinMode(UNO_PIN2, INPUT);
-  attachInterrupt(UNO_PIN2, blink, CHANGE);
+  //pinMode(UNO_PIN2, INPUT);
+  //attachInterrupt(UNO_PIN2, blink, CHANGE);
 
 }
 
 // the loop function runs over and over again forever
 void loop() {
   int i, val, set_v;
-
+#if 0
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(500);                       // wait for a second
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
@@ -64,12 +84,14 @@ void loop() {
   val = analogRead(UNO_A0);  
   Serial1.print("10-bit ADC result:"); 
   Serial1.println(val); 
+#endif  
   //Test Serial1 Functionality 2022-10-14
-  Serial1.println("Hello");
+  SSER.println("XXXHello M999**!!~~~++");
+i++;  
 }
 
 
 void blink() {
   //Test GPIO Interrupt Functionality 2022-10-14
-  Serial1.println("Interrupt");
+  //Serial1.println("Interrupt");
 }

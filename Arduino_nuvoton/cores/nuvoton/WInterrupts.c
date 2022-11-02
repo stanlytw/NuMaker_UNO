@@ -17,7 +17,6 @@
 */
 
 #include "WInterrupts.h"
-#define __M480__ 1
 #if defined(__M451__) || (__M252__) || (__M480__)
 
 typedef void (*interruptCB)(void);
