@@ -10,7 +10,7 @@
                 {
                   "name": "NuMaker UNO",
                   "architecture": "nuvoton",
-                  "version": "2.0.",
+                  "version": "2.0.0",
                   "category": "Arduino",
                   "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton.tar.bz2?raw=true",
                   "archiveFileName": "Arduino_nuvoton.tar.bz2",
