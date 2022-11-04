@@ -95,45 +95,45 @@ nuvoton_m252.build.pid=0x003e
 nuvoton_m252.build.def=M252
 nuvoton_m252.build.openocdscript=openocd_scripts/M252.cfg
 
-nuvoton_m460.name=NuMaker UNO M460
-nuvoton_m460.upload.tool=nulinkburn_m460
-nuvoton_m460.upload.protocol=nuc-ba
-nuvoton_m460.upload.maximum_size=524288
-nuvoton_m460.upload.use_1200bps_touch=false
-nuvoton_m460.upload.wait_for_upload_port=false
-nuvoton_m460.upload.native_usb=false
-nuvoton_m460.build.mcu=cortex-m4
-nuvoton_m460.build.f_cpu=192000000L
-nuvoton_m460.build.core=nuvoton
-nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-nuvoton_m460.build.board=__NUVOTON__
-nuvoton_m460.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
-nuvoton_m460.build.variant=Nuvoton
-nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
-nuvoton_m460.build.vid=0x2341
-nuvoton_m460.build.pid=0x003e
-nuvoton_m460.build.def=M460
-nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
+#nuvoton_m460.name=NuMaker UNO M460
+#nuvoton_m460.upload.tool=nulinkburn_m460
+#nuvoton_m460.upload.protocol=nuc-ba
+#nuvoton_m460.upload.maximum_size=524288
+#nuvoton_m460.upload.use_1200bps_touch=false
+#nuvoton_m460.upload.wait_for_upload_port=false
+#nuvoton_m460.upload.native_usb=false
+#nuvoton_m460.build.mcu=cortex-m4
+#nuvoton_m460.build.f_cpu=192000000L
+#nuvoton_m460.build.core=nuvoton
+#nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+#nuvoton_m460.build.board=__NUVOTON__
+#nuvoton_m460.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
+#nuvoton_m460.build.variant=Nuvoton
+#nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+#nuvoton_m460.build.vid=0x2341
+#nuvoton_m460.build.pid=0x003e
+#nuvoton_m460.build.def=M460
+#nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
 
-nuvoton_m480.name=NuMaker UNO M487
-nuvoton_m480.upload.tool=nulinkburn
-nuvoton_m480.upload.protocol=nuc-ba
-nuvoton_m480.upload.maximum_size=524288
-nuvoton_m480.upload.use_1200bps_touch=false
-nuvoton_m480.upload.wait_for_upload_port=false
-nuvoton_m480.upload.native_usb=false
-nuvoton_m480.build.mcu=cortex-m4
-nuvoton_m480.build.f_cpu=192000000L
-nuvoton_m480.build.core=nuvoton
-nuvoton_m480.build.extra_flags=-D__M480__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-nuvoton_m480.build.board=__NUVOTON__
-nuvoton_m480.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
-nuvoton_m480.build.variant=Nuvoton
-nuvoton_m480.build.variant_system_lib=../../system/{build.def}/libchip_M480_gcc_rel.a
-nuvoton_m480.build.vid=0x2341
-nuvoton_m480.build.pid=0x003e
-nuvoton_m480.build.def=M480
-nuvoton_m480.build.openocdscript=openocd_scripts/M480.cfg
+#nuvoton_m480.name=NuMaker UNO M487
+#nuvoton_m480.upload.tool=nulinkburn
+#nuvoton_m480.upload.protocol=nuc-ba
+#nuvoton_m480.upload.maximum_size=524288
+#nuvoton_m480.upload.use_1200bps_touch=false
+#nuvoton_m480.upload.wait_for_upload_port=false
+#nuvoton_m480.upload.native_usb=false
+#nuvoton_m480.build.mcu=cortex-m4
+#nuvoton_m480.build.f_cpu=192000000L
+#nuvoton_m480.build.core=nuvoton
+#nuvoton_m480.build.extra_flags=-D__M480__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+#nuvoton_m480.build.board=__NUVOTON__
+#nuvoton_m480.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
+#nuvoton_m480.build.variant=Nuvoton
+#nuvoton_m480.build.variant_system_lib=../../system/{build.def}/libchip_M480_gcc_rel.a
+#nuvoton_m480.build.vid=0x2341
+#nuvoton_m480.build.pid=0x003e
+#nuvoton_m480.build.def=M480
+#nuvoton_m480.build.openocdscript=openocd_scripts/M480.cfg
 
 
 
