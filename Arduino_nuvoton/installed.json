@@ -4,19 +4,19 @@
       "name": "nuvoton",
       "maintainer": "Nuvoton",
       "websiteUrl": "http://www.nuvoton.com",
-      "Url": "https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json",
+      "Url": "https://raw.githubusercontent.com/OpenNuvoton/NuMaker_UNO/master/package_nuvoton_index.json",
       "email": "",
       "platforms": [
         {
           "name": "NuMaker UNO",
           "architecture": "nuvoton",
-          "version": "2.0.1",
+          "version": "2.0.0",
           "deprecated": false,
           "category": "Arduino",
-          "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton.tar.bz2?raw=true",
+          "url": "https://github.com/OpenNuvoton/NuMaker_UNO/blob/master/Arduino_nuvoton.tar.bz2?raw=true",
           "archiveFileName": "Arduino_nuvoton.tar.bz2",
-          "checksum": "SHA-256:d9771b158db7d5856a6be1a8df9047aa3f4220c443fd0d16a4cca90bb9d771c1",
-          "size": "44212666",
+          "checksum": "SHA-256:28c7e07901939b199772f29670b3125cc23bdf854fa62f76f8af5fcba4f151ce",
+          "size": "46649984",
           "boards": [
             {
               "name": "NuMaker NUC131"
@@ -26,9 +26,6 @@
             },
             {
               "name": "NuMaker M252"
-            },
-            {
-              "name": "NuMaker M480"
             }
           ],
           "help": {},

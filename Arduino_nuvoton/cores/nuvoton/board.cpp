@@ -152,6 +152,11 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(EPWM0_MODULE);
     CLK_EnableModuleClock(EPWM1_MODULE);
 
+    CLK_EnableModuleClock(GPA_MODULE);
+    CLK_EnableModuleClock(GPB_MODULE);
+    CLK_EnableModuleClock(GPC_MODULE);
+    CLK_EnableModuleClock(GPG_MODULE);
+
     CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
 
