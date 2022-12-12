@@ -11062,7 +11062,7 @@ typedef struct
 
 #define FMC                 ((FMC_T *) FMC_BASE)
 
-#define CAN                 ((CAN_T *) CAN0_BASE)
+#define CANX                 ((CAN_T *) CAN0_BASE)
 #define CAN0                ((CAN_T *) CAN0_BASE)                       /*!< CAN0 Configuration Struct                        */
 #define CAN1                ((CAN_T *) CAN1_BASE)                       /*!< CAN1 Configuration Struct                        */
 

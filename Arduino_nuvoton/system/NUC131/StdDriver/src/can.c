@@ -565,7 +565,7 @@ uint32_t CAN_Open(CAN_T *tCAN, uint32_t u32BaudRate, uint32_t u32Mode)
 
     u32CurrentBitRate = CAN_SetBaudRate(tCAN, u32BaudRate);
 
-    if(u32Mode == CAN_BASIC_MODE)
+    if(u32Mode == CANX_BASIC_MODE)
         CAN_EnterTestMode(tCAN, CAN_TEST_BASIC_Msk);
 
     return u32CurrentBitRate;

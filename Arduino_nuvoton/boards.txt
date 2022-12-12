@@ -58,7 +58,7 @@
 nuvoton_nuc131.name=NuMaker UNO NUC131
 nuvoton_nuc131.upload.tool=nulinkburn
 nuvoton_nuc131.upload.protocol=nuc-ba
-nuvoton_nuc131.upload.maximum_size=65536
+nuvoton_nuc131.upload.maximum_size=32768
 nuvoton_nuc131.upload.use_1200bps_touch=false
 nuvoton_nuc131.upload.wait_for_upload_port=false
 nuvoton_nuc131.upload.native_usb=false
@@ -67,7 +67,7 @@ nuvoton_nuc131.build.f_cpu=50000000L
 nuvoton_nuc131.build.core=nuvoton
 nuvoton_nuc131.build.extra_flags=-D__NUC131__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_nuc131.build.board=__NUVOTON__
-nuvoton_nuc131.build.ldscript=linker_scripts/gcc/64K_8K_flash.ld
+nuvoton_nuc131.build.ldscript=linker_scripts/gcc/32K_8K_flash.ld
 nuvoton_nuc131.build.variant=Nuvoton
 nuvoton_nuc131.build.variant_system_lib=../../system/{build.def}/libchip_NUC131_gcc_rel.a
 nuvoton_nuc131.build.vid=0x2341

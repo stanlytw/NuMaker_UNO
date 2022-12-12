@@ -20,7 +20,7 @@
 
 #if defined(__M480__)
 
-#ifdef USE_BoardToPin
+#if 1//def USE_BoardToPin
 BoardToPin BoardToPinInfo[] =
 {
     {  4, UART_TYPE, 0},// 0: PB2(UART1_RX)     (D0/UART_RX0)

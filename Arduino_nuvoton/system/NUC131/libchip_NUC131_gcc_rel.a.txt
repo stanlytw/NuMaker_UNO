@@ -1,13 +1,12 @@
 
 system_NUC131.o:
-00000000 r C.7.2653
+         U __aeabi_uidiv
 00000000 D CyclesPerUs
+00000000 D gau32ClkSrcTbl
 00000000 D PllClock
 00000000 D SystemCoreClock
 00000000 T SystemCoreClockUpdate
 00000000 T SystemInit
-         U __aeabi_uidiv
-00000000 D gau32ClkSrcTbl
 
 adc.o:
 00000000 T ADC_Close
@@ -17,7 +16,113 @@ adc.o:
 00000000 T ADC_EnableInt
 00000000 T ADC_Open
 
+wdt.o:
+00000000 T WDT_Open
+
+i2c.o:
+         U __aeabi_uidiv
+00000000 T I2C_ClearTimeoutFlag
+00000000 T I2C_Close
+00000000 T I2C_DisableInt
+00000000 T I2C_DisableTimeout
+00000000 T I2C_DisableWakeup
+00000000 T I2C_EnableInt
+00000000 T I2C_EnableTimeout
+00000000 T I2C_EnableWakeup
+00000000 T I2C_GetBusClockFreq
+00000000 T I2C_GetData
+00000000 T I2C_GetIntFlag
+00000000 T I2C_GetStatus
+00000000 T I2C_Open
+00000000 T I2C_SetBusClockFreq
+00000000 T I2C_SetData
+00000000 T I2C_SetSlaveAddr
+00000000 T I2C_SetSlaveAddrMask
+00000000 T I2C_Trigger
+         U SystemCoreClock
+
+wwdt.o:
+00000000 T WWDT_Open
+
+timer.o:
+         U __aeabi_idiv
+         U __aeabi_uidiv
+         U SystemCoreClock
+00000000 T TIMER_Close
+00000000 T TIMER_Delay
+00000000 T TIMER_DisableCapture
+00000000 T TIMER_DisableEventCounter
+00000000 T TIMER_EnableCapture
+00000000 T TIMER_EnableEventCounter
+00000000 T TIMER_GetModuleClock
+00000000 T TIMER_Open
+
+can.o:
+         U __aeabi_uidiv
+         U __aeabi_uidivmod
+00000000 T CAN_BasicReceiveMsg
+00000000 T CAN_BasicSendMsg
+00000000 T CAN_Close
+00000000 T CAN_CLR_INT_PENDING_BIT
+00000000 T CAN_DisableInt
+00000000 T CAN_EnableInt
+00000000 T CAN_EnterInitMode
+00000000 T CAN_EnterTestMode
+00000000 T CAN_GetCANBitRate
+00000000 T CAN_IsNewDataReceived
+00000000 T CAN_LeaveInitMode
+00000000 T CAN_LeaveTestMode
+00000000 T CAN_Open
+00000000 T CAN_ReadMsgObj
+00000000 T CAN_Receive
+00000000 T CAN_SetBaudRate
+00000000 T CAN_SetMultiRxMsg
+00000000 T CAN_SetRxMsg
+00000000 T CAN_SetRxMsgObj
+00000000 T CAN_SetRxMsgObjAndMsk
+00000000 T CAN_SetTxMsg
+00000000 T CAN_Transmit
+00000000 T CAN_TriggerTxMsg
+00000000 T CAN_WaitMsg
+00000000 t GetFreeIF
+         U SystemCoreClock
+         U SystemCoreClockUpdate
+
+sys.o:
+00000000 T SYS_ClearResetSrc
+00000000 T SYS_DisableBOD
+00000000 T SYS_EnableBOD
+00000000 T SYS_GetBODStatus
+00000000 T SYS_GetResetSrc
+00000000 T SYS_IsRegLocked
+00000000 T SYS_ReadPDID
+00000000 T SYS_ResetChip
+00000000 T SYS_ResetCPU
+00000000 T SYS_ResetModule
+
+spi.o:
+         U __aeabi_uidiv
+         U CLK_GetHCLKFreq
+00000000 t CLK_GetPLLClockFreq
+00000000 T SPI_ClearIntFlag
+00000000 T SPI_ClearRxFIFO
+00000000 T SPI_ClearTxFIFO
+00000000 T SPI_Close
+00000000 T SPI_DisableAutoSS
+00000000 T SPI_DisableFIFO
+00000000 T SPI_DisableInt
+00000000 T SPI_EnableAutoSS
+00000000 T SPI_EnableFIFO
+00000000 T SPI_EnableInt
+00000000 T SPI_GetBusClock
+00000000 T SPI_GetIntFlag
+00000000 T SPI_GetStatus
+00000000 T SPI_Open
+00000000 T SPI_SetBusClock
+
 bpwm.o:
+         U __aeabi_idiv
+         U __aeabi_uidiv
 00000000 T BPWM_ClearADCTriggerFlag
 00000000 T BPWM_ClearCaptureIntFlag
 00000000 T BPWM_ClearDutyIntFlag
@@ -52,72 +157,14 @@ bpwm.o:
 00000000 T BPWM_SetClockSource
 00000000 T BPWM_Start
 00000000 T BPWM_Stop
-00000000 r C.7.2653
 00000000 t CLK_GetPLLClockFreq
          U SystemCoreClock
          U SystemCoreClockUpdate
-         U __aeabi_uidiv
 
-can.o:
-00000000 T CAN_BasicReceiveMsg
-00000000 T CAN_BasicSendMsg
-00000000 T CAN_CLR_INT_PENDING_BIT
-00000000 T CAN_Close
-00000000 T CAN_DisableInt
-00000000 T CAN_EnableInt
-00000000 T CAN_EnterInitMode
-00000000 T CAN_EnterTestMode
-00000000 T CAN_GetCANBitRate
-00000000 T CAN_IsNewDataReceived
-00000000 T CAN_LeaveInitMode
-00000000 T CAN_LeaveTestMode
-00000000 T CAN_Open
-00000000 T CAN_ReadMsgObj
-00000000 T CAN_Receive
-00000000 T CAN_SetBaudRate
-00000000 T CAN_SetMultiRxMsg
-00000000 T CAN_SetRxMsg
-00000000 T CAN_SetRxMsgObj
-00000000 T CAN_SetRxMsgObjAndMsk
-00000000 T CAN_SetTxMsg
-00000000 T CAN_Transmit
-00000000 T CAN_TriggerTxMsg
-00000000 T CAN_WaitMsg
-00000000 t GetFreeIF
-         U SystemCoreClock
-         U SystemCoreClockUpdate
-         U __aeabi_uidiv
-         U __aeabi_uidivmod
-
-clk.o:
-00000000 r C.11.2855
-00000000 r C.14.2912
-00000000 r C.16.2927
-00000000 r C.7.2653
-00000000 T CLK_DisableCKO
-00000000 T CLK_DisableModuleClock
-00000000 T CLK_DisablePLL
-00000000 T CLK_DisableSysTick
-00000000 T CLK_DisableXtalRC
-00000000 T CLK_EnableCKO
-00000000 T CLK_EnableModuleClock
-00000000 T CLK_EnablePLL
-00000000 T CLK_EnableSysTick
-00000000 T CLK_EnableXtalRC
-00000000 T CLK_GetCPUFreq
-00000000 T CLK_GetHCLKFreq
-00000000 T CLK_GetHXTFreq
-00000000 T CLK_GetPCLKFreq
-00000000 T CLK_Idle
-00000000 T CLK_PowerDown
-00000000 T CLK_SetCoreClock
-00000000 T CLK_SetHCLK
-00000000 T CLK_SetModuleClock
-00000000 T CLK_SetSysTickClockSrc
-00000000 T CLK_WaitClockReady
-         U SystemCoreClock
-         U SystemCoreClockUpdate
-         U __aeabi_uidiv
+gpio.o:
+00000000 T GPIO_DisableInt
+00000000 T GPIO_EnableInt
+00000000 T GPIO_SetMode
 
 fmc.o:
 00000000 T FMC_Close
@@ -134,35 +181,9 @@ fmc.o:
 00000000 T FMC_SetBootSource
 00000000 T FMC_WriteConfig
 
-gpio.o:
-00000000 T GPIO_DisableInt
-00000000 T GPIO_EnableInt
-00000000 T GPIO_SetMode
-
-i2c.o:
-00000000 T I2C_ClearTimeoutFlag
-00000000 T I2C_Close
-00000000 T I2C_DisableInt
-00000000 T I2C_DisableTimeout
-00000000 T I2C_DisableWakeup
-00000000 T I2C_EnableInt
-00000000 T I2C_EnableTimeout
-00000000 T I2C_EnableWakeup
-00000000 T I2C_GetBusClockFreq
-00000000 T I2C_GetData
-00000000 T I2C_GetIntFlag
-00000000 T I2C_GetStatus
-00000000 T I2C_Open
-00000000 T I2C_SetBusClockFreq
-00000000 T I2C_SetData
-00000000 T I2C_SetSlaveAddr
-00000000 T I2C_SetSlaveAddrMask
-00000000 T I2C_Trigger
-         U SystemCoreClock
-         U __aeabi_uidiv
-
 pwm.o:
-00000000 r C.7.2653
+         U __aeabi_idiv
+         U __aeabi_uidiv
 00000000 t CLK_GetPLLClockFreq
 00000000 T PWM_ClearADCTriggerFlag
 00000000 T PWM_ClearCaptureIntFlag
@@ -212,59 +233,36 @@ pwm.o:
 00000000 T PWM_Stop
          U SystemCoreClock
          U SystemCoreClockUpdate
+
+clk.o:
+         U __aeabi_idiv
          U __aeabi_uidiv
-
-spi.o:
-00000000 r C.7.2653
-         U CLK_GetHCLKFreq
-00000000 t CLK_GetPLLClockFreq
-00000000 T SPI_ClearIntFlag
-00000000 T SPI_ClearRxFIFO
-00000000 T SPI_ClearTxFIFO
-00000000 T SPI_Close
-00000000 T SPI_DisableAutoSS
-00000000 T SPI_DisableFIFO
-00000000 T SPI_DisableInt
-00000000 T SPI_EnableAutoSS
-00000000 T SPI_EnableFIFO
-00000000 T SPI_EnableInt
-00000000 T SPI_GetBusClock
-00000000 T SPI_GetIntFlag
-00000000 T SPI_GetStatus
-00000000 T SPI_Open
-00000000 T SPI_SetBusClock
-         U __aeabi_uidiv
-
-sys.o:
-00000000 T SYS_ClearResetSrc
-00000000 T SYS_DisableBOD
-00000000 T SYS_EnableBOD
-00000000 T SYS_GetBODStatus
-00000000 T SYS_GetResetSrc
-00000000 T SYS_IsRegLocked
-00000000 T SYS_ReadPDID
-00000000 T SYS_ResetCPU
-00000000 T SYS_ResetChip
-00000000 T SYS_ResetModule
-
-timer.o:
-00000000 r C.12.2846
+00000000 T CLK_DisableCKO
+00000000 T CLK_DisableModuleClock
+00000000 T CLK_DisablePLL
+00000000 T CLK_DisableSysTick
+00000000 T CLK_DisableXtalRC
+00000000 T CLK_EnableCKO
+00000000 T CLK_EnableModuleClock
+00000000 T CLK_EnablePLL
+00000000 T CLK_EnableSysTick
+00000000 T CLK_EnableXtalRC
+00000000 T CLK_GetCPUFreq
+00000000 T CLK_GetHCLKFreq
+00000000 T CLK_GetHXTFreq
+00000000 T CLK_GetPCLKFreq
+00000000 T CLK_Idle
+00000000 T CLK_PowerDown
+00000000 T CLK_SetCoreClock
+00000000 T CLK_SetHCLK
+00000000 T CLK_SetModuleClock
+00000000 T CLK_SetSysTickClockSrc
+00000000 T CLK_WaitClockReady
          U SystemCoreClock
-00000000 T TIMER_Close
-00000000 T TIMER_Delay
-00000000 T TIMER_DisableCapture
-00000000 T TIMER_DisableEventCounter
-00000000 T TIMER_EnableCapture
-00000000 T TIMER_EnableEventCounter
-00000000 T TIMER_GetModuleClock
-00000000 T TIMER_Open
-         U __aeabi_uidiv
+         U SystemCoreClockUpdate
 
 uart.o:
-00000000 r C.10.3557
-00000000 r C.11.3608
-00000000 r C.7.3317
-00000000 r C.9.3492
+         U __aeabi_uidiv
 00000000 t CLK_GetPLLClockFreq
 00000000 T UART_ClearIntFlag
 00000000 T UART_Close
@@ -280,15 +278,15 @@ uart.o:
 00000000 T UART_SetLine_Config
 00000000 T UART_SetTimeoutCnt
 00000000 T UART_Write
-         U __aeabi_uidiv
-
-wdt.o:
-00000000 T WDT_Open
-
-wwdt.o:
-00000000 T WWDT_Open
 
 startup_NUC131.o:
+         U __libc_init_array
+         U _erelocate
+         U _estack
+         U _etext
+         U _ezero
+         U _srelocate
+         U _szero
 00000000 W ADC_IRQHandler
 00000000 W BOD_IRQHandler
 00000000 W BPWM0_IRQHandler
@@ -302,19 +300,21 @@ startup_NUC131.o:
 00000000 T Dummy_Handler
 00000000 W EINT0_IRQHandler
 00000000 W EINT1_IRQHandler
+00000000 D exception_table
 00000000 W GPAB_IRQHandler
 00000000 W GPCDEF_IRQHandler
 00000000 W HardFault_Handler
 00000000 W I2C0_IRQHandler
 00000000 W I2C1_IRQHandler
+         U main
 00000000 W MemManage_Handler
 00000000 W NMI_Handler
+00000000 W PendSV_Handler
 00000000 W PWM0_IRQHandler
 00000000 W PWM1_IRQHandler
 00000000 W PWRWU_IRQHandler
-00000000 W PendSV_Handler
-00000000 W RTC_IRQHandler
 00000000 T Reset_Handler
+00000000 W RTC_IRQHandler
 00000000 W SPI0_IRQHandler
 00000000 W SVC_Handler
 00000000 W SysTick_Handler
@@ -329,12 +329,3 @@ startup_NUC131.o:
 00000000 W UART5_IRQHandler
 00000000 W UsageFault_Handler
 00000000 W WDT_IRQHandler
-         U __libc_init_array
-         U _erelocate
-         U _estack
-         U _etext
-         U _ezero
-         U _srelocate
-         U _szero
-00000000 D exception_table
-         U main

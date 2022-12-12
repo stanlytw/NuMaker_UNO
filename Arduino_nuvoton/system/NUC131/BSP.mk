@@ -8,8 +8,8 @@
 #OUTPUT_BIN=.\
 
 CHIP=NUC131
-ARM_GCC_TOOLCHAIN=C:/Users/hphuang/AppData/Local/Arduino15/packages/arduino/tools/arm-none-eabi-gcc/4.8.3-2014q1/bin
-PROJECT_BASE_PATH=C:/Users/hphuang/AppData/Local/Arduino15/packages/nuvoton/hardware/nuvoton/1.6.10/system/$(CHIP)
+ARM_GCC_TOOLCHAIN=C:/Users/HLLIN6/AppData/Local/Arduino15/packages/arduino/tools/arm-none-eabi-gcc/7-2017q4/bin
+PROJECT_BASE_PATH=C:/Users/HLLIN6/AppData/Local/Arduino15/packages/nuvoton/hardware/nuvoton/2.0.1/system/$(CHIP)
 CORE=cortex-m0
 
 OUTPUT_BIN=./

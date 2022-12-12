@@ -1027,6 +1027,16 @@ SPIPinDescription SPI_Desc[] =
             {28, SYS_GPC_MFP_PC0_SPI0_SS0, NULL, NULL, NULL, NULL},
         }
     },
+    //[2022-12-10]Add for meet SPI init rule. MAX_COUNT=1, SPI_Desc index=1
+    {
+        SPI0, SPI0_MODULE, SPI0_IRQn, CLK_CLKSEL1_SPI0_S_HCLK,
+        {
+            {27, SYS_GPC_MFP_PC1_SPI0_CLK, NULL, NULL, NULL, NULL},
+            {26, SYS_GPC_MFP_PC2_SPI0_MISO0, NULL, NULL, NULL, NULL},
+            {25, SYS_GPC_MFP_PC3_SPI0_MOSI0, NULL, NULL, NULL, NULL},
+            {28, SYS_GPC_MFP_PC0_SPI0_SS0, NULL, NULL, NULL, NULL},
+        }
+    },
 };
 
 UARTPinDescription UART_Desc[] =

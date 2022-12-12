@@ -186,6 +186,9 @@ void Reset_Handler(void)
 	// Arduino: we must setup hardware before doing this
 	__libc_init_array();
 
+	SYS_UnlockReg();//[2022-12-09] Add by stanly. Compare to M480
+	SystemInit();//
+	SYS_LockReg();//
 	/* Branch to main function */
 	main();
 
