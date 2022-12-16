@@ -262,7 +262,7 @@ void init(void)
     CLK_SetHCLK(CLK_CLKSEL0_HCLK_S_HIRC, CLK_CLKDIV_HCLK(1));
 
     /* Enable external 12MHz XTAL, internal 22.1184MHz */
-    CLK_EnableXtalRC(CLK_PWRCON_XTL12M_EN_Msk | CLK_PWRCON_OSC22M_EN_Msk);
+    CLK_EnableXtalRC(CLK_PWRCON_XTL12M_EN_Msk );//| CLK_PWRCON_OSC22M_EN_Msk);
 
     /* Waiting for external XTAL clock ready */
     CLK_WaitClockReady(CLK_CLKSTATUS_XTL12M_STB_Msk);

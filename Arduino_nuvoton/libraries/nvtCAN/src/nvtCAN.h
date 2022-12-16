@@ -37,36 +37,37 @@
 
 
 #include "Arduino.h"
-#include "nvt_can.h"
-#include "nvt_can_dfs.h"
+#include "Pins_arduino.h"
+#include "mcp_can.h"
+#include "nvtCAN_dfs.h"
 
 
 
 
 #define MAX_CHAR_IN_MESSAGE 8
-
-class nvt_can : public MCP_CAN
+class nvtCAN //: public MCP_CAN
 {
 public:
     //nvt_can(byte _CS) : MCP_CAN(_CS), nReservedTx(0){};
     //nvt_can(void *_can,uint32_t module,IRQn_Type _id, void(*_initCb)(void));
-    nvt_can(byte _CANSEL);
+    
+    nvtCAN(byte _CANSEL);// :nReservedTx(0){};
     /*
         Nuvoton CAN controller(ccan) driver function
     */
 public:
-    virtual void enableTxInterrupt(bool enable = true); // enable transmit interrupt
-    virtual void reserveTxBuffers(byte nTxBuf = 0);
+    //virtual void enableTxInterrupt(bool enable = true); // enable transmit interrupt
+    //virtual void reserveTxBuffers(byte nTxBuf = 0);
 //    {
 //       nReservedTx = (nTxBuf < MCP_N_TXBUFFERS ? nTxBuf : MCP_N_TXBUFFERS - 1);
 //    }
-    virtual byte getLastTxBuffer();
+ //   virtual byte getLastTxBuffer();
 //    {
 //        return MCP_N_TXBUFFERS - 1; // read index of last tx buffer
 //    }
     virtual byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);                                                                                 // init can
-    virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
-    virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
+    //virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
+    //virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
     //virtual void setSleepWakeup(byte enable);                                                                                                           // Enable or disable the wake up interrupt (If disabled the ncan will not be woken up by CAN bus activity, making it send only)
     //virtual byte sleep();                                                                                                                               // Put the ncan in sleep mode
     //virtual byte wake();                                                                                                                                // Wake ncan manually from sleep
@@ -121,7 +122,7 @@ private:
     //byte ncan_readStatus(void);                                  // read ncan's Status
     //byte ncan_setCANCTRL_Mode(const byte newmode);               // set mode
     //byte ncan_requestNewMode(const byte newmode);                // Set mode
-    byte ncan_configRate(const byte canSpeed, const byte clock); // set baudrate
+    byte ncan_configRate(const uint32_t canSpeed, const byte clock); // set baudrate
     byte ncan_init(const byte canSpeed, const byte clock);       // ncan init
 
     //void ncan_write_id(const byte mcp_addr, // write can id
@@ -147,8 +148,20 @@ private:
     byte sendMsg(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true); // send message
 private:
     byte nReservedTx; // Count of tx buffers for reserved send
+
+	union{
+		void *_vncan;
+		CAN_T *ncan;
+
+	};
+	uint32_t module;
+    byte nCANSel;
+	IRQn_Type id;
 };
 
+
+byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate);
+static void CAN_0_Init(void);
 #endif
 /*********************************************************************************************************
     END FILE
