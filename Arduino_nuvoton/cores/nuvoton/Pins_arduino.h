@@ -138,7 +138,7 @@ typedef struct _UARTPinDescription
     PinType pintype[2];
 } UARTPinDescription;
 
-#if defined(__M451__) | defined(__NUC240__)
+#if defined(__M451__) | defined(__NUC240__) | defined(__NUC131__) 
 typedef struct _CANPinDescription
 {
     CAN_T *C;
@@ -411,7 +411,7 @@ do { \
 
 
 /*========== CAN definition ==========*/
-#if defined(__M451__) | defined(__NUC240__)
+#if defined(__M451__) | defined(__NUC240__)| defined(__NUC131__)
 #define CAN_MAX_COUNT 1
 extern CANPinDescription CAN_Desc[];
 #define CAN_RX 0

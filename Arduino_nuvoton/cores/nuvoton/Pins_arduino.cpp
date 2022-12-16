@@ -1048,6 +1048,11 @@ I2CPinDescription I2C_Desc[] =
 {
     {I2C0, I2C0_MODULE, {{9, SYS_GPA_MFP_PA8_I2C0_SDA, NULL, NULL, NULL, NULL}, {8, SYS_GPA_MFP_PA9_I2C0_SCL, NULL, NULL, NULL, NULL}}},
 };
+
+CANPinDescription CAN_Desc[] =
+{
+    {CAN0, CAN0_MODULE, CAN0_IRQn, {{21, SYS_GPD_MFP_PD6_CAN0_RXD}, {22, SYS_GPD_MFP_PD7_CAN0_TXD}}},
+};
 #elif defined(__M032BT__)
 
 #ifdef USE_BoardToPin /* Digital Pin Function mapping */
