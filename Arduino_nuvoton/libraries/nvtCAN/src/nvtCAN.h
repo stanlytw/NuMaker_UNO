@@ -65,7 +65,8 @@ public:
 //    {
 //        return MCP_N_TXBUFFERS - 1; // read index of last tx buffer
 //    }
-    virtual byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);                                                                                 // init can
+    byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);
+    //virtual byte begin_testmode(uint32_t speedset, const byte testmode);                                                                                 // init can
     //virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
     //virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
     //virtual void setSleepWakeup(byte enable);                                                                                                           // Enable or disable the wake up interrupt (If disabled the ncan will not be woken up by CAN bus activity, making it send only)
@@ -75,7 +76,7 @@ public:
     //virtual byte getMode();                                                                                                                             // Get operational mode
     //virtual byte checkError(uint8_t* err_ptr = NULL);                                                                                                   // if something error
 
-    virtual byte checkReceive(void);                                                                                                                    // if something received
+    byte checkReceive(void);                                                                                                                    // if something received
     //virtual byte readMsgBufID(byte status, volatile unsigned long *id, volatile byte *ext, volatile byte *rtr, volatile byte *len, volatile byte *buf); // read buf with object ID
     /* wrapper */
     //byte readMsgBufID(unsigned long *ID, byte *len, byte *buf) {
@@ -86,8 +87,8 @@ public:
     //}
 
     //virtual byte trySendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, byte iTxBuf = 0xff);                                 // as sendMsgBuf, but does not have any wait for free buffer
-    virtual byte sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
-    virtual byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true);                                 // send buf
+    byte sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
+    byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true);                                 // send buf
 
 
     //virtual void clearBufferTransmitIfFlags(byte flags = 0);                                                                                            // Clear transmit flags according to status
@@ -100,6 +101,14 @@ public:
 
 private:
     void ncan_reset(void); // reset ncan
+
+     void ncan_resetIF(uint8_t u8IF_Num);//clear IF reg, for test_basic mode Rx 
+
+     byte ncan_enableInterrput(void);
+
+     void ncan_disableInterrupt();
+
+     
 
     //byte ncan_readRegister(const byte address); // read ncan's register
 
@@ -146,6 +155,10 @@ private:
     */
 
     byte sendMsg(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true); // send message
+
+public:    
+    uint32_t ncan_readStatus(void);
+
 private:
     byte nReservedTx; // Count of tx buffers for reserved send
 
@@ -157,11 +170,19 @@ private:
 	uint32_t module;
     byte nCANSel;
 	IRQn_Type id;
+    
 };
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate);
+uint32_t BaudRateSelector(uint32_t u32mcpBaudRate);
 static void CAN_0_Init(void);
+void CAN_ResetIF(uint8_t u8IF_Num);
+#ifdef __cplusplus
+}
+#endif
 #endif
 /*********************************************************************************************************
     END FILE

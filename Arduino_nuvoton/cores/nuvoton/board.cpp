@@ -270,6 +270,9 @@ void init(void)
     /* Set core clock as PLL_CLOCK from PLL */
     CLK_SetCoreClock(F_CPU);
 
+    /* Enable CAN module clock */
+    CLK_EnableModuleClock(CAN0_MODULE);
+
     /* STCLK to HXT */
     //CLK_SetSysTickClockSrc(CLK_CLKSEL0_STCLK_S_HXT);
 #elif defined(__M032BT__)

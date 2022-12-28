@@ -244,12 +244,12 @@ void UART1_IRQHandler(void)
 
 #if(UART_MAX_COUNT>0)
 ring_buffer rx_buffer = { { 0 }, 0, 0};
-HardwareSerial Serial(UART_Desc[0].U, 0, CLK_CLKSEL1_UART_S_HXT, 1, UART_Desc[0].irq, &rx_buffer);
+HardwareSerial Serial(UART_Desc[0].U, 0, CLK_CLKSEL1_UART_S_PLL, 1, UART_Desc[0].irq, &rx_buffer);
 #endif
 
 #if(UART_MAX_COUNT>1)
 ring_buffer rx_buffer1 = { { 0 }, 0, 0};
-HardwareSerial Serial1(UART_Desc[1].U, 1, CLK_CLKSEL1_UART_S_HXT, 1, UART_Desc[1].irq, &rx_buffer1);
+HardwareSerial Serial1(UART_Desc[1].U, 1, CLK_CLKSEL1_UART_S_PLL, 1, UART_Desc[1].irq, &rx_buffer1);
 #endif
 
 #ifdef __cplusplus

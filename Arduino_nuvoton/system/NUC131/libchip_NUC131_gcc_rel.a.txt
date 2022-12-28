@@ -58,8 +58,10 @@ timer.o:
 00000000 T TIMER_Open
 
 can.o:
+         U __aeabi_idiv
+         U __aeabi_ldivmod
          U __aeabi_uidiv
-         U __aeabi_uidivmod
+         U __aeabi_uldivmod
 00000000 T CAN_BasicReceiveMsg
 00000000 T CAN_BasicSendMsg
 00000000 T CAN_Close
@@ -78,12 +80,15 @@ can.o:
 00000000 T CAN_SetBaudRate
 00000000 T CAN_SetMultiRxMsg
 00000000 T CAN_SetRxMsg
+00000000 T CAN_SetRxMsgAndMsk
 00000000 T CAN_SetRxMsgObj
 00000000 T CAN_SetRxMsgObjAndMsk
 00000000 T CAN_SetTxMsg
 00000000 T CAN_Transmit
 00000000 T CAN_TriggerTxMsg
+00000000 t can_update_spt
 00000000 T CAN_WaitMsg
+         U CLK_GetPCLKFreq
 00000000 t GetFreeIF
          U SystemCoreClock
          U SystemCoreClockUpdate
@@ -317,6 +322,7 @@ startup_NUC131.o:
 00000000 W RTC_IRQHandler
 00000000 W SPI0_IRQHandler
 00000000 W SVC_Handler
+         U SystemInit
 00000000 W SysTick_Handler
 00000000 W TMR0_IRQHandler
 00000000 W TMR1_IRQHandler

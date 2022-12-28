@@ -33,7 +33,7 @@
 */
 #define DEBUG_EN 0
 #include "nvtCAN.h"
-
+#include "can.h"
 //#define spi_readwrite      pSPI->transfer
 //#define spi_read()         spi_readwrite(0x00)
 //#define spi_write(spi_val) spi_readwrite(spi_val)
@@ -52,16 +52,17 @@ nvtCAN::nvtCAN(byte _CANSEL)
    
    /*Variable initialization */
    nReservedTx = 0;
-
+ 
    if( _CANSEL)
    {
        module = CAN0_MODULE;
-       ncan = CAN0;
+       ncan = (CAN_T *)CAN0;
+    
    }
    else//Update code for more than 2 CAN interface's device 
    {
        module = CAN0_MODULE;
-       ncan = CAN0;
+       ncan = (CAN_T *)CAN0;
    }
    
    ncan_reset();
@@ -76,13 +77,13 @@ nvtCAN::nvtCAN(byte _CANSEL)
 void nvtCAN::ncan_reset(void) {
 #if defined(__NUC131__)
     /* Unlock protected registers */
-    SYS_UnlockReg();
-    /* Reset IP */
-    SYS_ResetModule(module);
+    //SYS_UnlockReg();
      /* Enable CAN module clock */
-    CLK_EnableModuleClock(module);
+    //CLK_EnableModuleClock(module);
+     /* Reset IP */
+    //SYS_ResetModule(module);
     /* Lock protected registers */
-    SYS_LockReg();
+    //SYS_LockReg();
 
     CAN_0_Init();
 #endif    
@@ -105,7 +106,7 @@ byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
 
     /* Check the real baud-rate is OK */
     res = BaudRateCheck(BaudRate, RealBaudRate);
-    ncan->CON |= CAN_TEST_LBACK_Msk;
+  	ncan->CON |= (CAN_TEST_LBACK_Msk);
     return res;
 #endif    
    
@@ -134,8 +135,13 @@ void nvtCAN::ncan_write_canMsg(const byte buffer_sidh_addr, unsigned long id, by
 *********************************************************************************************************/
 byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
     
-    byte res = ncan_configRate(speedset, clockset);
-
+    uint32_t nvtspeed = BaudRateSelector(speedset);
+    byte res ;
+    
+    res = ncan_configRate(nvtspeed, clockset);
+    //if(res) return res;
+   
+    //res = ncan_enableInterrput();
     return res;
 }
 
@@ -147,29 +153,43 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
 byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte* buf) {
    
     int32_t delaycount;
+    int8_t nn;
+    uint32_t res =0 ;
 
-    /* Declare a CAN message structure */
     STR_CANMSG_T msg1;
+
+    ncan_enableInterrput();
     delaycount = 1000;
-
-    /* Enable CAN interrupt */
-    //CAN_EnableInt(ncan, CAN_CON_IE_Msk | CAN_CON_SIE_Msk);
-    /* Set Interrupt Priority */
-    //NVIC_SetPriority(CAN0_IRQn, (1 << __NVIC_PRIO_BITS) - 2);
-    /* Enable External Interrupt */
-    //NVIC_EnableIRQ(CAN0_IRQn);
-
     /* Send Message No.1 */
     msg1.FrameType = CAN_DATA_FRAME;
     msg1.IdType   = CAN_STD_ID;
-    msg1.Id       = 0x0001;//(uint32_t)(id);
+    msg1.Id       = 0x6FF;
     msg1.DLC      = 2;
-    msg1.Data[0]  = 0x00;
-    msg1.Data[1]  = 0x02;
+     /* Send a 11-bit Standard Identifier message */
+    //tMsg.FrameType = CAN_DATA_FRAME;
+    //tMsg.IdType   = CAN_STD_ID;
+    //tMsg.Id       = 0x7FF;
+    //tMsg.DLC      = 2;
+    msg1.Data[0]  = 7;
+    msg1.Data[1]  = 0xFF;
+
+   CAN_Transmit(ncan, 0, &msg1); 
+   
+/* Send Message No.2 */
+    msg1.FrameType = CAN_DATA_FRAME;
+    msg1.IdType   = CAN_STD_ID;
+    msg1.Id       = 0x1AC;
+    msg1.DLC      = 8;
+    msg1.Data[0]  = 0x11;
+    msg1.Data[1]  = 0x12;
+    msg1.Data[2]  = 0x13;
+    msg1.Data[3]  = 0x14;
+    msg1.Data[4]  = 0x15;
+    msg1.Data[5]  = 0x16;
+    msg1.Data[6]  = 0x17;
+    msg1.Data[7]  = 0x18;
     CAN_Transmit(ncan, 0, &msg1);//Send CAN message
-    //printf("Send STD_ID:0x1,Data[0,2]\n");
-    CLK_SysTickDelay(delaycount);   /* Generate the Delay Time by Systick */
-    return CAN_OK;
+    return (byte)res;
 }
 
 
@@ -222,25 +242,53 @@ byte nvtCAN::ncan_init(const byte canSpeed, const byte clock) {
 }
 
 
-
-byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)
+/*********************************************************************************************************
+** Function name:           ncan_ResetIF
+** Descriptions:            Reset message interface parameters 
+*********************************************************************************************************/
+void nvtCAN::ncan_resetIF(uint8_t u8IF_Num)
 {
-    byte res;
-
-    if(u32BaudRate != u32RealBaudRate)
-    {
-        res = 0x01;
-    }
-    else
-    {
-        res = 0x00;
-    }
-    return res;
+    if(u8IF_Num > 1)
+        return;
+    ncan->IF[u8IF_Num].CREQ     = 0x0;          // set bit15 for sending
+    ncan->IF[u8IF_Num].CMASK    = 0x0;
+    ncan->IF[u8IF_Num].MASK1    = 0x0;          // useless in basic mode
+    ncan->IF[u8IF_Num].MASK2    = 0x0;          // useless in basic mode
+    ncan->IF[u8IF_Num].ARB1     = 0x0;          // ID15~0
+    ncan->IF[u8IF_Num].ARB2     = 0x0;          // MsgVal, eXt, xmt, ID28~16
+    ncan->IF[u8IF_Num].MCON     = 0x0;              // DLC
+    ncan->IF[u8IF_Num].DAT_A1   = 0x0;          // data0,1
+    ncan->IF[u8IF_Num].DAT_A2   = 0x0;          // data2,3
+    ncan->IF[u8IF_Num].DAT_B1   = 0x0;          // data4,5
+    ncan->IF[u8IF_Num].DAT_B2   = 0x0;          // data6,7
 }
 
 
 
+/*********************************************************************************************************
+** Function name:           ncan_enableInterrput
+** Descriptions:            init can and set speed
+*********************************************************************************************************/
+byte nvtCAN::ncan_enableInterrput(void) {
+    
+    byte res = 0;
+    /* Enable CAN interrupt */
+    CAN_EnableInt(CAN0, CAN_CON_IE_Msk | CAN_CON_SIE_Msk);
+    /* Set Interrupt Priority */
+    NVIC_SetPriority(CAN0_IRQn, (1 << __NVIC_PRIO_BITS) - 2);
+    /* Enable External Interrupt */
+    NVIC_EnableIRQ(CAN0_IRQn);
+    return res;
+}
 
+uint32_t nvtCAN::ncan_readStatus(void) 
+{
+    
+  uint32_t u8IIDRstatus;
+
+    u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
+    return u8IIDRstatus;
+}
 
 #if CAN_MAX_COUNT > 0
 #define CAN_ID0 0
@@ -252,12 +300,15 @@ static void CAN_0_Init(void) {
 /*---------------------------------------------------------------------------------------------------------*/
 /* CAN0 interrupt handler                                                                                  */
 /*---------------------------------------------------------------------------------------------------------*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void CAN0_IRQHandler(void)
 {
     uint32_t u8IIDRstatus;
 
-    u8IIDRstatus = CAN0->IIDR;
-
+    u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
     {
         /**************************/
@@ -294,11 +345,11 @@ void CAN0_IRQHandler(void)
         }
 
     }
-    else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))
+    else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
     }
-    else if(CAN0->WU_STATUS == 1)
+    else if(CAN0->WU_STATUS == 1)/*Wake-up Interrupt*/
     {
         //printf("Wake up\n");
 
@@ -307,8 +358,106 @@ void CAN0_IRQHandler(void)
 
 }
 
+byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)
+{
+    byte res;
 
+    if(u32BaudRate != u32RealBaudRate)
+    {
+        res = 0x01;
+    }
+    else
+    {
+        res = 0x00;
+    }
+    return res;
+}
 
+uint32_t BaudRateSelector(uint32_t u32mcpBaudRate)
+{
+    uint32_t u32NvtBaudRate;
+
+   switch(u32mcpBaudRate)
+    {
+        case CAN_10KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_10K;
+            break;
+
+        case CAN_20KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_20K;
+            break;
+
+        case CAN_25KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_25K;
+            break;
+
+        case CAN_31K25BPS:
+             u32NvtBaudRate = CAN_BAUDRATE_31K25;
+            break;
+
+        case CAN_33KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_33K;
+            break;        
+
+        case CAN_40KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_40K;
+            break;
+
+        case CAN_50KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_50K;
+            break;
+
+        case CAN_80KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_80K;
+            break;
+
+        case CAN_83K3BPS:
+             u32NvtBaudRate = CAN_BAUDRATE_83K3;
+            break;
+
+        case CAN_95KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_95K;
+            break;
+
+         case CAN_100KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_100K;
+            break;
+
+        case CAN_125KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_125K;
+            break;
+
+        case CAN_200KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_200K;
+            break;
+
+        case CAN_250KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_250K;
+            break;
+
+        case CAN_666KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_666K;
+            break;        
+
+        case CAN_800KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_800K;
+            break;
+
+        case CAN_1000KBPS:
+             u32NvtBaudRate = CAN_BAUDRATE_1000K;
+            break;
+
+        default:
+             u32NvtBaudRate = CAN_BAUDRATE_10K;
+            break;
+
+    
+     }
+     return u32NvtBaudRate;
+}
+#ifdef __cplusplus
+}
+#endif
 #endif
 /*********************************************************************************************************
     END FILE
