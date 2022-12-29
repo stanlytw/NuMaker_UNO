@@ -425,6 +425,8 @@ int32_t CAN_ReadMsgObj(CAN_T *tCAN, uint8_t u8MsgObj, uint8_t u8Release, STR_CAN
   *
   * @details The function is used to set bus timing parameter according current clock and target baud-rate.
   */
+
+ #if 0
 uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
 {
     uint8_t u8Tseg1,u8Tseg2;
@@ -470,6 +472,121 @@ uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
 
     return (CAN_GetCANBitRate(tCAN));
 }
+#endif
+uint32_t CAN_SetBaudRate(CAN_T *tCAN, uint32_t u32BaudRate)
+{
+    long rate;
+    long best_error = 1000000000, error = 0;
+    int best_tseg = 0, best_brp = 0, brp = 0;
+    int tsegall, tseg = 0, tseg1 = 0, tseg2 = 0;
+    int spt_error = 1000, spt = 0, sampl_pt;
+    uint64_t clock_freq = (uint64_t)0;
+    uint32_t sjw = (uint32_t)1;
+
+    CAN_EnterInitMode(tCAN);
+
+    SystemCoreClockUpdate();
+    clock_freq = CLK_GetPCLKFreq();
+
+    if(u32BaudRate > (uint32_t)1000000)
+    {
+        u32BaudRate = (uint32_t)1000000;
+    }
+
+    /* Use CIA recommended sample points */
+    if(u32BaudRate > (uint32_t)800000)
+    {
+        sampl_pt = (int)750;
+    }
+    else if(u32BaudRate > (uint32_t)500000)
+    {
+        sampl_pt = (int)800;
+    }
+    else
+    {
+        sampl_pt = (int)875;
+    }
+
+    /* tseg even = round down, odd = round up */
+    for(tseg = (TSEG1_MAX + TSEG2_MAX) * 2ul + 1ul; tseg >= (TSEG1_MIN + TSEG2_MIN) * 2ul; tseg--)
+    {
+        tsegall = 1ul + tseg / 2ul;
+        /* Compute all possible tseg choices (tseg=tseg1+tseg2) */
+        brp = clock_freq / (tsegall * u32BaudRate) + tseg % 2;
+        /* chose brp step which is possible in system */
+        brp = (brp / BRP_INC) * BRP_INC;
+
+        if((brp < BRP_MIN) || (brp > BRP_MAX))
+        {
+            continue;
+        }
+        rate = clock_freq / (brp * tsegall);
+
+        error = u32BaudRate - rate;
+
+        /* tseg brp biterror */
+        if(error < 0)
+        {
+            error = -error;
+        }
+        if(error > best_error)
+        {
+            continue;
+        }
+        best_error = error;
+        if(error == 0)
+        {
+            spt = can_update_spt(sampl_pt, tseg / 2, &tseg1, &tseg2);
+            error = sampl_pt - spt;
+            if(error < 0)
+            {
+                error = -error;
+            }
+            if(error > spt_error)
+            {
+                continue;
+            }
+            spt_error = error;
+        }
+        best_tseg = tseg / 2;
+        best_brp = brp;
+
+        if(error == 0)
+        {
+            break;
+        }
+    }
+
+    spt = can_update_spt(sampl_pt, best_tseg, &tseg1, &tseg2);
+
+    /* check for sjw user settings */
+    /* bt->sjw is at least 1 -> sanitize upper bound to sjw_max */
+    if(sjw > SJW_MAX)
+    {
+        sjw = SJW_MAX;
+    }
+    /* bt->sjw must not be higher than tseg2 */
+    if(tseg2 < sjw)
+    {
+        sjw = tseg2;
+    }
+
+    /* real bit-rate */
+    u32BaudRate = clock_freq / (best_brp * (tseg1 + tseg2 + 1));
+
+    tCAN->BTIME = ((uint32_t)(tseg2 - 1ul) << CAN_BTIME_TSEG2_Pos) | ((uint32_t)(tseg1 - 1ul) << CAN_BTIME_TSEG1_Pos) |
+                  ((uint32_t)(best_brp - 1ul) & CAN_BTIME_BRP_Msk) | (sjw << CAN_BTIME_SJW_Pos);
+    tCAN->BRPE  = ((uint32_t)(best_brp - 1ul) >> 6) & 0x0Ful;
+
+    /* printf("\n bitrate = %d \n", CAN_GetCANBitRate(tCAN)); */
+
+    CAN_LeaveInitMode(tCAN);
+
+    return u32BaudRate;
+}
+
+
+
 
 /**
   * @brief The function is used to disable all CAN interrupt.

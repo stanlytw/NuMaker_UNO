@@ -20,6 +20,12 @@
 
 #define USE_BoardToPin
 
+
+#if defined(__NUC131__)
+#define NOT_AN_INTERRUPT -1
+#define digitalPinToInterrupt(p) ((p) == 2 ? 0 : ((p) == 3 ? 1 : ((p) >= 18 && (p) <= 21 ? 23 - (p) : NOT_AN_INTERRUPT)))
+#endif
+
 #if defined(__M252__)
 #include "Pins_M252_arduino.h"
 

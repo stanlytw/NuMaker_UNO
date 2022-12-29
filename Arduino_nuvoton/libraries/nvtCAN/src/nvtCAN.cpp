@@ -34,11 +34,6 @@
 #define DEBUG_EN 0
 #include "nvtCAN.h"
 #include "can.h"
-//#define spi_readwrite      pSPI->transfer
-//#define spi_read()         spi_readwrite(0x00)
-//#define spi_write(spi_val) spi_readwrite(spi_val)
-//#define SPI_BEGIN()        pSPI->beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0))
-//#define SPI_END()          pSPI->endTransaction()
 
 
 /*********************************************************************************************************
@@ -47,12 +42,14 @@
 *********************************************************************************************************/
 nvtCAN::nvtCAN(byte _CANSEL)
 {
+   uint8_t nn;
    /*Keep the _CANSEL to suuport muti CAN MFP, if presents */ 
    nCANSel = _CANSEL;
-   
+   canspeed_set = CAN_100KBPS;
    /*Variable initialization */
    nReservedTx = 0;
- 
+   opmode = CAN_BASIC_MODE;
+   //rxCANMsg(0);
    if( _CANSEL)
    {
        module = CAN0_MODULE;
@@ -66,6 +63,7 @@ nvtCAN::nvtCAN(byte _CANSEL)
    }
    
    ncan_reset();
+   for(nn=0; nn < NVT_MAXFILTER_NUM; nn++) rxMsgAMsk[nn].ulIDMask = 0;
 
 
 }
@@ -75,18 +73,16 @@ nvtCAN::nvtCAN(byte _CANSEL)
 ** Descriptions:            reset the device
 *********************************************************************************************************/
 void nvtCAN::ncan_reset(void) {
-#if defined(__NUC131__)
+
     /* Unlock protected registers */
-    //SYS_UnlockReg();
-     /* Enable CAN module clock */
-    //CLK_EnableModuleClock(module);
+    SYS_UnlockReg();
      /* Reset IP */
-    //SYS_ResetModule(module);
+    SYS_ResetModule(module);
     /* Lock protected registers */
-    //SYS_LockReg();
+    SYS_LockReg();
 
     CAN_0_Init();
-#endif    
+  
 }
 
 
@@ -95,7 +91,7 @@ void nvtCAN::ncan_reset(void) {
 ** Descriptions:            set baudrate
 *********************************************************************************************************/
 byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
-#if defined(__NUC131__)
+
     //Add NUC131 standard driver code to reset and enable CAN IP
     //SelectCANSpeed()
     uint32_t RealBaudRate = 0;
@@ -103,12 +99,12 @@ byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
     byte res = 0x00;
     /*Set target baud-rate and operation mode.*/
     RealBaudRate = CAN_Open(ncan,  BaudRate, CAN_BASIC_MODE);
-
+    opmode = CAN_BASIC_MODE;
     /* Check the real baud-rate is OK */
     res = BaudRateCheck(BaudRate, RealBaudRate);
   	ncan->CON |= (CAN_TEST_LBACK_Msk);
     return res;
-#endif    
+  
    
 }
 
@@ -120,10 +116,10 @@ byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
 *********************************************************************************************************/
 void nvtCAN::ncan_write_canMsg(const byte buffer_sidh_addr, unsigned long id, byte ext, byte rtrBit, byte len,
                                    volatile const byte* buf) {
-#if defined(__NUC131__)
+
     //Add NUC131 standard driver code to reset and enable CAN IP
     delay(10);
-#endif   
+
 
 }
 
@@ -135,9 +131,11 @@ void nvtCAN::ncan_write_canMsg(const byte buffer_sidh_addr, unsigned long id, by
 *********************************************************************************************************/
 byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
     
-    uint32_t nvtspeed = BaudRateSelector(speedset);
+    uint32_t nvtspeed;
     byte res ;
     
+    nvtspeed = BaudRateSelector(speedset);  
+    canspeed_set = speedset;
     res = ncan_configRate(nvtspeed, clockset);
     //if(res) return res;
    
@@ -152,94 +150,114 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
 *********************************************************************************************************/
 byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte* buf) {
    
-    int32_t delaycount;
-    int8_t nn;
-    uint32_t res =0 ;
-
+    int32_t ires;
+    uint8_t nn;
+  
     STR_CANMSG_T msg1;
 
     ncan_enableInterrput();
-    delaycount = 1000;
+    
     /* Send Message No.1 */
     msg1.FrameType = CAN_DATA_FRAME;
-    msg1.IdType   = CAN_STD_ID;
-    msg1.Id       = 0x6FF;
-    msg1.DLC      = 2;
-     /* Send a 11-bit Standard Identifier message */
-    //tMsg.FrameType = CAN_DATA_FRAME;
-    //tMsg.IdType   = CAN_STD_ID;
-    //tMsg.Id       = 0x7FF;
-    //tMsg.DLC      = 2;
-    msg1.Data[0]  = 7;
-    msg1.Data[1]  = 0xFF;
-
-   CAN_Transmit(ncan, 0, &msg1); 
+    msg1.IdType   = ext;
+    msg1.Id       = id;
+    msg1.DLC      = len;
+    for(nn=0; nn<len;nn++)
+    {
+        msg1.Data[nn] = buf[nn];
+    }
+    ires = CAN_Transmit(ncan, 0, &msg1); 
    
-/* Send Message No.2 */
-    msg1.FrameType = CAN_DATA_FRAME;
-    msg1.IdType   = CAN_STD_ID;
-    msg1.Id       = 0x1AC;
-    msg1.DLC      = 8;
-    msg1.Data[0]  = 0x11;
-    msg1.Data[1]  = 0x12;
-    msg1.Data[2]  = 0x13;
-    msg1.Data[3]  = 0x14;
-    msg1.Data[4]  = 0x15;
-    msg1.Data[5]  = 0x16;
-    msg1.Data[6]  = 0x17;
-    msg1.Data[7]  = 0x18;
-    CAN_Transmit(ncan, 0, &msg1);//Send CAN message
-    return (byte)res;
+    return (byte)(ires);
 }
 
 
 
 /*********************************************************************************************************
-** Function name:           sendMsg
-** Descriptions:            send message
+** Function name:           readMsgBuf
+** Descriptions:            read message data field and its data length
 *********************************************************************************************************/
-byte nvtCAN::sendMsg(unsigned long id, byte ext, byte rtrBit, byte len, const byte* buf, bool wait_sent) {
-    byte res, res1, txbuf_n;
-    uint16_t uiTimeOut = 0;
+ byte nvtCAN::readMsgBuf(byte *len, byte *buf)
+ {
+     //uint32_t u32IIDRstatus;
+     if(opmode == CAN_BASIC_MODE)
+     {
+        *len =  rxCANMsg.DLC;
+        buf =  rxCANMsg.Data;
+     }
+     else /*Normal Mode*/
+     {
+         //CAN_Receive(ncan, (uint32_t)(g32IIDRStatus-1), &rxCANMsg);
+         *len =  rxCANMsg.DLC;
+          buf =  rxCANMsg.Data;
 
+     }
+     return (byte)(g32IIDRStatus);
 
-    return CAN_OK;
+ }
 
-}
+/*********************************************************************************************************
+** Function name:           readMsgBuf
+** Descriptions:            read message data field and its data length
+*********************************************************************************************************/
+ byte nvtCAN::readMsgBufID(unsigned long *ID, byte *len, byte *buf)
+ {
+    *ID = rxCANMsg.Id;
+    *len =  rxCANMsg.DLC;
+     buf =  rxCANMsg.Data;
+
+     return 0;
+ }
 
 /*********************************************************************************************************
 ** Function name:           sendMsgBuf
 ** Descriptions:            send buf
 *********************************************************************************************************/
-byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte* buf, bool wait_sent) {
-    return sendMsg(id, ext, rtrBit, len, buf, wait_sent);
-}
+//byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte* buf, bool wait_sent) {
+//    return sendMsg(id, ext, rtrBit, len, buf, wait_sent);
+//}
 
 
 
+      
 /*********************************************************************************************************
 ** Function name:           checkReceive
-** Descriptions:            check if got something
+** Descriptions:            check if got something, if yes, keep it in rxCANMsg
 *********************************************************************************************************/
 byte nvtCAN::checkReceive(void) {
-    byte res;
-    //res = mcp2515_readStatus();                                         // RXnIF in Bit 1 and 0
-    return res;
+    byte resb;
+    int32_t resint;
+    static byte resetFlag = 0;
+    if(resetFlag==0x00) 
+    {
+        ncan_resetIF(1); //In basic mode, use IF1 to receive message object
+        resetFlag = 1;
+    }
+    resint = CAN_Receive(ncan, 0, &rxCANMsg);
+    if(resint==TRUE) 
+    {
+        resb = CAN_MSGAVAIL;
+        resetFlag = 0;
+    }
+    else
+    {
+        resb = CAN_NOMSG;
+    }
+    return resb;
 }
 
 
 /*********************************************************************************************************
-** Function name:           ncan_init
-** Descriptions:            init ncan
+** Function name:           getCanId
+** Descriptions:            get packet ID from RX message
 *********************************************************************************************************/
-byte nvtCAN::ncan_init(const byte canSpeed, const byte clock) {
-    byte res;
+ unsigned long nvtCAN::getCanId(void)
+ {
+     return rxCANMsg.Id;
 
-    /* Unlock protected registers */
-    SYS_UnlockReg();
-    //res = mcp2515_readStatus();                                         // RXnIF in Bit 1 and 0
-    return res;
-}
+ }
+
+
 
 
 /*********************************************************************************************************
@@ -278,17 +296,98 @@ byte nvtCAN::ncan_enableInterrput(void) {
     NVIC_SetPriority(CAN0_IRQn, (1 << __NVIC_PRIO_BITS) - 2);
     /* Enable External Interrupt */
     NVIC_EnableIRQ(CAN0_IRQn);
+
+    GPIO_SetMode(PB, BIT2, GPIO_PMD_OUTPUT);
+    PB2=1;
+   
     return res;
 }
 
-uint32_t nvtCAN::ncan_readStatus(void) 
-{
-    
-  uint32_t u8IIDRstatus;
 
-    u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
-    return u8IIDRstatus;
+/*********************************************************************************************************
+** Function name:           init_Mask
+** Descriptions:            init msg ID mask
+*********************************************************************************************************/
+byte nvtCAN::init_Mask(byte num, byte ext, unsigned long ulData)
+{
+    uint32_t BaudRate;
+    byte res = 0x00;
+    uint32_t nvtspeed;
+
+    if(ncan->CON & CAN_CON_TEST_Msk) /*If CAN is set to test mode, set it back to normal mode*/
+    {
+        ncan->TEST &= ~(CAN_TEST_LBACK_Msk|CAN_TEST_SILENT_Msk|CAN_TEST_BASIC_Msk);
+
+        ncan->CON &= (~CAN_CON_TEST_Msk);
+        
+        nvtspeed = BaudRateSelector(canspeed_set);/*Recall baudrate from class variable*/
+
+        BaudRate = CAN_Open(ncan,  nvtspeed, CAN_NORMAL_MODE);
+         /* Check the real baud-rate is OK */
+        res = BaudRateCheck(nvtspeed, BaudRate);
+
+        ncan_enableInterrput();
+
+        opmode = CAN_NORMAL_MODE;
+
+    }
+    
+    if(num > 0x01) return num;
+
+    rxMsgAMsk[num].ulIDMask = ulData;
+    return res;
 }
+
+
+/*********************************************************************************************************
+** Function name:           init_Filt
+** Descriptions:            init msg ID filter
+*********************************************************************************************************/
+byte nvtCAN::init_Filt(byte num, byte ext, unsigned long ulData)
+{
+  
+    int32_t  res;
+    if(num > 0x05) return num; /*Follow MCP2515, provides six msg ID filters*/
+    //if(rxMsgAMsk[0].ulIDMask) == 0) return num; /*To use msg ID filter, need to set msg ID mask first*/
+
+    switch(num)
+    {
+            case 0:/*filter num 0,1 use mask 1 setting, follow MCP2515*/
+            case 1:
+                res = CAN_SetRxMsgAndMsk(ncan, MSG(num), ext, ulData, rxMsgAMsk[0].ulIDMask);
+                break;
+            
+            case 2:/*filter num 2~5, use mask 2 setting, follow MCP2515*/
+            case 3:
+            case 4:
+            case 5:
+                res = CAN_SetRxMsgAndMsk(ncan, MSG(num), ext, ulData, rxMsgAMsk[1].ulIDMask);
+                break;
+            
+            default:
+                res = 0xFF; 
+                break;
+    }
+    
+    return (byte)(res);
+}
+
+
+
+
+//Dummy implementation for virtual function
+
+/*********************************************************************************************************
+** Function name:           ncan_init
+** Descriptions:            init ncan
+*********************************************************************************************************/
+byte nvtCAN::ncan_init(const byte canSpeed, const byte clock) {
+    
+    byte res = 0;
+    return res;
+}
+
+
 
 #if CAN_MAX_COUNT > 0
 #define CAN_ID0 0
@@ -307,7 +406,7 @@ extern "C" {
 void CAN0_IRQHandler(void)
 {
     uint32_t u8IIDRstatus;
-
+   
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
     {
@@ -316,7 +415,9 @@ void CAN0_IRQHandler(void)
         /**************************/
         if(CAN0->STATUS & CAN_STATUS_RXOK_Msk)
         {
+            PB2 = 1;
             CAN0->STATUS &= ~CAN_STATUS_RXOK_Msk;   /* Clear RxOK status*/
+            PB2 = 0;
         }
 
         if(CAN0->STATUS & CAN_STATUS_TXOK_Msk)
@@ -347,7 +448,10 @@ void CAN0_IRQHandler(void)
     }
     else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
+        PB2 = 1;
+        CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1), &rxCANMsg);
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
+        PB2 = 0;
     }
     else if(CAN0->WU_STATUS == 1)/*Wake-up Interrupt*/
     {
@@ -355,7 +459,7 @@ void CAN0_IRQHandler(void)
 
         CAN0->WU_STATUS = 0;    /* Write '0' to clear */
     }
-
+    //PB2 = 0;
 }
 
 byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)

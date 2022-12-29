@@ -41,10 +41,16 @@
 #include "mcp_can.h"
 #include "nvtCAN_dfs.h"
 
-
+typedef struct _RxMsgAndMskType
+{
+    uint32_t u32IDType;
+    uint32_t u32ID; 
+    unsigned long ulIDMask;
+} RxMsgAndMskType;
 
 
 #define MAX_CHAR_IN_MESSAGE 8
+#define NVT_MAXFILTER_NUM 6
 class nvtCAN //: public MCP_CAN
 {
 public:
@@ -56,19 +62,19 @@ public:
         Nuvoton CAN controller(ccan) driver function
     */
 public:
-    //virtual void enableTxInterrupt(bool enable = true); // enable transmit interrupt
-    //virtual void reserveTxBuffers(byte nTxBuf = 0);
+//    virtual void enableTxInterrupt(bool enable = true); // enable transmit interrupt
+//    virtual void reserveTxBuffers(byte nTxBuf = 0);
 //    {
 //       nReservedTx = (nTxBuf < MCP_N_TXBUFFERS ? nTxBuf : MCP_N_TXBUFFERS - 1);
 //    }
- //   virtual byte getLastTxBuffer();
+//    virtual byte getLastTxBuffer();
 //    {
 //        return MCP_N_TXBUFFERS - 1; // read index of last tx buffer
 //    }
-    byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);
-    //virtual byte begin_testmode(uint32_t speedset, const byte testmode);                                                                                 // init can
-    //virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
-    //virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
+    virtual byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);
+                                                                           
+    virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
+    virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
     //virtual void setSleepWakeup(byte enable);                                                                                                           // Enable or disable the wake up interrupt (If disabled the ncan will not be woken up by CAN bus activity, making it send only)
     //virtual byte sleep();                                                                                                                               // Put the ncan in sleep mode
     //virtual byte wake();                                                                                                                                // Wake ncan manually from sleep
@@ -76,7 +82,7 @@ public:
     //virtual byte getMode();                                                                                                                             // Get operational mode
     //virtual byte checkError(uint8_t* err_ptr = NULL);                                                                                                   // if something error
 
-    byte checkReceive(void);                                                                                                                    // if something received
+    virtual byte checkReceive(void);                                                                                                                    // if something received
     //virtual byte readMsgBufID(byte status, volatile unsigned long *id, volatile byte *ext, volatile byte *rtr, volatile byte *len, volatile byte *buf); // read buf with object ID
     /* wrapper */
     //byte readMsgBufID(unsigned long *ID, byte *len, byte *buf) {
@@ -85,12 +91,13 @@ public:
     //byte readMsgBuf(byte *len, byte *buf) {
     //    return readMsgBufID(readRxTxStatus(), &can_id, &ext_flg, &rtr, len, buf);
     //}
-
+    virtual byte readMsgBuf(byte *len, byte *buf);
+    virtual byte readMsgBufID(unsigned long *ID, byte *len, byte *buf);
     //virtual byte trySendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, byte iTxBuf = 0xff);                                 // as sendMsgBuf, but does not have any wait for free buffer
-    byte sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
-    byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true);                                 // send buf
+    virtual byte sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
+    //virtual byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true);                                 // send buf
 
-
+    unsigned long getCanId(void);
     //virtual void clearBufferTransmitIfFlags(byte flags = 0);                                                                                            // Clear transmit flags according to status
     //virtual byte readRxTxStatus(void);                                                                                                                  // read has something send or received
     //virtual byte checkClearRxStatus(byte *status);                                                                                                      // read and clear and return first found rx status bit
@@ -107,8 +114,6 @@ private:
      byte ncan_enableInterrput(void);
 
      void ncan_disableInterrupt();
-
-     
 
     //byte ncan_readRegister(const byte address); // read ncan's register
 
@@ -156,8 +161,16 @@ private:
 
     byte sendMsg(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true); // send message
 
+
+    /*
+        auxillary function
+    */
+ 
+
 public:    
     uint32_t ncan_readStatus(void);
+    //STR_CANMSG_T rxCANMsg;
+    RxMsgAndMskType rxMsgAMsk[NVT_MAXFILTER_NUM];
 
 private:
     byte nReservedTx; // Count of tx buffers for reserved send
@@ -168,6 +181,8 @@ private:
 
 	};
 	uint32_t module;
+    uint32_t opmode;
+    uint32_t canspeed_set;
     byte nCANSel;
 	IRQn_Type id;
     
@@ -179,10 +194,12 @@ extern "C" {
 byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate);
 uint32_t BaudRateSelector(uint32_t u32mcpBaudRate);
 static void CAN_0_Init(void);
-void CAN_ResetIF(uint8_t u8IF_Num);
+
 #ifdef __cplusplus
 }
 #endif
+static STR_CANMSG_T rxCANMsg;
+static uint32_t g32IIDRStatus;
 #endif
 /*********************************************************************************************************
     END FILE
