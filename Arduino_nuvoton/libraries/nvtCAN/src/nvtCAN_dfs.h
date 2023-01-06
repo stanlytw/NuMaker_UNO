@@ -78,6 +78,11 @@
 #define CAN_BAUDRATE_5K        (uint32_t)(5000)
 #define CAN_BAUDRATE_NO        (uint32_t)(0)
 
+//Hidden the macro in NVT's header
+#define STD_ID 0
+#define NVT_CAN_IDX 0
+
+
 #endif
 /*********************************************************************************************************
     END FILE

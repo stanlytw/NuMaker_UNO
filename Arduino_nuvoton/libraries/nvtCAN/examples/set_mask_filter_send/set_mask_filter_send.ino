@@ -2,6 +2,7 @@
 // this demo will show you how to use mask and filter
 #include <SPI.h>
 
+//#define NVT_CAN
 #define CAN_2515
 // #define CAN_2518FD
 
@@ -34,6 +35,10 @@ mcp2518fd CAN(SPI_CS_PIN); // Set CS pin
 mcp2515_can CAN(SPI_CS_PIN); // Set CS pin
 #endif  
                          
+#ifdef CAN_NVT
+#include "nvtCAN.h"
+nvtCAN CAN(NVT_CAN_IDX); // Set nvt's parameter, if required.
+#endif
 
 void setup() {
     SERIAL_PORT_MONITOR.begin(115200);

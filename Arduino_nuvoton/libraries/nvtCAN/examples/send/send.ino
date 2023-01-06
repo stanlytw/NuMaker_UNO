@@ -4,7 +4,8 @@
 
 #include <SPI.h>
 
-#define CAN_2515
+#define CAN_NVT
+//#define CAN_2515
 // #define CAN_2518FD
 
 // Set SPI CS Pin according to your hardware
@@ -36,6 +37,11 @@ mcp2518fd CAN(SPI_CS_PIN); // Set CS pin
 mcp2515_can CAN(SPI_CS_PIN); // Set CS pin
 #endif
 
+#ifdef CAN_NVT
+#include "nvtCAN.h"
+nvtCAN CAN(NVT_CAN_IDX); // Set nvt's parameter, if required.
+#endif
+
 void setup() {
     SERIAL_PORT_MONITOR.begin(115200);
     while(!Serial){};
@@ -47,7 +53,7 @@ void setup() {
     SERIAL_PORT_MONITOR.println("CAN init ok!");
 }
 
-unsigned char stmp[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+unsigned char stmp[8] = {0, 0, 0, 0, 0, 0, 0, 0x30};
 void loop() {
     // send data:  id = 0x00, standrad frame, data len = 8, stmp: data buf
     stmp[7] = stmp[7] + 1;
@@ -61,7 +67,7 @@ void loop() {
         }
     }
 
-    CAN.sendMsgBuf(0x00, 0, 8, stmp);
+    CAN.sendMsgBuf(0x33, 0, 8, stmp);
     delay(100);                       // send data per 100ms
     SERIAL_PORT_MONITOR.println("CAN BUS sendMsgBuf ok!");
 }

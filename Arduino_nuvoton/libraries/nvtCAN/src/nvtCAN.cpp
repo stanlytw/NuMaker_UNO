@@ -139,7 +139,7 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
     res = ncan_configRate(nvtspeed, clockset);
     //if(res) return res;
    
-    //res = ncan_enableInterrput();
+    res = ncan_enableInterrput();
     return res;
 }
 
@@ -148,7 +148,42 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
 ** Descriptions:            Send message by using buffer read as free from CANINTF status
 **                          Status has to be read with readRxTxStatus and filtered with checkClearTxStatus
 *********************************************************************************************************/
-byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte* buf) {
+byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte* buf) {
+   
+    int32_t ires;
+    uint8_t nn;
+  
+    STR_CANMSG_T msg1;
+
+    ncan_enableInterrput();
+    
+    if(rtrBit==0x01){
+        msg1.FrameType = CAN_REMOTE_FRAME;
+        len = 0; /*DLC=0 for remote frame*/
+    }
+    else if(rtrBit==0x00){
+        msg1.FrameType = CAN_DATA_FRAME;
+    }
+    else return 0xFF; 
+
+    msg1.IdType   = ext;
+    msg1.Id       = id;
+    msg1.DLC      = len;
+    for(nn=0; nn<len;nn++)
+    {
+        msg1.Data[nn] = buf[nn];
+    }
+    ires = CAN_Transmit(ncan, 0, &msg1); 
+   
+    return (byte)(ires);
+}
+
+/*********************************************************************************************************
+** Function name:           sendMsgBuf Data Frame Only
+** Descriptions:            Send message by using buffer read as free from CANINTF status
+**                          Status has to be read with readRxTxStatus and filtered with checkClearTxStatus
+*********************************************************************************************************/
+byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte len, volatile const byte* buf) {
    
     int32_t ires;
     uint8_t nn;
@@ -171,7 +206,59 @@ byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, by
     return (byte)(ires);
 }
 
+/*********************************************************************************************************
+** Function name:           sendMsgBuf
+** Descriptions:            Send message by using buffer read as free from CANINTF status
+**                          Status has to be read with readRxTxStatus and filtered with checkClearTxStatus
+*********************************************************************************************************/
+byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte* buf) {
+   
+    int32_t ires;
+    uint8_t nn;
+  
+    STR_CANMSG_T tMsg;
+    uint32_t BaudRate;
+    byte res = 0x00;
+    uint32_t nvtspeed;
 
+    if(ncan->CON & CAN_CON_TEST_Msk) /*If CAN is set to test mode, set it back to normal mode*/
+    {
+        ncan->TEST &= ~(CAN_TEST_LBACK_Msk|CAN_TEST_SILENT_Msk|CAN_TEST_BASIC_Msk);
+
+        ncan->CON &= (~CAN_CON_TEST_Msk);
+        
+        nvtspeed = BaudRateSelector(canspeed_set);/*Recall baudrate from class variable*/
+
+        BaudRate = CAN_Open(ncan,  nvtspeed, CAN_NORMAL_MODE);
+         /* Check the real baud-rate is OK */
+        res = BaudRateCheck(nvtspeed, BaudRate);
+
+        ncan_enableInterrput();
+
+        opmode = CAN_NORMAL_MODE;
+
+    }
+
+
+    /* Send a 11-bits message */
+    tMsg.FrameType = CAN_DATA_FRAME;
+    tMsg.IdType   = ext;
+    tMsg.Id       = id;
+    tMsg.DLC      = len;
+    
+    for(nn=0; nn<len;nn++)
+    {
+        tMsg.Data[nn] = buf[nn];
+    }
+
+    if(CAN_Transmit(ncan, MSG(0), &tMsg) == FALSE)  // Configure Msg RAM and send the Msg in the RAM
+    {
+        //printf("Set Tx Msg Object failed\n");
+        return 0xFF;
+    }
+    return (byte)(0x00);
+
+}
 
 /*********************************************************************************************************
 ** Function name:           readMsgBuf
@@ -184,12 +271,18 @@ byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, by
      {
         *len =  rxCANMsg.DLC;
         buf =  rxCANMsg.Data;
+        ext_flg = rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
+        can_id  = rxCANMsg.Id;           // can id
+        rtr     = !(rxCANMsg.FrameType);             // is remote frame, add "!", see can.c CAN_BasicReceiveMsg
      }
      else /*Normal Mode*/
      {
          //CAN_Receive(ncan, (uint32_t)(g32IIDRStatus-1), &rxCANMsg);
          *len =  rxCANMsg.DLC;
           buf =  rxCANMsg.Data;
+          ext_flg = rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
+          can_id  = rxCANMsg.Id;           // can id
+          rtr     = rxCANMsg.FrameType;              // is remote frame
 
      }
      return (byte)(g32IIDRStatus);
@@ -205,7 +298,7 @@ byte nvtCAN::sendMsgBuf(byte status, unsigned long id, byte ext, byte rtrBit, by
     *ID = rxCANMsg.Id;
     *len =  rxCANMsg.DLC;
      buf =  rxCANMsg.Data;
-
+   
      return 0;
  }
 
@@ -230,7 +323,7 @@ byte nvtCAN::checkReceive(void) {
     static byte resetFlag = 0;
     if(resetFlag==0x00) 
     {
-        ncan_resetIF(1); //In basic mode, use IF1 to receive message object
+        ncan_resetIF(1); //In basic mode
         resetFlag = 1;
     }
     resint = CAN_Receive(ncan, 0, &rxCANMsg);
@@ -245,19 +338,6 @@ byte nvtCAN::checkReceive(void) {
     }
     return resb;
 }
-
-
-/*********************************************************************************************************
-** Function name:           getCanId
-** Descriptions:            get packet ID from RX message
-*********************************************************************************************************/
- unsigned long nvtCAN::getCanId(void)
- {
-     return rxCANMsg.Id;
-
- }
-
-
 
 
 /*********************************************************************************************************
@@ -402,12 +482,36 @@ static void CAN_0_Init(void) {
 #ifdef __cplusplus
 extern "C" {
 #endif
+#if 0
+/*---------------------------------------------------------------------------------------------------------*/
+/* ISR to handle CAN interrupt event                                                                       */
+/*---------------------------------------------------------------------------------------------------------*/
+void CAN_MsgInterrupt(CAN_T *tCAN, uint32_t u32IIDR)
+{
 
+    CAN_Receive(tCAN, (uint32_t)(u32IIDR-1), &rxCANMsg);
+    if(u32IIDR == 1)
+    {
+        //rxCANMsg.Id = 0;
+        //printf("Msg-0 INT and Callback\n");
+        //CAN_Receive(tCAN, 0, &rxCANMsg);
+        //CAN_ShowMsg(&rxCANMsg);
+    }
+    if(u32IIDR == 5 + 1)
+    {
+        //printf("Msg-5 INT and Callback \n");
+        //CAN_Receive(tCAN, 5, &rxCANMsg);
+        //CAN_ShowMsg(&rxCANMsg);
+    }
+   
+}
+#endif
 void CAN0_IRQHandler(void)
 {
     uint32_t u8IIDRstatus;
-   
+    //PB2 = 1;
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
+    //g32IIDRStatus = u8IIDRstatus;
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
     {
         /**************************/
@@ -449,6 +553,7 @@ void CAN0_IRQHandler(void)
     else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
         PB2 = 1;
+        //CAN_MsgInterrupt(CAN0, u8IIDRstatus);
         CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1), &rxCANMsg);
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
         PB2 = 0;
