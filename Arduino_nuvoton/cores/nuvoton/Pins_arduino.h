@@ -23,7 +23,11 @@
 
 #if defined(__NUC131__)
 #define NOT_AN_INTERRUPT -1
-#define digitalPinToInterrupt(p) ((p) == 2 ? 0 : ((p) == 3 ? 1 : ((p) >= 18 && (p) <= 21 ? 23 - (p) : NOT_AN_INTERRUPT)))
+//#define digitalPinToInterrupt(p) ((p) == 2 ? 0 : ((p) == 3 ? 1 : ((p) >= 18 && (p) <= 21 ? 23 - (p) : NOT_AN_INTERRUPT)))
+#define digitalPinToInterrupt(p) (((p) >= 2 && (p) <= 13)? (p) : NOT_AN_INTERRUPT)
+#ifndef SERIAL_PORT_MONITOR
+  #define SERIAL_PORT_MONITOR Serial
+#endif
 #endif
 
 #if defined(__M252__)
