@@ -11,13 +11,13 @@ This repository contains the package descriptor for NuMaker UNO boards
 
 # Supported Boards & Features
 
-| NuMaker Boards | Rich peripherals | Bluetooth Low Energy<br>ArduinoBLE(***1.2.1***) |
-| -------------- | ---------------- | ----------------------------------------------- |
-| **NUC131**     | ✔️                | ❌                                               |
-| **M032BT**     | ✔️                | ✔️                                               |
-| **M252**       | ✔️                | ❌                                               |
-| **M480**       | ✔️                | ❌                                               |
-| **M460**       | ✔️                | ❌                                               |
+| NuMaker Boards | Rich peripherals |CAN_BUS_Shield<br>compatible Embedded CAN Support |Bluetooth Low Energy<br>ArduinoBLE(***1.2.1***) |
+| -------------- | ---------------- | ----------------------------------------------- |----------------------------------------------- |
+| **NUC131**     | ✔️              | ✔️                                               | ❌                                          |
+| **M032BT**     | ✔️              | ❌                                               | ✔️                                           |
+| **M252**       | ✔️              | ❌                                               | ❌                                           |
+| **M480**       | ✔️              | ❌                                               | ❌                                           |
+| **M460**       |  ✔️             | ❌                                               | ❌                                           |
 
 # Board Package Installation Steps
 1. Download and Install Arduino IDE from https://www.arduino.cc/en/Main/Software
