@@ -1,50 +1,16 @@
-/*
-    mcp_can_dfs.h
-    2012 Copyright (c) Seeed Technology Inc.  All right reserved.
-
-    Author:Loovee (loovee@seeed.cc)
-    2014-1-16
-
-    Contributor:
-
-    Cory J. Fowler
-    Latonita
-    Woodward1
-    Mehtajaghvi
-    BykeBlast
-    TheRo0T
-    Tsipizic
-    ralfEdmund
-    Nathancheek
-    BlueAndi
-    Adlerweb
-    Btetz
-    Hurvajs
-    xboxpro1
-    ttlappalainen
-
-    The MIT License (MIT)
-
-    Copyright (c) 2013 Seeed Technology Inc.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-*/
+/**************************************************************************//**
+ * @file     nvtCAN_dfs.h
+ * @version  V1.00
+ * $Revision: 1 $
+ * $Date: 1/30/23 2:33p $
+ * @brief    NUC131 Series of Arduino CAN Library Macro Definition Header File
+ *
+ * @note
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved.
+ *
+ ******************************************************************************/
 #ifndef _NVTCANDFS_H_
 #define _NVTCANDFS_H_
 
@@ -69,7 +35,7 @@
 #define CAN_BAUDRATE_83K3      (uint32_t)(83800)
 #define CAN_BAUDRATE_80K       (uint32_t)(50000)
 #define CAN_BAUDRATE_50K       (uint32_t)(50000)
-#define CAN_BAUDRATE_40K        (uint32_t)(40000)
+#define CAN_BAUDRATE_40K       (uint32_t)(40000)
 #define CAN_BAUDRATE_33K       (uint32_t)(33000)
 #define CAN_BAUDRATE_31K25     (uint32_t)(31250)
 #define CAN_BAUDRATE_25K       (uint32_t)(25000)

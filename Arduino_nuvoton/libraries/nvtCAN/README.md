@@ -1,6 +1,6 @@
 # Nuvotn NUC131 Arduino CAN BSP
 
-This nvtCAN folder
+In this nvtCAN folder
 
 ## .\
 

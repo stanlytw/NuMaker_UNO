@@ -1,36 +1,16 @@
-/*
-    nvtCAN.cpp
-    2022 Copyright (c) Nuvoton Technology Inc.
-
-    Author: 
-    2022-12-12
-
-    Contributor:
-
-    
-
-    The MIT License (MIT)
-
-    2022 Copyright (c) Nuvoton Technology Inc.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-*/
+/**************************************************************************//**
+ * @file     nvtCAN.cpp
+ * @version  V1.00
+ * $Revision: 1 $
+ * $Date: 1/30/23 2:33p $
+ * @brief    NUC131 Series of Arduino CAN Library Source File
+ *
+ * @note
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved.
+ *
+ ******************************************************************************/
 #define DEBUG_EN 0
 #include "nvtCAN.h"
 #include "can.h"
@@ -45,11 +25,12 @@ nvtCAN::nvtCAN(byte _CANSEL)
    uint8_t nn;
    /*Keep the _CANSEL to suuport muti CAN MFP, if presents */ 
    nCANSel = _CANSEL;
-   canspeed_set = CAN_100KBPS;
+   
    /*Variable initialization */
+   canspeed_set = CAN_100KBPS;
    nReservedTx = 0;
    opmode = CAN_BASIC_MODE;
-   //rxCANMsg(0);
+  
    if( _CANSEL)
    {
        module = CAN0_MODULE;
@@ -69,7 +50,7 @@ nvtCAN::nvtCAN(byte _CANSEL)
 }
 
 /*********************************************************************************************************
-** Function name:           mcp2515_reset
+** Function name:           ncan_reset
 ** Descriptions:            reset the device
 *********************************************************************************************************/
 void nvtCAN::ncan_reset(void) {
@@ -87,13 +68,13 @@ void nvtCAN::ncan_reset(void) {
 
 
 /*********************************************************************************************************
-** Function name:           mcp2515_configRate
+** Function name:           ncan_configRate
 ** Descriptions:            set baudrate
 *********************************************************************************************************/
 byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
 
     //Add NUC131 standard driver code to reset and enable CAN IP
-    //SelectCANSpeed()
+ 
     uint32_t RealBaudRate = 0;
     uint32_t BaudRate = canSpeed;
     byte res = 0x00;
@@ -110,22 +91,6 @@ byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
 
 
 /*********************************************************************************************************
-** Function name:           mcp2515_write_canMsg
-** Descriptions:            write msg
-**                          Note! There is no check for right address!
-*********************************************************************************************************/
-void nvtCAN::ncan_write_canMsg(const byte buffer_sidh_addr, unsigned long id, byte ext, byte rtrBit, byte len,
-                                   volatile const byte* buf) {
-
-    //Add NUC131 standard driver code to reset and enable CAN IP
-    delay(10);
-
-
-}
-
-
-
-/*********************************************************************************************************
 ** Function name:           begin
 ** Descriptions:            init can and set speed
 *********************************************************************************************************/
@@ -137,8 +102,7 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
     nvtspeed = BaudRateSelector(speedset);  
     canspeed_set = speedset;
     res = ncan_configRate(nvtspeed, clockset);
-    //if(res) return res;
-   
+     
     res = ncan_enableInterrput();
     return res;
 }
@@ -272,17 +236,17 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
         *len =  rxCANMsg.DLC;
         buf =  rxCANMsg.Data;
         ext_flg = rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
-        can_id  = rxCANMsg.Id;           // can id
-        rtr     = !(rxCANMsg.FrameType);             // is remote frame, add "!", see can.c CAN_BasicReceiveMsg
+        can_id  = rxCANMsg.Id;              // can id
+        rtr     = !(rxCANMsg.FrameType);    // is remote frame, add "!", see can.c CAN_BasicReceiveMsg
      }
      else /*Normal Mode*/
      {
          //CAN_Receive(ncan, (uint32_t)(g32IIDRStatus-1), &rxCANMsg);
          *len =  rxCANMsg.DLC;
           buf =  rxCANMsg.Data;
-          ext_flg = rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
-          can_id  = rxCANMsg.Id;           // can id
-          rtr     = rxCANMsg.FrameType;              // is remote frame
+          ext_flg = rxCANMsg.IdType;         // type, either extended (the 29 LSB) or standard (the 11 LSB)
+          can_id  = rxCANMsg.Id;             // can id
+          rtr     = rxCANMsg.FrameType;      // is remote frame
 
      }
      return (byte)(g32IIDRStatus);
@@ -301,16 +265,6 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
    
      return 0;
  }
-
-/*********************************************************************************************************
-** Function name:           sendMsgBuf
-** Descriptions:            send buf
-*********************************************************************************************************/
-//byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, const byte* buf, bool wait_sent) {
-//    return sendMsg(id, ext, rtrBit, len, buf, wait_sent);
-//}
-
-
 
       
 /*********************************************************************************************************
@@ -354,7 +308,7 @@ void nvtCAN::ncan_resetIF(uint8_t u8IF_Num)
     ncan->IF[u8IF_Num].MASK2    = 0x0;          // useless in basic mode
     ncan->IF[u8IF_Num].ARB1     = 0x0;          // ID15~0
     ncan->IF[u8IF_Num].ARB2     = 0x0;          // MsgVal, eXt, xmt, ID28~16
-    ncan->IF[u8IF_Num].MCON     = 0x0;              // DLC
+    ncan->IF[u8IF_Num].MCON     = 0x0;          // DLC
     ncan->IF[u8IF_Num].DAT_A1   = 0x0;          // data0,1
     ncan->IF[u8IF_Num].DAT_A2   = 0x0;          // data2,3
     ncan->IF[u8IF_Num].DAT_B1   = 0x0;          // data4,5
@@ -453,10 +407,6 @@ byte nvtCAN::init_Filt(byte num, byte ext, unsigned long ulData)
 }
 
 
-
-
-//Dummy implementation for virtual function
-
 /*********************************************************************************************************
 ** Function name:           ncan_init
 ** Descriptions:            init ncan
@@ -467,51 +417,27 @@ byte nvtCAN::ncan_init(const byte canSpeed, const byte clock) {
     return res;
 }
 
-
-
 #if CAN_MAX_COUNT > 0
 #define CAN_ID0 0
 static void CAN_0_Init(void) {	
 	CAN_Config(CAN_Desc[CAN_ID0]);	
 }
-//To fit SeedArcuino
-//nvtCAN SPI(SPI_Desc[SPI_ID0].S,SPI_Desc[SPI_ID0].module,SPI_Desc[SPI_ID0].clksel,SPI_Desc[SPI_ID0].irq,SPI_0_Init);
+
 /*---------------------------------------------------------------------------------------------------------*/
 /* CAN0 interrupt handler                                                                                  */
 /*---------------------------------------------------------------------------------------------------------*/
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if 0
+
 /*---------------------------------------------------------------------------------------------------------*/
 /* ISR to handle CAN interrupt event                                                                       */
 /*---------------------------------------------------------------------------------------------------------*/
-void CAN_MsgInterrupt(CAN_T *tCAN, uint32_t u32IIDR)
-{
-
-    CAN_Receive(tCAN, (uint32_t)(u32IIDR-1), &rxCANMsg);
-    if(u32IIDR == 1)
-    {
-        //rxCANMsg.Id = 0;
-        //printf("Msg-0 INT and Callback\n");
-        //CAN_Receive(tCAN, 0, &rxCANMsg);
-        //CAN_ShowMsg(&rxCANMsg);
-    }
-    if(u32IIDR == 5 + 1)
-    {
-        //printf("Msg-5 INT and Callback \n");
-        //CAN_Receive(tCAN, 5, &rxCANMsg);
-        //CAN_ShowMsg(&rxCANMsg);
-    }
-   
-}
-#endif
 void CAN0_IRQHandler(void)
 {
     uint32_t u8IIDRstatus;
-    //PB2 = 1;
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
-    //g32IIDRStatus = u8IIDRstatus;
+  
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
     {
         /**************************/
@@ -552,11 +478,8 @@ void CAN0_IRQHandler(void)
     }
     else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
-        PB2 = 1;
-        //CAN_MsgInterrupt(CAN0, u8IIDRstatus);
         CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1), &rxCANMsg);
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
-        PB2 = 0;
     }
     else if(CAN0->WU_STATUS == 1)/*Wake-up Interrupt*/
     {
@@ -564,9 +487,14 @@ void CAN0_IRQHandler(void)
 
         CAN0->WU_STATUS = 0;    /* Write '0' to clear */
     }
-    //PB2 = 0;
+   
 }
 
+
+/*********************************************************************************************************
+** Function name:           BaudRateCheck
+** Descriptions:            check if CAN Buadrate equals the desired value
+*********************************************************************************************************/
 byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)
 {
     byte res;
@@ -582,6 +510,11 @@ byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)
     return res;
 }
 
+
+/*********************************************************************************************************
+** Function name:           BaudRateSelector
+** Descriptions:            to map MCP2515 BaudRate setting to NUC131
+*********************************************************************************************************/
 uint32_t BaudRateSelector(uint32_t u32mcpBaudRate)
 {
     uint32_t u32NvtBaudRate;
