@@ -1,4 +1,4 @@
-# Nuvoton Arduino CAN Library
+# Nuvoton Arduino CAN Library(nvtCAN)
 ## Currently, it supports NUC131 MCU only.
 
 In this nvtCAN folder
