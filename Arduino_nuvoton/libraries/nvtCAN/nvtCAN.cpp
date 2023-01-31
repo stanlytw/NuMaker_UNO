@@ -1,8 +1,6 @@
 /**************************************************************************//**
  * @file     nvtCAN.cpp
  * @version  V1.00
- * $Revision: 1 $
- * $Date: 1/30/23 2:33p $
  * @brief    NUC131 Series of Arduino CAN Library Source File
  *
  * @note
@@ -103,9 +101,10 @@ byte nvtCAN::begin(uint32_t speedset, const byte clockset) {
     canspeed_set = speedset;
     res = ncan_configRate(nvtspeed, clockset);
      
-    res = ncan_enableInterrput();
+    res = ncan_enableInterrupt();
     return res;
 }
+
 
 /*********************************************************************************************************
 ** Function name:           sendMsgBuf
@@ -119,8 +118,6 @@ byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, volat
   
     STR_CANMSG_T msg1;
 
-    ncan_enableInterrput();
-    
     if(rtrBit==0x01){
         msg1.FrameType = CAN_REMOTE_FRAME;
         len = 0; /*DLC=0 for remote frame*/
@@ -154,8 +151,6 @@ byte nvtCAN::sendMsgBuf(unsigned long id, byte ext, byte len, volatile const byt
   
     STR_CANMSG_T msg1;
 
-    ncan_enableInterrput();
-    
     /* Send Message No.1 */
     msg1.FrameType = CAN_DATA_FRAME;
     msg1.IdType   = ext;
@@ -187,6 +182,8 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
 
     if(ncan->CON & CAN_CON_TEST_Msk) /*If CAN is set to test mode, set it back to normal mode*/
     {
+        ncan_disableInterrupt();
+        
         ncan->TEST &= ~(CAN_TEST_LBACK_Msk|CAN_TEST_SILENT_Msk|CAN_TEST_BASIC_Msk);
 
         ncan->CON &= (~CAN_CON_TEST_Msk);
@@ -197,7 +194,7 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
          /* Check the real baud-rate is OK */
         res = BaudRateCheck(nvtspeed, BaudRate);
 
-        ncan_enableInterrput();
+        ncan_enableInterrupt();
 
         opmode = CAN_NORMAL_MODE;
 
@@ -217,8 +214,7 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
 
     if(CAN_Transmit(ncan, MSG(0), &tMsg) == FALSE)  // Configure Msg RAM and send the Msg in the RAM
     {
-        //printf("Set Tx Msg Object failed\n");
-        return 0xFF;
+       return 0xFF;
     }
     return (byte)(0x00);
 
@@ -230,7 +226,6 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
 *********************************************************************************************************/
  byte nvtCAN::readMsgBuf(byte *len, byte *buf)
  {
-     //uint32_t u32IIDRstatus;
      if(opmode == CAN_BASIC_MODE)
      {
         *len =  rxCANMsg.DLC;
@@ -241,7 +236,7 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
      }
      else /*Normal Mode*/
      {
-         //CAN_Receive(ncan, (uint32_t)(g32IIDRStatus-1), &rxCANMsg);
+         
          *len =  rxCANMsg.DLC;
           buf =  rxCANMsg.Data;
           ext_flg = rxCANMsg.IdType;         // type, either extended (the 29 LSB) or standard (the 11 LSB)
@@ -321,7 +316,7 @@ void nvtCAN::ncan_resetIF(uint8_t u8IF_Num)
 ** Function name:           ncan_enableInterrput
 ** Descriptions:            init can and set speed
 *********************************************************************************************************/
-byte nvtCAN::ncan_enableInterrput(void) {
+byte nvtCAN::ncan_enableInterrupt(void) {
     
     byte res = 0;
     /* Enable CAN interrupt */
@@ -337,6 +332,22 @@ byte nvtCAN::ncan_enableInterrput(void) {
     return res;
 }
 
+/*********************************************************************************************************
+** Function name:           ncan_disableInterrupt
+** Descriptions:            disable can interrupt
+*********************************************************************************************************/
+byte nvtCAN::ncan_disableInterrupt(void) {
+    
+    byte res = 0;
+    /* Disable CAN interrupt */
+    CAN_DisableInt(CAN0, CAN_CON_IE_Msk | CAN_CON_SIE_Msk);
+    /* Disable External Interrupt */
+    NVIC_DisableIRQ(CAN0_IRQn);
+
+    GPIO_SetMode(PB, BIT2, GPIO_PMD_OPEN_DRAIN);
+
+    return res;
+}
 
 /*********************************************************************************************************
 ** Function name:           init_Mask
@@ -350,6 +361,8 @@ byte nvtCAN::init_Mask(byte num, byte ext, unsigned long ulData)
 
     if(ncan->CON & CAN_CON_TEST_Msk) /*If CAN is set to test mode, set it back to normal mode*/
     {
+        ncan_disableInterrupt();
+        
         ncan->TEST &= ~(CAN_TEST_LBACK_Msk|CAN_TEST_SILENT_Msk|CAN_TEST_BASIC_Msk);
 
         ncan->CON &= (~CAN_CON_TEST_Msk);
@@ -360,7 +373,7 @@ byte nvtCAN::init_Mask(byte num, byte ext, unsigned long ulData)
          /* Check the real baud-rate is OK */
         res = BaudRateCheck(nvtspeed, BaudRate);
 
-        ncan_enableInterrput();
+        ncan_enableInterrupt();
 
         opmode = CAN_NORMAL_MODE;
 
@@ -382,7 +395,7 @@ byte nvtCAN::init_Filt(byte num, byte ext, unsigned long ulData)
   
     int32_t  res;
     if(num > 0x05) return num; /*Follow MCP2515, provides six msg ID filters*/
-    //if(rxMsgAMsk[0].ulIDMask) == 0) return num; /*To use msg ID filter, need to set msg ID mask first*/
+                               /*To use msg ID filter, need to set msg ID mask first*/
 
     switch(num)
     {
@@ -440,14 +453,11 @@ void CAN0_IRQHandler(void)
   
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
     {
-        /**************************/
-        /* Status Change interrupt*/
-        /**************************/
-        if(CAN0->STATUS & CAN_STATUS_RXOK_Msk)
+        if(CAN0->STATUS & CAN_STATUS_RXOK_Msk)/* Status Change interrupt*/
         {
-            PB2 = 1;
+            
             CAN0->STATUS &= ~CAN_STATUS_RXOK_Msk;   /* Clear RxOK status*/
-            PB2 = 0;
+           
         }
 
         if(CAN0->STATUS & CAN_STATUS_TXOK_Msk)
@@ -455,36 +465,33 @@ void CAN0_IRQHandler(void)
             CAN0->STATUS &= ~CAN_STATUS_TXOK_Msk;    /* Clear TxOK status*/
         }
 
-        /**************************/
-        /* Error Status interrupt */
-        /**************************/
-        if(CAN0->STATUS & CAN_STATUS_BOFF_Msk)
+        if(CAN0->STATUS & CAN_STATUS_BOFF_Msk) /* Error Status interrupt */
         {
-            //printf("BOFF INT\n") ;
+            
         }
         else if(CAN0->STATUS & CAN_STATUS_EWARN_Msk)
         {
-            //printf("EWARN INT\n") ;
+            
         }
         else if((CAN0->ERR & CAN_ERR_TEC_Msk) != 0)
         {
-           //printf("Transmit error!\n") ;
+           
         }
         else if((CAN0->ERR & CAN_ERR_REC_Msk) != 0)
         {
-            //printf("Receive error!\n") ;
+           
         }
 
     }
     else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
+        PB2 = 1;
         CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1), &rxCANMsg);
+        PB2 = 0;
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
     }
     else if(CAN0->WU_STATUS == 1)/*Wake-up Interrupt*/
     {
-        //printf("Wake up\n");
-
         CAN0->WU_STATUS = 0;    /* Write '0' to clear */
     }
    

@@ -1,8 +1,6 @@
 /**************************************************************************//**
  * @file     nvtCAN_dfs.h
  * @version  V1.00
- * $Revision: 1 $
- * $Date: 1/30/23 2:33p $
  * @brief    NUC131 Series of Arduino CAN Library Macro Definition Header File
  *
  * @note
@@ -44,7 +42,7 @@
 #define CAN_BAUDRATE_5K        (uint32_t)(5000)
 #define CAN_BAUDRATE_NO        (uint32_t)(0)
 
-//Hidden the macro in NVT's header
+//Macros used in nvtCAN library
 #define STD_ID 0
 #define NVT_CAN_IDX 0
 

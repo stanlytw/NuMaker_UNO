@@ -1,8 +1,6 @@
 /**************************************************************************//**
  * @file     nvtCAN.h
  * @version  V1.00
- * $Revision: 1 $
- * $Date: 1/30/23 2:33p $
  * @brief    NUC131 Series of Arduino CAN Library Header File
  *
  * @note
@@ -31,19 +29,16 @@ typedef struct _RxMsgAndMskType
 
 #define MAX_CHAR_IN_MESSAGE 8
 #define NVT_MAXFILTER_NUM 6
-class nvtCAN //: public MCP_CAN
+class nvtCAN 
 {
 public:
     
-    
     nvtCAN(byte _CANSEL);
-    /*
-        Nuvoton CAN controller(ccan) driver function
-    */
+    
 public:
-
+	/*CAN operator function*/
     virtual byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);
-                                                                           
+                                                                              
     virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
     virtual byte init_Filt(byte num, byte ext, unsigned long ulData);                                                                                   // init filters
    
@@ -52,9 +47,9 @@ public:
     virtual byte readMsgBuf(byte *len, byte *buf);
     virtual byte readMsgBufID(unsigned long *ID, byte *len, byte *buf);
    
-    virtual byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
+    virtual byte sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf
  
-    virtual byte sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);                                  // send message buf by using parsed buffer status
+    virtual byte sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtrBit, byte len, volatile const byte *buf);              // send message buf by using Msg Object
     
     /* could be called after a successful readMsgBufID() */
     unsigned long getCanId(void) { return can_id; }
@@ -65,34 +60,19 @@ public:
     byte sendMsgBuf(unsigned long id, byte ext, byte len, volatile const byte *buf);
 
 private:
+	/*Nuvoton CAN controller(ccan) driver function */
     void ncan_reset(void); // reset ncan
+    void ncan_resetIF(uint8_t u8IF_Num);//clear IF reg, for test_basic mode Rx 
 
-     void ncan_resetIF(uint8_t u8IF_Num);//clear IF reg, for test_basic mode Rx 
-
-     byte ncan_enableInterrput(void);
-
-     void ncan_disableInterrupt();
-
+    byte ncan_enableInterrupt(void);
+    byte ncan_disableInterrupt(void);
  
     byte ncan_configRate(const uint32_t canSpeed, const byte clock); // set baudrate
     byte ncan_init(const byte canSpeed, const byte clock);       // ncan init
 
-  
-    /*
-        can operator function
-    */
-
     byte sendMsg(unsigned long id, byte ext, byte rtrBit, byte len, const byte *buf, bool wait_sent = true); // send message
 
-
-    /*
-        auxillary function
-    */
- 
-
 public:    
-    uint32_t ncan_readStatus(void);
-    //STR_CANMSG_T rxCANMsg;
     RxMsgAndMskType rxMsgAMsk[NVT_MAXFILTER_NUM];
 
 private:
@@ -108,10 +88,9 @@ private:
     uint32_t canspeed_set;
     byte nCANSel;
 	IRQn_Type id;
-    byte ext_flg; // identifier xxxID
-    // either extended (the 29 LSB) or standard (the 11 LSB)
-    unsigned long can_id; // can id
-    byte rtr;             // is remote frame
+    byte ext_flg; 			// identifier xxxID, either extended (the 29 LSB) or standard (the 11 LSB)
+    unsigned long can_id;   // can id
+    byte rtr;               // is remote frame
     
 };
 

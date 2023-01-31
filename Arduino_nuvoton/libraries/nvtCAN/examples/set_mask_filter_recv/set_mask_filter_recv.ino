@@ -5,7 +5,7 @@
 
 #include <SPI.h>
 
-#define NVT_CAN
+#define CAN_NVT
 //#define CAN_2515
 // #define CAN_2518FD
 
