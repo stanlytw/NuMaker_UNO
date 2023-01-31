@@ -11,7 +11,7 @@ This repository contains the package descriptor for NuMaker UNO boards
 
 # Supported Boards & Features
 
-| NuMaker Boards | Rich peripherals |Embedded CAN Support<br>  |Bluetooth Low Energy<br>ArduinoBLE(***1.2.1***) |
+| NuMaker Boards | Rich peripherals |Embedded CAN<br>nvtCAN  |Bluetooth Low Energy<br>ArduinoBLE(***1.2.1***) |
 | -------------- | ---------------- | ----------------------------------------------- |----------------------------------------------- |
 | **NUC131**     | ✔️              | ✔️   (*Note)                                    | ❌                                          |
 | **M032BT**     | ✔️              | ❌                                               | ✔️                                           |
