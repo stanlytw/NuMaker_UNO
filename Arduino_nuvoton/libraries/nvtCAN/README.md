@@ -13,7 +13,7 @@ In this nvtCAN folder
 - nvtCAN.cpp<br>
 	Seeed_Arduino_CAN compatible CAN class source files. It implements CAN class API with Nuvoton MCU's standard driver. 
 	
-# Licesne
+# License
 
 **SPDX-License-Identifier: Apache-2.0**
 
