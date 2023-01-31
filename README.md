@@ -19,7 +19,7 @@ This repository contains the package descriptor for NuMaker UNO boards
 | **M480**       | ✔️              | ❌                                               | ❌                                           |
 | **M460**       |  ✔️             | ❌                                               | ❌                                           |
 
-Note:Compatible to Seeed_Arduino_CAN https://github.com/Seeed-Studio/Seeed_Arduino_CAN
+Note:Compatible to [Seeed_Arduino_CAN](https://github.com/Seeed-Studio/Seeed_Arduino_CAN)
 
 # Board Package Installation Steps
 1. Download and Install Arduino IDE from https://www.arduino.cc/en/Main/Software
