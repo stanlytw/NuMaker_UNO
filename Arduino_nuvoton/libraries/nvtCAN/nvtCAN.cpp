@@ -13,6 +13,9 @@
 #include "nvtCAN.h"
 #include "can.h"
 
+/*static member data initialization*/
+uint32_t nvtCAN::g32IIDRStatus = 0;
+STR_CANMSG_T nvtCAN::rxCANMsg ={0};
 
 /*********************************************************************************************************
 ** Function name:           nvtCAN(constructor)
@@ -226,25 +229,27 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
 *********************************************************************************************************/
  byte nvtCAN::readMsgBuf(byte *len, byte *buf)
  {
+     uint32_t res;
+     uint32_t ii;
      if(opmode == CAN_BASIC_MODE)
      {
-        *len =  rxCANMsg.DLC;
-        buf =  rxCANMsg.Data;
-        ext_flg = rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
-        can_id  = rxCANMsg.Id;              // can id
-        rtr     = !(rxCANMsg.FrameType);    // is remote frame, add "!", see can.c CAN_BasicReceiveMsg
+        *len =  nvtCAN::rxCANMsg.DLC;
+        for(ii=0;ii<*len;ii++) *buf++ = nvtCAN::rxCANMsg.Data[ii];
+        ext_flg = nvtCAN::rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
+        can_id  = nvtCAN::rxCANMsg.Id;              // can id
+        rtr     = !(nvtCAN::rxCANMsg.FrameType);    // is remote frame, add "!", see can.c CAN_BasicReceiveMsg
+        res     = 0xFFFFFFFF;
      }
-     else /*Normal Mode*/
+     else if(opmode == CAN_NORMAL_MODE)/*Normal Mode*//*Normal Mode*/
      {
-         
-         *len =  rxCANMsg.DLC;
-          buf =  rxCANMsg.Data;
-          ext_flg = rxCANMsg.IdType;         // type, either extended (the 29 LSB) or standard (the 11 LSB)
-          can_id  = rxCANMsg.Id;             // can id
-          rtr     = rxCANMsg.FrameType;      // is remote frame
-
+        *len =  nvtCAN::rxCANMsg.DLC;
+        for(ii=0;ii<*len;ii++) *buf++ = nvtCAN::rxCANMsg.Data[ii];
+        ext_flg = nvtCAN::rxCANMsg.IdType;          // type, either extended (the 29 LSB) or standard (the 11 LSB)
+        can_id  = nvtCAN::rxCANMsg.Id;              // can id
+        rtr     = nvtCAN::rxCANMsg.FrameType;      // is remote frame
+        res     = nvtCAN::g32IIDRStatus;
      }
-     return (byte)(g32IIDRStatus);
+     return (byte)(res);
 
  }
 
@@ -254,9 +259,10 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
 *********************************************************************************************************/
  byte nvtCAN::readMsgBufID(unsigned long *ID, byte *len, byte *buf)
  {
-    *ID = rxCANMsg.Id;
+    uint32_t ii;
+	*ID = rxCANMsg.Id;
     *len =  rxCANMsg.DLC;
-     buf =  rxCANMsg.Data;
+    for(ii=0;ii<*len;ii++) *buf++ = nvtCAN::rxCANMsg.Data[ii];
    
      return 0;
  }
@@ -449,6 +455,7 @@ extern "C" {
 void CAN0_IRQHandler(void)
 {
     uint32_t u8IIDRstatus;
+	STR_CANMSG_T* prxCANMsg;
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
   
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
@@ -486,7 +493,9 @@ void CAN0_IRQHandler(void)
     else if((u8IIDRstatus >= 0x1) || (u8IIDRstatus <= 0x20))/*Message Object Interrupt*/
     {
         PB2 = 1;
-        CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1), &rxCANMsg);
+        prxCANMsg = nvtCAN::getrxCANMsgPtr();
+        nvtCAN::setg32IIDRStatus(u8IIDRstatus);
+        CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1),prxCANMsg);
         PB2 = 0;
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
     }
