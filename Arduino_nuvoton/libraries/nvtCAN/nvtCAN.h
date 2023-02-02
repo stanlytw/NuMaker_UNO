@@ -82,16 +82,15 @@ public:
 private:
     byte nReservedTx; // Count of tx buffers for reserved send
 
-	union{
-		void *_vncan;
-		CAN_T *ncan;
-
-	};
+    union{
+        void *_vncan;
+        CAN_T *ncan;
+    };
 	uint32_t module;
     uint32_t opmode;
     uint32_t canspeed_set;
     byte nCANSel;
-	IRQn_Type id;
+    IRQn_Type id;
     byte ext_flg; 			// identifier xxxID, either extended (the 29 LSB) or standard (the 11 LSB)
     unsigned long can_id;   // can id
     byte rtr;               // is remote frame
