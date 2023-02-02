@@ -36,7 +36,7 @@ public:
     nvtCAN(byte _CANSEL);
     
 public:
-	/*CAN operator function*/
+    /*CAN operator function*/
     virtual byte begin(uint32_t speedset, const byte clockset = MCP_16MHz);
                                                                               
     virtual byte init_Mask(byte num, byte ext, unsigned long ulData);                                                                                   // init Masks
@@ -60,7 +60,7 @@ public:
     byte sendMsgBuf(unsigned long id, byte ext, byte len, volatile const byte *buf);
 
 private:
-	/*Nuvoton CAN controller(ccan) driver function */
+    /*Nuvoton CAN controller(ccan) driver function */
     void ncan_reset(void); // reset ncan
     void ncan_resetIF(uint8_t u8IF_Num);//clear IF reg, for test_basic mode Rx 
 
@@ -81,12 +81,11 @@ public:
 
 private:
     byte nReservedTx; // Count of tx buffers for reserved send
-
     union{
         void *_vncan;
         CAN_T *ncan;
     };
-	uint32_t module;
+    uint32_t module;
     uint32_t opmode;
     uint32_t canspeed_set;
     byte nCANSel;
