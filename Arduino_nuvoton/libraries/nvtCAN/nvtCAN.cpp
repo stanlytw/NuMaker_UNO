@@ -84,7 +84,7 @@ byte nvtCAN::ncan_configRate(const uint32_t canSpeed, const byte clock) {
     opmode = CAN_BASIC_MODE;
     /* Check the real baud-rate is OK */
     res = BaudRateCheck(BaudRate, RealBaudRate);
-  	ncan->CON |= (CAN_TEST_LBACK_Msk);
+    ncan->CON |= (CAN_TEST_LBACK_Msk);
     return res;
   
    
@@ -454,7 +454,7 @@ extern "C" {
 /*---------------------------------------------------------------------------------------------------------*/
 void CAN0_IRQHandler(void)
 {
-	uint32_t u8IIDRstatus;
+    uint32_t u8IIDRstatus;
     STR_CANMSG_T* prxCANMsg;
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
   
