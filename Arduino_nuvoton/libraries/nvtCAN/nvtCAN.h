@@ -74,8 +74,8 @@ private:
 
 public:    
     RxMsgAndMskType rxMsgAMsk[NVT_MAXFILTER_NUM];
-	/*functions to access static member data*/
-	static STR_CANMSG_T* getrxCANMsgPtr() { return &(rxCANMsg); }
+    /*functions to access static member data*/
+    static STR_CANMSG_T* getrxCANMsgPtr() { return &(rxCANMsg); }
     static void setg32IIDRStatus(uint32_t val) { g32IIDRStatus = val; }
    
 
@@ -96,7 +96,7 @@ private:
     unsigned long can_id;   // can id
     byte rtr;               // is remote frame
 	
-	/*static member data*/
+    /*static member data*/
     static STR_CANMSG_T rxCANMsg;
     static uint32_t g32IIDRStatus;
     

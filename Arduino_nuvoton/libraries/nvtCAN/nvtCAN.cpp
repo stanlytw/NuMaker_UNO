@@ -260,7 +260,7 @@ byte nvtCAN::sendMsgBufwMsgObj(byte status, unsigned long id, byte ext, byte rtr
  byte nvtCAN::readMsgBufID(unsigned long *ID, byte *len, byte *buf)
  {
     uint32_t ii;
-	*ID = rxCANMsg.Id;
+    *ID = rxCANMsg.Id;
     *len =  rxCANMsg.DLC;
     for(ii=0;ii<*len;ii++) *buf++ = nvtCAN::rxCANMsg.Data[ii];
    
@@ -454,8 +454,8 @@ extern "C" {
 /*---------------------------------------------------------------------------------------------------------*/
 void CAN0_IRQHandler(void)
 {
-    uint32_t u8IIDRstatus;
-	STR_CANMSG_T* prxCANMsg;
+	uint32_t u8IIDRstatus;
+    STR_CANMSG_T* prxCANMsg;
     u8IIDRstatus = CAN0->IIDR; /*Read Interrupr Identifier Register*/
   
     if(u8IIDRstatus == 0x00008000)        /* Check Status Interrupt Flag (Error status Int and Status change Int) */
