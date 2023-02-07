@@ -496,6 +496,7 @@ void CAN0_IRQHandler(void)
         prxCANMsg = nvtCAN::getrxCANMsgPtr();
         nvtCAN::setg32IIDRStatus(u8IIDRstatus);
         CAN_Receive(CAN0, (uint32_t)(u8IIDRstatus-1),prxCANMsg);
+        if (callbackCAN0) callbackCAN0();	  	
         PB2 = 0;
         CAN_CLR_INT_PENDING_BIT(CAN0, (u8IIDRstatus - 1)); /* Clear Interrupt Pending */
     }
@@ -613,6 +614,31 @@ uint32_t BaudRateSelector(uint32_t u32mcpBaudRate)
      }
      return u32NvtBaudRate;
 }
+
+/* Configure CAN interrupt resources */
+static void __initializeCAN() {
+	
+	callbackCAN0 = NULL;
+	NVIC_EnableIRQ(CAN0_IRQn);
+}
+
+
+void attachInterruptCAN(void (*callback)(void))
+{
+	static int enabledCAN = 0;
+	
+	if (!enabledCAN) {
+		__initializeCAN();
+		enabledCAN = 1;
+	}
+
+    callbackCAN0 = callback;
+    
+	// Enable interrupt
+	//if(mode==FALLING)
+	//	GPIO_EnableInt(pio,pos,GPIO_INT_FALLING);
+}
+
 #ifdef __cplusplus
 }
 #endif

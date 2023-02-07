@@ -52,7 +52,11 @@ char str[20];
 void setup() {
     SERIAL_PORT_MONITOR.begin(115200);
     while(!Serial){};
+#ifndef CAN_NVT    
     attachInterrupt(digitalPinToInterrupt(CAN_INT_PIN), MCP2515_ISR, FALLING); // start interrupt
+#else
+    attachInterruptCAN(MCP2515_ISR); // hook CAN interrupt
+#endif    
     while (CAN_OK != CAN.begin(CAN_500KBPS)) {             // init can bus : baudrate = 500k
         SERIAL_PORT_MONITOR.println("CAN init fail, retry...");
         delay(100);

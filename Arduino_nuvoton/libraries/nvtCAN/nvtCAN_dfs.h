@@ -46,7 +46,7 @@
 #define STD_ID 0
 #define NVT_CAN_IDX 0
 
-
+typedef void (*interruptCB)(void);
 #endif
 /*********************************************************************************************************
     END FILE
