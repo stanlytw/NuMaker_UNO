@@ -618,25 +618,22 @@ uint32_t BaudRateSelector(uint32_t u32mcpBaudRate)
 /* Configure CAN interrupt resources */
 static void __initializeCAN() {
 	
-	callbackCAN0 = NULL;
-	NVIC_EnableIRQ(CAN0_IRQn);
+    callbackCAN0 = NULL;
+    NVIC_EnableIRQ(CAN0_IRQn);
 }
 
 
 void attachInterruptCAN(void (*callback)(void))
 {
-	static int enabledCAN = 0;
+    static int enabledCAN = 0;
 	
-	if (!enabledCAN) {
-		__initializeCAN();
-		enabledCAN = 1;
-	}
+    if (!enabledCAN) {
+        __initializeCAN();
+        enabledCAN = 1;
+    }
 
     callbackCAN0 = callback;
-    
-	// Enable interrupt
-	//if(mode==FALLING)
-	//	GPIO_EnableInt(pio,pos,GPIO_INT_FALLING);
+
 }
 
 #ifdef __cplusplus
