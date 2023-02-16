@@ -107,6 +107,7 @@ byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate);
 uint32_t BaudRateSelector(uint32_t u32mcpBaudRate);
 static void CAN_0_Init(void);
 static interruptCB callbackCAN0;
+void attachInterruptCAN(void (*callback)(void));
 #ifdef __cplusplus
 }
 #endif
