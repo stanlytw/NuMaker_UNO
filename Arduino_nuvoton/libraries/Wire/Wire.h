@@ -50,7 +50,7 @@
 #define I2C_STO 		    I2C_CTL_STO               
 #define I2C_AA 			    I2C_CTL_AA  
 
-#elif defined(__M032BT__)
+#elif defined(__M032BT__) || (__M032KG__)
 #define I2C_STA_STO_SI 		I2C_CTL_STA_STO_SI       
 #define I2C_STA_STO_SI_AA 	I2C_CTL_STA_STO_SI_AA    
 #define I2C_STA_SI 	        I2C_CTL_STA_SI           
