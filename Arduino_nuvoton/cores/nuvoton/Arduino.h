@@ -32,6 +32,8 @@
   #include "M480.h"
 #elif defined(__M460__)
   #include "m460.h"
+#elif defined(__M032KG__)
+  #include "M031Series.h"
 #elif defined(__M032BT__)
   #include "M031Series.h"
   #define ENABLE_C_PRINTF 1 /* enable UART0 PA0 PA1 fo C style printf in M032BT board for internal use*/

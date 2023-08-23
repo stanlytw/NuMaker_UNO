@@ -81,7 +81,7 @@
 		HardwareTimer Timer4(3,TMR3_MODULE,CLK_CLKSEL1_TMR3_S_HXT);
 	#endif
 
-#elif  defined(__M032BT__)
+#elif  defined(__M032BT__) ||defined(__M032KG__) 
 	#if(NR_TIMERS>0)
 		HardwareTimer Timer1(0,TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_PCLK0);
 	#endif

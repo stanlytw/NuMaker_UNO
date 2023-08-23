@@ -35,7 +35,7 @@ void __attribute__((weak)) setup(void)
 int main( void )
 {
 
-#if ENABLE_C_PRINTF && defined(__M032BT__)
+#if ENABLE_C_PRINTF && (defined(__M032BT__) |defined(__M032KG__) )
   SYS_UnlockReg();
   
   CLK_EnableModuleClock(UART0_MODULE);

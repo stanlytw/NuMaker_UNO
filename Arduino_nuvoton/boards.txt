@@ -175,3 +175,24 @@ nuvoton_m032bt.build.vid=0x2341
 nuvoton_m032bt.build.pid=0x003e
 nuvoton_m032bt.build.def=M032BT
 nuvoton_m032bt.build.openocdscript=openocd_scripts/M032BT.cfg
+
+
+nuvoton_m032kg.name=NuMaker UNO M032KG
+nuvoton_m032kg.upload.tool=nulinkburn
+nuvoton_m032kg.upload.protocol=nuc-ba
+nuvoton_m032kg.upload.maximum_size=262144
+nuvoton_m032kg.upload.use_1200bps_touch=false
+nuvoton_m032kg.upload.wait_for_upload_port=false
+nuvoton_m032kg.upload.native_usb=false
+nuvoton_m032kg.build.mcu=cortex-m0
+nuvoton_m032kg.build.f_cpu=72000000L
+nuvoton_m032kg.build.core=nuvoton
+nuvoton_m032kg.build.extra_flags=-D__M032KG__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m032kg.build.board=__NUVOTON__
+nuvoton_m032kg.build.ldscript=linker_scripts/gcc/256K_64K_flash.ld
+nuvoton_m032kg.build.variant=Nuvoton
+nuvoton_m032kg.build.variant_system_lib=../../system/{build.def}/libchip_M032KG_gcc_rel.a
+nuvoton_m032kg.build.vid=0x2341
+nuvoton_m032kg.build.pid=0x003e
+nuvoton_m032kg.build.def=M032KG
+nuvoton_m032kg.build.openocdscript=openocd_scripts/M032KG.cfg

@@ -81,7 +81,7 @@ void Enable_All_IPs(void)
 
     CLK_SetModuleClock(PWM0_MODULE, CLK_CLKSEL3_PWM0_S_PLL, 0);
     CLK_SetModuleClock(PWM1_MODULE, CLK_CLKSEL3_PWM0_S_PLL, 0);
-#elif defined(__M032BT__)
+#elif defined(__M032BT__) || defined(__M032KG__)
     //Enable ADC module
     CLK_EnableModuleClock(ADC_MODULE);
 
@@ -275,7 +275,7 @@ void init(void)
 
     /* STCLK to HXT */
     //CLK_SetSysTickClockSrc(CLK_CLKSEL0_STCLK_S_HXT);
-#elif defined(__M032BT__)
+#elif defined(__M032BT__) || defined(__M032KG__)
     /*---------------------------------------------------------------------------------------------------------*/
     /* Init System Clock                                                                                       */
     /*---------------------------------------------------------------------------------------------------------*/

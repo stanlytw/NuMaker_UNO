@@ -965,7 +965,8 @@ void GPCDEF_IRQHandler(void)
 #ifdef __cplusplus
 }
 #endif
-#elif(__M032BT__)
+#elif defined(__M032BT__)|| defined(__M032KG__)
+//#elif(__M032BT__)
 
 #define GP_NUM 16
 

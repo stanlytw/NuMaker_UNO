@@ -33,7 +33,7 @@ typedef struct
 
 tone_t Tone = {0};
 
-#if defined(__M032BT__)
+#if defined(__M032BT__) || defined(__M032KG__)
 /**** Combine Structure BPWM and PWM ****/
 typedef uint32_t (*pwmConfigChannel)(void *pwm, uint32_t , uint32_t , uint32_t);
 typedef uint32_t (*pwmEnableOutput)(void *pwm, uint32_t u32ChannelMask);
@@ -51,7 +51,7 @@ void tone_ISR(uint8_t num)
     Tone.waitISR = 0;
 #if defined(__NANO100__) | defined(__NANO1X2__)
     Tone.timer->clearIntFlag();
-#elif defined(__M032BT__)
+#elif defined(__M032BT__)|| defined(__M032KG__)
     Tone.timer->close();
     pfn_pwmDisableOutput(PWM_Desc[Tone.pin].P, (1 << PWM_Desc[Tone.pin].ch));
 #elif defined(__M480__) ||defined(__M460__)
@@ -215,7 +215,7 @@ void tone(uint8_t ulPin, unsigned int frequency, unsigned long duration)
 void noTone(uint8_t ulPin)
 {
 
-#if defined(__M032BT__)
+#if defined(__M032BT__)|| defined(__M032KG__)
 
     tone_t *tone;
 #ifdef USE_BoardToPin

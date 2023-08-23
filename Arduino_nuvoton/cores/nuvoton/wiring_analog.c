@@ -206,7 +206,7 @@ uint32_t analogRead(uint32_t ulPin)
   // Close ADC
   ADC_Close(ADC_Desc[ulPin].A);
 
-#elif defined(__M032BT__)
+#elif defined(__M032BT__)|| defined(__M032KG__)
 	uint32_t ulValue = 0;
 	
 	if ((ulPin >= ADC_MAX_COUNT) || (ADC_Desc[ulPin].A == NULL))

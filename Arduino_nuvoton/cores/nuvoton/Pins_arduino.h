@@ -39,6 +39,8 @@
 #elif defined(__M460__)
 #include "Pins_M460_arduino.h"
 
+#elif defined(__M032KG__)
+#include "Pins_M032_arduino.h"
 #else
 
 /* Types used for the tables below */

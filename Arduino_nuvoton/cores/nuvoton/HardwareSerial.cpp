@@ -342,6 +342,62 @@ void UART1_IRQHandler(void)
 }
 #endif
 
+#elif defined(__M032KG__)
+#if(UART_MAX_COUNT>0)
+ring_buffer rx_buffer1 = { { 0 }, 0, 0};
+HardwareSerial Serial(UART_Desc[0].U, 0, CLK_CLKSEL1_UART1SEL_HIRC, 1, UART_Desc[0].irq, &rx_buffer1);
+#endif
+
+#if(UART_MAX_COUNT>1)
+ring_buffer rx_buffer = { { 0 }, 0, 0};
+HardwareSerial Serial1(UART_Desc[1].U, 1, CLK_CLKSEL1_UART0SEL_HIRC, 1, UART_Desc[1].irq, &rx_buffer);
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if(UART_MAX_COUNT>0)
+void UART13_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART1, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer1.tail)
+        {
+            rx_buffer1.buffer[rx_buffer1.head] = UART1->DAT;
+            rx_buffer1.head = i;
+        }
+    }
+
+}
+#endif
+
+
+#if(UART_MAX_COUNT>1)
+void UART02_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer.tail)
+        {
+            rx_buffer.buffer[rx_buffer.head] = UART0->DAT;
+            rx_buffer.head = i;
+        }
+    }
+}
+#endif
+
+
+
+
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #elif defined(__NANO1X2__)
 
 #if(UART_MAX_COUNT>0)
@@ -474,15 +530,25 @@ void HardwareSerial::begin(uint32_t baud)
     /* Configure UART and set UART Baudrate */
     UART_Open(uart_device, baud);
 
-#elif defined(__M032BT__)
+#elif defined(__M032BT__)|| defined(__M032KG__)
     /* Enable IP clock */
     CLK_EnableModuleClock(UART_Desc[u32Idx].module);
 
     /* Select IP clock source and clock divider */
-    CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV0_UART0(u32ClkDiv));
-
-    /* Reset IP */
-    SYS_ResetModule(UART0_RST);
+    if(uart_device == UART0)
+    {
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV0_UART0(u32ClkDiv));
+        /* Reset IP */
+        //SYS_ResetModule(UART0_RST);
+    }
+    else if(uart_device == UART1)
+    {
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV0_UART1(u32ClkDiv));
+        /* Reset IP */
+        //SYS_ResetModule(UART1_RST);
+    }
+        
+    
 
     /* Enable Interrupt */
     UART_ENABLE_INT(uart_device, UART_INTEN_RDAIEN_Msk);
@@ -563,7 +629,7 @@ int HardwareSerial::availableForWrite(void)
     {
         return (UART0_FIFO_SIZE - ((uart_device->FSR & UART_FSR_TX_POINTER_Msk) >> UART_FSR_TX_POINTER_Pos));
     }
-#elif defined(__M032BT__) || defined(__M252__) || defined(__M480__) || defined(__M460__)
+#elif defined(__M032BT__) || defined(__M032KG__)|| defined(__M252__) || defined(__M480__) || defined(__M460__)
     if (UART_IS_TX_FULL(uart_device))
     {
         return 0;
@@ -586,7 +652,7 @@ int HardwareSerial::available(void)
 
 size_t HardwareSerial::write(const uint8_t ch)
 {
-#if defined(__M451__) || defined(__M032BT__) || defined(__M252__) || defined(__M480__)|| defined(__M460__)
+#if defined(__M451__) || defined(__M032BT__) || defined(__M032KG__) || defined(__M252__)|| defined(__M480__)|| defined(__M460__)
     while (uart_device->FIFOSTS & UART_FIFOSTS_TXFULL_Msk);
     uart_device->DAT = ch;
     return 1;

@@ -51,7 +51,7 @@ extern void pinMode(uint32_t ulPin, uint32_t ulMode)
     default:
         break;
     }
-#elif defined(__M032BT__)
+#elif defined(__M032BT__)|| defined(__M032KG__)
     switch (ulMode)
     {
     case INPUT:
