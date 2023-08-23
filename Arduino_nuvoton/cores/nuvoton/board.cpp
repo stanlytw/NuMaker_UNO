@@ -95,6 +95,7 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(USCI0_MODULE);
     CLK_EnableModuleClock(USCI1_MODULE);
 
+
     CLK_SetModuleClock(PWM0_MODULE, CLK_CLKSEL2_PWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(PWM1_MODULE, CLK_CLKSEL2_PWM1SEL_PCLK1, 0);
     CLK_SetModuleClock(BPWM0_MODULE, CLK_CLKSEL2_BPWM0SEL_PCLK0, 0);

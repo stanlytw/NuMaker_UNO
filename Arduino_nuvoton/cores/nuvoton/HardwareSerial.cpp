@@ -453,11 +453,11 @@ void UART1_IRQHandler(void)
 #endif
 
 #if(UART_MAX_COUNT>0)
-    void serialEvent() __attribute__((weak));
+void serialEvent() __attribute__((weak));
 #endif
 
 #if(UART_MAX_COUNT>1)
-    void serial1Event() __attribute__((weak));
+void serial1Event() __attribute__((weak));
 #endif
 
 void serialEventRun(void)
@@ -547,8 +547,8 @@ void HardwareSerial::begin(uint32_t baud)
         /* Reset IP */
         //SYS_ResetModule(UART1_RST);
     }
-        
-    
+
+
 
     /* Enable Interrupt */
     UART_ENABLE_INT(uart_device, UART_INTEN_RDAIEN_Msk);

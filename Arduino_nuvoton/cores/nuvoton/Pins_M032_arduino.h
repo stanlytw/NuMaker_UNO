@@ -131,8 +131,8 @@ extern ADCPinDescription ADC_Desc[];
 #define ADC_Config(Desc) outp32(GPIO_Desc[Desc.pintype.num].Pin.MFP,(inp32(GPIO_Desc[Desc.pintype.num].Pin.MFP) & ~GPIO_Desc[Desc.pintype.num].Pin.Mask) | Desc.pintype.type);
 
 /*========== SPI definition ==========*/
-#define SPI_MAX_COUNT 1// Kept SPI1 PA8~PA11
-#define SPI_CHANNELS_NUM 1
+#define SPI_MAX_COUNT 2// Kept SPI1 PA8~PA11
+#define SPI_CHANNELS_NUM 2
 extern SPIPinDescription SPI_Desc[];
 
 // #define SPI_SCK   0 //defined but not used

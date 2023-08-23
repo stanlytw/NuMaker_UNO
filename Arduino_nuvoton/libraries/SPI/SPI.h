@@ -17,7 +17,7 @@
 #undef SPI1
 #endif
 
-#if defined(__M032BT__)
+#if defined(__M032BT__) || defined(__M032KG__)
 
 #define BOARD_SPI_DEFAULT_SS 6 //M032BT not support SS in USPI
 
@@ -127,7 +127,7 @@ class SPIClass {
 	union{
 		void *_vspi;
 		SPI_T *spi;
-#if defined(__M032BT__) || defined(__M252__) || defined(__M480__)|| defined(__M460__) 
+#if defined(__M032BT__) || defined(__M032KG__)|| defined(__M252__) || defined(__M480__)|| defined(__M460__) 
 		USPI_T *uspi;
 #endif
 	};

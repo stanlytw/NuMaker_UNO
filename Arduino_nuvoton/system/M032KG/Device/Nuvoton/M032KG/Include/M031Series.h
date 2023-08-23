@@ -573,7 +573,7 @@ typedef volatile unsigned short vu16;
 #include "pwm.h"
 #include "bpwm.h"
 #include "qspi.h"
-#include "spi.h"
+#include "_spi.h"
 #include "rtc.h"
 #include "hdiv.h"
 #include "timer.h"
