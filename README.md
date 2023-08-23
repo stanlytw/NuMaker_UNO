@@ -15,6 +15,7 @@ This repository contains the package descriptor for NuMaker UNO boards
 | -------------- | ---------------- | ----------------------------------------------- |----------------------------------------------- |
 | **NUC131**     | ✔️              | ✔️                                               | ❌                                          |
 | **M032BT**     | ✔️              | ❌                                               | ✔️                                           |
+| **M03XKG**     | ✔️              | ❌                                               | ✔️                                           |
 | **M252**       | ✔️              | ❌                                               | ❌                                           |
 | **M480**       | ✔️              | ❌                                               | ❌                                           |
 | **M460**       |  ✔️             | ❌                                               | ❌                                           |
@@ -68,4 +69,4 @@ trademarks of products and companies mentioned in this datasheet belong to their
 owners.
 
 
-**Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved**
+**Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved**
