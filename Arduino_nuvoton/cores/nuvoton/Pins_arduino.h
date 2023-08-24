@@ -376,7 +376,7 @@ do { \
     #define SPI_MAX_COUNT 1
     #define SPI_CHANNELS_NUM 1
 
-#elif defined(__M032BT__) || defined(__M032KG__) 
+#elif defined(__M032BT__)
     #define SPI_MAX_COUNT 2
     #define SPI_CHANNELS_NUM 2
 #endif

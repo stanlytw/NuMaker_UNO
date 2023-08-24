@@ -177,7 +177,7 @@ static const uint8_t SS   = 43;
 static const uint8_t MOSI = 42;
 static const uint8_t MISO = 40;
 static const uint8_t SCK  = 41;
-static const uint8_t LED_BUILTIN = 45;
+static const uint8_t LED_BUILTIN = 13;
 static const uint8_t SDA = 14;
 static const uint8_t SCL = 15;
 
@@ -192,69 +192,6 @@ static const uint8_t A7  = 7;
 static const uint8_t A8  = 8;
 static const uint8_t A9  = 9;
 
-#define UNO_PIN_0      0
-#define UNO_PIN_1      1
-#define UNO_PIN_2      2
-#define UNO_PIN_3      3
-#define UNO_PIN_4      4
-#define UNO_PIN_5      5
-#define UNO_PIN_6      6 
-#define UNO_PIN_7      7
-#define UNO_PIN_8      8
-#define UNO_PIN_9      9
-#define UNO_PIN_10    10
-#define UNO_PIN_11    11
-#define UNO_PIN_12    12
-#define UNO_PIN_13    13
-#define UNO_PIN_14    14
-#define UNO_PIN_15    15
-#define UNO_PIN_16    16
-#define UNO_PIN_17    17
-#define UNO_PIN_18    18
-#define UNO_PIN_19    19
-#define UNO_PIN_20    20
-#define UNO_PIN_21    21
-//PIN22~PIN39: NC
-#define UNO_PIN_NC    -1
-#define UNO_PIN_40    40
-#define UNO_PIN_41    41
-#define UNO_PIN_42    42
-#define UNO_PIN_43    43
-#define UNO_PIN_44    44
-
-#define GPIO_DESC_IDX_NC  (-1)
-#define GPIO_DESC_IDX_0    0
-#define GPIO_DESC_IDX_1    1
-#define GPIO_DESC_IDX_2    2
-#define GPIO_DESC_IDX_3    3
-#define GPIO_DESC_IDX_4    4
-#define GPIO_DESC_IDX_5    5
-#define GPIO_DESC_IDX_6    6
-#define GPIO_DESC_IDX_7    7
-#define GPIO_DESC_IDX_8    8
-#define GPIO_DESC_IDX_9    9
-#define GPIO_DESC_IDX_10  10
-#define GPIO_DESC_IDX_11  11
-#define GPIO_DESC_IDX_12  12
-#define GPIO_DESC_IDX_13  13
-#define GPIO_DESC_IDX_14  14
-#define GPIO_DESC_IDX_15  15
-#define GPIO_DESC_IDX_16  16
-#define GPIO_DESC_IDX_17  17
-#define GPIO_DESC_IDX_18  18
-#define GPIO_DESC_IDX_19  19
-#define GPIO_DESC_IDX_20  20
-#define GPIO_DESC_IDX_21  21
-#define GPIO_DESC_IDX_22  22
-#define GPIO_DESC_IDX_23  23
-#define GPIO_DESC_IDX_24  24
-#define GPIO_DESC_IDX_25  25
-#define GPIO_DESC_IDX_26  26
-#define GPIO_DESC_IDX_27  27
-#define GPIO_DESC_IDX_28  28
-#define GPIO_DESC_IDX_29  29
-
-
-#endif//#if defined(__M032KG__)
+#endif
 
 #endif

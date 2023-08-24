@@ -43,9 +43,9 @@
 
 struct ring_buffer
 {
-    unsigned char buffer[SERIAL_BUFFER_SIZE];
-    volatile unsigned int head;
-    volatile unsigned int tail;
+  unsigned char buffer[SERIAL_BUFFER_SIZE];
+  volatile unsigned int head;
+  volatile unsigned int tail;
 };
 
 /*
@@ -78,16 +78,14 @@ public:
     virtual void flush( void ) ;
     size_t write( const uint8_t ch ) ;
     using Print::write; // pull in write(str) and write(buf, size) from Print
-    operator bool() {
-        return true;
-    }; // UART always active
-
+    operator bool() { return true; }; // UART always active
+    
     ring_buffer *_rx_buffer;
 private:
     UART_T *uart_device;
     uint32_t u32Idx;
     uint32_t u32ClkSrc;
-    uint32_t u32ClkDiv;
+    uint32_t u32ClkDiv;  
     IRQn_Type u32IrqId;
 };
 
