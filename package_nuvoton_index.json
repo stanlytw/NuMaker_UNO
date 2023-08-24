@@ -14,8 +14,8 @@
                   "category": "Arduino",
                   "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton.tar.bz2?raw=true",
                   "archiveFileName": "Arduino_nuvoton.tar.bz2",
-                  "checksum": "SHA-256:ac99a71603b168e701989cb940101cb46d3f379e0a157937ef7ad58c0936ebd4",
-                  "size": "47305299",
+                  "checksum": "SHA-256:fbd496ca15112995204ed1defe98f882a4879e734b694d3f42d7f4a68468044b",
+                  "size": "47305740",
                   "boards": [
                     {"name": "NuMaker NUC131"},
                     {"name": "NuMaker M032BT"},
