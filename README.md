@@ -15,10 +15,10 @@ This repository contains the package descriptor for NuMaker UNO boards
 | -------------- | ---------------- | ----------------------------------------------- |----------------------------------------------- |
 | **NUC131**     | ✔️              | ✔️                                               | ❌                                          |
 | **M032BT**     | ✔️              | ❌                                               | ✔️                                           |
-| **M03XKG**     | ✔️              | ❌                                               | ✔️                                           |
+| **M03XKG**     | ✔️              | ❌                                               | ️❌                                         |
 | **M252**       | ✔️              | ❌                                               | ❌                                           |
 | **M480**       | ✔️              | ❌                                               | ❌                                           |
-| **M460**       |  ✔️             | ❌                                               | ❌                                           |
+| **M460**       | ✔️              | ❌                                               | ❌                                           |
 
 Note: Compatible to [Seeed_Arduino_CAN](https://github.com/Seeed-Studio/Seeed_Arduino_CAN)
 
