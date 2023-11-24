@@ -23,14 +23,38 @@
 #include <inttypes.h>
 #include "Wire.h"
 
+#define DEFAULT_EEPROM_ID    (0x50)
+
 class EEPROMClass
 {
-  public:
-  	EEPROMClass();
+public:
+    EEPROMClass();
     void begin();
+    void begin(uint8_t id);
+    //To support 2-byte address case
     uint8_t read(int);
     void write(int, uint8_t);
-  private:
+    void update(int, uint8_t);
+    uint8_t get(int address);
+    uint16_t length()         {
+        return 0xFFF + 1;
+    }
+    //Functionality to 'get' and 'put' objects to and from EEPROM.
+    template< typename T > T &get( int idx, T &t ) {
+        uint8_t *ptr = (uint8_t*) &t;
+        for( int count = sizeof(T) ; count ; --count, ++idx )  *ptr++ = read(idx);
+        return t;
+    }
+
+    template< typename T > const T &put( int idx, const T &t ) {
+        const uint8_t *ptr = (const uint8_t*) &t;
+        for( int count = sizeof(T) ; count ; --count, ++idx )  write(idx, (*ptr++));
+        return t;
+    }
+
+
+    uint8_t eeprom_id;
+private:
     bool begin_done;
 };
 
