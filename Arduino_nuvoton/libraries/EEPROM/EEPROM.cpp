@@ -92,7 +92,7 @@ void EEPROMClass::update(int address, uint8_t value)
     if(begin_done == false)
         begin();
     
-    value_pre = this->read(int address);
+    value_pre = this->read(address);
     if(value == value_pre)
         return;
     Wire.beginTransmission(eeprom_id); // transmit to device #80(0x50)
