@@ -59,19 +59,19 @@ void EEPROMClass::begin(uint8_t id)
 
 uint8_t EEPROMClass::read(int address)
 {
-    uint8_t reading;
+    uint8_t reading =0xFF;
     if(begin_done == false)
         begin();
-    Wire.beginTransmission(eeprom_id); // transmit to device #80(0x50)
-    Wire.write(byte(address>>8)); // high address
-    Wire.write(byte(address)); 		//low address
-    Wire.endTransmission(); 			// stop transmitting
+    Wire.beginTransmission(eeprom_id);      // transmit to device #80(0x50)
+    Wire.write(byte(address>>8));           // high address
+    Wire.write(byte(address)); 		        // low address
+    Wire.endTransmission(); 			    // stop transmitting
 
-    Wire.requestFrom(eeprom_id, 1);    	// request 1 bytes from slave device #80(0x50)
+    Wire.requestFrom(eeprom_id, 1);    	    // request 1 bytes from slave device #80(0x50)
     delay(2);
     // receive reading from sensor
-    if( Wire.available() >=1)    	// if two bytes were received
-        reading = Wire.read();  		// receive high byte (overwrites previous reading)
+    if( Wire.available() >=1)    	        // if two bytes were received
+        reading = Wire.read();  		    // receive high byte (overwrites previous reading)
     return reading;
 }
 
@@ -80,20 +80,25 @@ void EEPROMClass::write(int address, uint8_t value)
     if(begin_done == false)
         begin();
     Wire.beginTransmission(eeprom_id); // transmit to device #80(0x50)
-    Wire.write(address>>8); 		// high address
-    Wire.write(address);  			// low address
-    Wire.write(value);  				// data
+    Wire.write(address>>8); 		   // high address
+    Wire.write(address);  			   // low address
+    Wire.write(value);  			   // data
     Wire.endTransmission();
 }
 
 void EEPROMClass::update(int address, uint8_t value)
 {
+    uint8_t value_pre;
     if(begin_done == false)
         begin();
+    
+    value_pre = this->read(int address);
+    if(value == value_pre)
+        return;
     Wire.beginTransmission(eeprom_id); // transmit to device #80(0x50)
-    Wire.write(address>>8); 		// high address
-    Wire.write(address);  			// low address
-    Wire.write(value);  				// data
+    Wire.write(address>>8); 		   // high address
+    Wire.write(address);  			   // low address
+    Wire.write(value);  			   // data
     Wire.endTransmission();
 }
 
