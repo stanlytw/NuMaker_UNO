@@ -121,7 +121,7 @@ debug.toolchain=gcc
 debug.toolchain.path={compiler.path}
 debug.toolchain.prefix=arm-none-eabi-
 debug.server=openocd
-debug.server.openocd.path={runtime.platform.path}/tools/OpenOCD/bin/openocd
+debug.server.openocd.path={runtime.platform.path}/tools/OpenOCD/bin/openocd_cmsis-dap
 debug.server.openocd.scripts_dir={runtime.platform.path}/tools/OpenOCD/share/openocd/scripts/
 debug.server.openocd.script={runtime.platform.path}/variants/{build.variant}/{build.openocdscript}
 
