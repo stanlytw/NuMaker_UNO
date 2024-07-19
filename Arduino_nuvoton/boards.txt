@@ -55,7 +55,7 @@
 #nuvoton_nano100.build.pid=0x003e
 #nuvoton_nano100.build.def=Nano100Series
 
-nuvoton_nuc131.name=NuMaker UNO NUC131
+nuvoton_nuc131.name=NuMaker-NUC131U
 nuvoton_nuc131.upload.tool=nulinkburn
 nuvoton_nuc131.upload.protocol=nuc-ba
 nuvoton_nuc131.upload.maximum_size=32768
@@ -75,7 +75,7 @@ nuvoton_nuc131.build.pid=0x003e
 nuvoton_nuc131.build.def=NUC131
 nuvoton_nuc131.build.openocdscript=openocd_scripts/NUC131.cfg
 
-nuvoton_m252.name=NuMaker UNO M252
+nuvoton_m252.name=NuMaker-M252KG
 nuvoton_m252.upload.tool=nulinkburn
 nuvoton_m252.upload.protocol=nuc-ba
 nuvoton_m252.upload.maximum_size=262144
@@ -95,7 +95,7 @@ nuvoton_m252.build.pid=0x003e
 nuvoton_m252.build.def=M252
 nuvoton_m252.build.openocdscript=openocd_scripts/M252.cfg
 
-nuvoton_m460.name=NuMaker UNO M460
+nuvoton_m460.name=NuMaker-M467HJ
 nuvoton_m460.upload.tool=nulinkburn_m460
 nuvoton_m460.upload.protocol=nuc-ba
 nuvoton_m460.upload.maximum_size=524288
@@ -115,7 +115,7 @@ nuvoton_m460.build.pid=0x003e
 nuvoton_m460.build.def=M460
 nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
 
-nuvoton_m480.name=NuMaker UNO M487
+nuvoton_m480.name=NuMaker-PFM-M487
 nuvoton_m480.upload.tool=nulinkburn
 nuvoton_m480.upload.protocol=nuc-ba
 nuvoton_m480.upload.maximum_size=524288
@@ -156,7 +156,7 @@ nuvoton_m480.build.openocdscript=openocd_scripts/M480.cfg
 #nuvoton_nano102.build.pid=0x003e
 #nuvoton_nano102.build.def=Nano1X2Series
 
-nuvoton_m032bt.name=NuMaker UNO M032BT
+nuvoton_m032bt.name=NuMaker-M032BTAI
 nuvoton_m032bt.upload.tool=nulinkburn
 nuvoton_m032bt.upload.protocol=nuc-ba
 nuvoton_m032bt.upload.maximum_size=131072
@@ -177,7 +177,7 @@ nuvoton_m032bt.build.def=M032BT
 nuvoton_m032bt.build.openocdscript=openocd_scripts/M032BT.cfg
 
 
-nuvoton_m032kg.name=NuMaker UNO M032KG
+nuvoton_m032kg.name=NuMaker-M032KG
 nuvoton_m032kg.upload.tool=nulinkburn
 nuvoton_m032kg.upload.protocol=nuc-ba
 nuvoton_m032kg.upload.maximum_size=262144
