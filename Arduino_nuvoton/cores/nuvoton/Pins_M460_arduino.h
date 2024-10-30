@@ -78,6 +78,7 @@ typedef struct _UARTPinDescription
     uint32_t module;
     IRQn_Type irq;
     PinType pintype[2];
+    uint32_t clksrcsel;
 } UARTPinDescription;
 
 typedef struct _I2CPinDescription

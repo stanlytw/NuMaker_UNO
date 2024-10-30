@@ -107,9 +107,9 @@ nuvoton_m460.build.f_cpu=192000000L
 nuvoton_m460.build.core=nuvoton
 nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m460.build.board=__NUVOTON__
-nuvoton_m460.build.ldscript=linker_scripts/gcc/512K_128K_flash.ld
-nuvoton_m460.build.variant=Nuvoton
+nuvoton_m460.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
 nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+nuvoton_m460.build.variant=Nuvoton
 nuvoton_m460.build.vid=0x2341
 nuvoton_m460.build.pid=0x003e
 nuvoton_m460.build.def=M460

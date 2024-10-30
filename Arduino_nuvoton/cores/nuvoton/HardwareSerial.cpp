@@ -140,19 +140,19 @@ void UART1_IRQHandler(void)
 
 #if(UART_MAX_COUNT>0)
 ring_buffer rx_buffer = { { 0 }, 0, 0};
-HardwareSerial Serial(UART_Desc[0].U, 0, CLK_CLKSEL1_UART1SEL_HIRC, 1, UART_Desc[0].irq, &rx_buffer);
+HardwareSerial Serial(UART_Desc[0].U, 0, UART_Desc[0].clksrcsel, 1, UART_Desc[0].irq, &rx_buffer);
 #endif
 
 #if(UART_MAX_COUNT>1)
 ring_buffer rx_buffer1 = { { 0 }, 0, 0};
-HardwareSerial Serial1(UART_Desc[1].U, 1, CLK_CLKSEL1_UART0SEL_HIRC, 1, UART_Desc[1].irq, &rx_buffer1);
+HardwareSerial Serial1(UART_Desc[1].U, 1, UART_Desc[1].clksrcsel, 1, UART_Desc[1].irq, &rx_buffer1);
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if(UART_MAX_COUNT>0)
+#if(UART_MAX_COUNT>1)
 void UART1_IRQHandler(void)
 {
     while (UART_GET_INT_FLAG(UART1, UART_INTEN_RDAIEN_Msk))
@@ -169,7 +169,7 @@ void UART1_IRQHandler(void)
 
 #endif
 
-#if(UART_MAX_COUNT>1)
+#if(UART_MAX_COUNT>0)
 void UART0_IRQHandler(void)
 {
     while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
