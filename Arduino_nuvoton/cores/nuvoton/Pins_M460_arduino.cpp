@@ -250,10 +250,10 @@ SPIPinDescription SPI_Desc[] =
         }
     },
     {
-        USPI0, (uint32_t)USCI0_MODULE, USCI0_IRQn, (0x1ul << CLK_APBCLK1_USCI0CKEN_Pos),
-        {   {13, SYS_GPA_MFP2_PA11MFP_USCI0_CLK }, {14, SYS_GPA_MFP2_PA10MFP_USCI0_DAT0},
-            {15, SYS_GPA_MFP2_PA9MFP_USCI0_DAT1 }, {16, SYS_GPA_MFP2_PA8MFP_USCI0_CTL1 }
-        }
+        SPI2, (uint32_t)SPI2_MODULE, SPI2_IRQn, (0x2UL << CLK_CLKSEL3_SPI2SEL_Pos),
+        {   {13, SYS_GPA_MFP2_PA11MFP_SPI2_SS }, {14, SYS_GPA_MFP2_PA10MFP_SPI2_CLK},
+            {15, SYS_GPA_MFP2_PA9MFP_SPI2_MISO}, {16, SYS_GPA_MFP2_PA8MFP_SPI2_MOSI}
+        }// UNO nu5 connector
     },
 
 };
