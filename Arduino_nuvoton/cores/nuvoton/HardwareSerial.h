@@ -40,7 +40,10 @@
 #include "Pins_arduino.h"
 
 #define SERIAL_BUFFER_SIZE 16
-
+#if 1//defined(__M460MINIMA__)
+#include "vcom_serial.h"
+#define VCOM_T        HSUSBD_T
+#endif
 struct ring_buffer
 {
   unsigned char buffer[SERIAL_BUFFER_SIZE];
@@ -66,6 +69,8 @@ public:
                    IRQn_Type u32IrqId,
                    ring_buffer *rx_buffer);
 
+    HardwareSerial(VCOM_T *vcom_device, ring_buffer *rx_buffer);
+
     /* Set up/tear down */
     void begin(uint32_t baud);
     void end(void);
@@ -87,6 +92,9 @@ private:
     uint32_t u32ClkSrc;
     uint32_t u32ClkDiv;  
     IRQn_Type u32IrqId;
+    VCOM_T *vcom_device;
+    uint32_t vcom_init_done;
+    uint32_t use_vcom;
 };
 
 #if(UART_MAX_COUNT>0)

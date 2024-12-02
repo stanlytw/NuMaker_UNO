@@ -1,60 +1,3 @@
-#nuvoton_m451.name=NuMaker-M451
-#nuvoton_m451.upload.tool=nulinkburn
-#nuvoton_m451.upload.protocol=nuc-ba
-#nuvoton_m451.upload.maximum_size=262144
-#nuvoton_m451.upload.use_1200bps_touch=false
-#nuvoton_m451.upload.wait_for_upload_port=false
-#nuvoton_m451.upload.native_usb=false
-#nuvoton_m451.build.mcu=cortex-m4
-#nuvoton_m451.build.f_cpu=72000000L
-#nuvoton_m451.build.core=nuvoton
-#nuvoton_m451.build.extra_flags=-D__M451__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-#nuvoton_m451.build.board=__NUVOTON__
-#nuvoton_m451.build.ldscript=linker_scripts/gcc/256K_32K_flash.ld
-#nuvoton_m451.build.variant=Nuvoton
-#nuvoton_m451.build.variant_system_lib=../../system/{build.def}/libchip_M451Series_gcc_rel.a
-#nuvoton_m451.build.vid=0x2341
-#nuvoton_m451.build.pid=0x003e
-#nuvoton_m451.build.def=M451Series
-
-#nuvoton_nuc200.name=NuMaker-NUC240 
-#nuvoton_nuc200.upload.tool=nulinkburn
-#nuvoton_nuc200.upload.protocol=sam-ba
-#nuvoton_nuc200.upload.maximum_size=131072
-#nuvoton_nuc200.upload.use_1200bps_touch=false
-#nuvoton_nuc200.upload.wait_for_upload_port=false
-#nuvoton_nuc200.upload.native_usb=false
-#nuvoton_nuc200.build.mcu=cortex-m0
-#nuvoton_nuc200.build.f_cpu=48000000L
-#nuvoton_nuc200.build.core=nuvoton
-#nuvoton_nuc200.build.extra_flags=-D__NUC240__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-#nuvoton_nuc200.build.board=__NUVOTON__
-#nuvoton_nuc200.build.ldscript=linker_scripts/gcc/256K_32K_flash.ld
-#nuvoton_nuc200.build.variant=Nuvoton
-#nuvoton_nuc200.build.variant_system_lib=../../system/{build.def}/libchip_NUC200Series_gcc_rel.a
-#nuvoton_nuc200.build.vid=0x2341
-#nuvoton_nuc200.build.pid=0x003e
-#nuvoton_nuc200.build.def=NUC200Series
-
-#nuvoton_nano100.name=NuMaker-NANO130
-#nuvoton_nano100.upload.tool=nulinkburn
-#nuvoton_nano100.upload.protocol=nuc-ba
-#nuvoton_nano100.upload.maximum_size=65536
-#nuvoton_nano100.upload.use_1200bps_touch=false
-#nuvoton_nano100.upload.wait_for_upload_port=false
-#nuvoton_nano100.upload.native_usb=false
-#nuvoton_nano100.build.mcu=cortex-m0
-#nuvoton_nano100.build.f_cpu=32000000L
-#nuvoton_nano100.build.core=nuvoton
-#nuvoton_nano100.build.extra_flags= -D__NANO100__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-#nuvoton_nano100.build.board=__NUVOTON__
-#nuvoton_nano100.build.ldscript=linker_scripts/gcc/128K_16K_flash.ld
-#nuvoton_nano100.build.variant=Nuvoton
-#nuvoton_nano100.build.variant_system_lib=../../system/{build.def}/libchip_Nano100Series_gcc_rel.a
-#nuvoton_nano100.build.vid=0x2341
-#nuvoton_nano100.build.pid=0x003e
-#nuvoton_nano100.build.def=Nano100Series
-
 nuvoton_nuc131.name=NuMaker-NUC131U
 nuvoton_nuc131.upload.tool=nulinkburn
 nuvoton_nuc131.upload.protocol=nuc-ba
@@ -103,7 +46,7 @@ nuvoton_m460.upload.use_1200bps_touch=false
 nuvoton_m460.upload.wait_for_upload_port=false
 nuvoton_m460.upload.native_usb=false
 nuvoton_m460.build.mcu=cortex-m4
-nuvoton_m460.build.f_cpu=192000000L
+nuvoton_m460.build.f_cpu=200000000L
 nuvoton_m460.build.core=nuvoton
 nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m460.build.board=__NUVOTON__
@@ -135,26 +78,6 @@ nuvoton_m480.build.pid=0x003e
 nuvoton_m480.build.def=M480
 nuvoton_m480.build.openocdscript=openocd_scripts/M480.cfg
 
-
-
-#nuvoton_nano102.name=NuMaker-TRIO
-#nuvoton_nano102.upload.tool=nulinkburn
-#nuvoton_nano102.upload.protocol=nuc-ba
-#nuvoton_nano102.upload.maximum_size=32768
-#nuvoton_nano102.upload.use_1200bps_touch=false
-#nuvoton_nano102.upload.wait_for_upload_port=false
-#nuvoton_nano102.upload.native_usb=false
-#nuvoton_nano102.build.mcu=cortex-m0
-#nuvoton_nano102.build.f_cpu=32000000L
-#nuvoton_nano102.build.core=nuvoton
-#nuvoton_nano102.build.extra_flags= -D__NANO1X2__ -D__NANO102ZC2AN__ -D__IOT_EVB__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-#nuvoton_nano102.build.board=__NUVOTON__
-#nuvoton_nano102.build.ldscript=linker_scripts/gcc/32K_8K_flash.ld
-#nuvoton_nano102.build.variant=Nuvoton
-#nuvoton_nano102.build.variant_system_lib=../../system/{build.def}/libchip_Nano1X2Series_gcc_rel.a
-#nuvoton_nano102.build.vid=0x2341
-#nuvoton_nano102.build.pid=0x003e
-#nuvoton_nano102.build.def=Nano1X2Series
 
 nuvoton_m032bt.name=NuMaker-M032BTAI
 nuvoton_m032bt.upload.tool=nulinkburn
@@ -196,3 +119,25 @@ nuvoton_m032kg.build.vid=0x2341
 nuvoton_m032kg.build.pid=0x003e
 nuvoton_m032kg.build.def=M032KG
 nuvoton_m032kg.build.openocdscript=openocd_scripts/M032KG.cfg
+
+
+nuvoton_m460m.name=Customized-M467M
+nuvoton_m460m.upload.tool=isp_m460
+#nuvoton_m460m.upload.tool=nulinkburn_m460
+nuvoton_m460m.upload.protocol=nuc-ba
+nuvoton_m460m.upload.maximum_size=524288
+nuvoton_m460m.upload.use_1200bps_touch=false
+nuvoton_m460m.upload.wait_for_upload_port=false
+nuvoton_m460m.upload.native_usb=false
+nuvoton_m460m.build.mcu=cortex-m4
+nuvoton_m460m.build.f_cpu=200000000L
+nuvoton_m460m.build.core=nuvoton
+nuvoton_m460m.build.extra_flags=-D__M460__ -D__M460MINIMA__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m460m.build.board=__NUVOTON__
+nuvoton_m460m.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
+nuvoton_m460m.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+nuvoton_m460m.build.variant=Nuvoton
+nuvoton_m460m.build.vid=0x2341
+nuvoton_m460m.build.pid=0x003e
+nuvoton_m460m.build.def=M460
+nuvoton_m460m.build.openocdscript=openocd_scripts/M460.cfg

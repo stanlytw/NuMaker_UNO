@@ -156,11 +156,26 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(GPA_MODULE);
     CLK_EnableModuleClock(GPB_MODULE);
     CLK_EnableModuleClock(GPC_MODULE);
+    CLK_EnableModuleClock(GPD_MODULE);//[2024-11-06]For SDH
+    CLK_EnableModuleClock(GPE_MODULE);//[2024-11-06]For SDH
     CLK_EnableModuleClock(GPG_MODULE);
 
     CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
 
+
+    /* Enable SDH0 module clock source as HCLK and SDH0 module clock divider as 4 */
+    //[2024-11-06]Since no wrap for sdh, enable ip clock here.
+    CLK_EnableModuleClock(SDH0_MODULE);
+    CLK_SetModuleClock(SDH0_MODULE, CLK_CLKSEL0_SDH0SEL_HCLK, CLK_CLKDIV0_SDH0(4));
+
+    SET_SD0_nCD_PD13();
+    SET_SD0_CLK_PE6();
+    SET_SD0_CMD_PE7();
+    SET_SD0_DAT0_PE2();
+    SET_SD0_DAT1_PE3();
+    SET_SD0_DAT2_PE4();
+    SET_SD0_DAT3_PE5();
 #endif
 
 }
@@ -350,12 +365,23 @@ void init(void)
     CLK->PCLKDIV = CLK_PCLKDIV_APB0DIV_DIV2 | CLK_PCLKDIV_APB1DIV_DIV2;
 
 #elif defined(__M460__)
+#if defined(__M460MINIMA__)
+    /* Enable HIRC and HXT clock */
+    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
+
+    /* Wait for HIRC and HXT clock ready */
+    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk | CLK_STATUS_HXTSTB_Msk);
+#else
+
    /* Enable HIRC clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
 
     /* Wait for HIRC clock ready */
     CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
-
+#endif
+    /* Set PCLK0 and PCLK1 to HCLK/2 */
+    CLK->PCLKDIV = (CLK_PCLKDIV_APB0DIV_DIV2 | CLK_PCLKDIV_APB1DIV_DIV2);
+    
     /* Set core clock to 192MHz */
     CLK_SetCoreClock(F_CPU);
 

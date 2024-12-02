@@ -1211,7 +1211,8 @@ void HID_ClassRequest(void)
 
 //=======================================================================
 //=======================================================================
-
+#if defined(__M460MINIMA__)
+#else
 USBDevice_ USBDevice;
 
 USBDevice_::USBDevice_()
@@ -1307,3 +1308,5 @@ bool USBDevice_::detach(void)
 #endif	
 	return true;
 }
+
+#endif
