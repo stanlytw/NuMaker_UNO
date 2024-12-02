@@ -8,12 +8,40 @@ system_m460.o:
 00000000 T SystemCoreClockUpdate
 00000000 T SystemInit
 
+sdh.o:
+00000000 b _SDH0_ReferenceClock
+00000000 b _SDH0_ucSDHCBuffer
+00000000 b _SDH1_ReferenceClock
+00000000 b _SDH1_ucSDHCBuffer
+         U CLK_GetHCLKFreq
+         U CLK_GetHXTFreq
+         U CLK_GetPLLClockFreq
+         U memset
+00000020 C SD0
+00000020 C SD1
+00000000 T SDH_CardDetection
+00000000 t SDH_CheckRB
+00000000 T SDH_Get_SD_info
+00000000 T SDH_Init
+00000000 T SDH_Open
+00000000 T SDH_Probe
+00000000 T SDH_Read
+00000000 T SDH_SDCmdAndRsp
+00000000 T SDH_SDCmdAndRsp2
+00000000 T SDH_SDCmdAndRspDataIn
+00000000 T SDH_SDCommand
+00000000 T SDH_SelectCardType
+00000000 T SDH_Set_clock
+00000000 T SDH_Swap32
+00000000 T SDH_SwitchToHighSpeed
+00000000 T SDH_Write
+         U SYS_IsRegLocked
+         U SystemCoreClock
+00000000 b u32SD_ClkSrc.8719
+
 wdt.o:
          U SystemCoreClock
 00000000 T WDT_Open
-
-wwdt.o:
-00000000 T WWDT_Open
 
 i2c.o:
          U CLK_GetPCLK0Freq
@@ -60,6 +88,9 @@ i2c.o:
 00000000 T I2C_WriteMultiBytesOneReg
 00000000 T I2C_WriteMultiBytesTwoRegs
          U SystemCoreClock
+
+wwdt.o:
+00000000 T WWDT_Open
 
 timer.o:
          U CLK_GetPCLK0Freq
@@ -488,3 +519,37 @@ startup_M460.o:
 00000000 W USCI0_IRQHandler
 00000000 W WDT_IRQHandler
 00000000 W WWDT_IRQHandler
+
+hsusbd.o:
+00000000 b g_hsusbd_buf
+00000000 B g_hsusbd_Configured
+00000000 b g_hsusbd_CtrlInPointer
+00000000 B g_hsusbd_CtrlInSize
+00000000 d g_hsusbd_CtrlMaxPktSize
+00000000 B g_hsusbd_CtrlZero
+00000000 B g_hsusbd_DmaDone
+00000000 b g_hsusbd_EnableTestMode
+00000000 B g_hsusbd_pfnClassRequest
+00000000 B g_hsusbd_pfnSetInterface
+00000000 B g_hsusbd_pfnVendorRequest
+00000000 B g_hsusbd_RemoteWakeupEn
+00000000 B g_hsusbd_ShortPacket
+00000004 C g_hsusbd_sInfo
+00000000 b g_hsusbd_TestSelector
+00000000 B g_hsusbd_UsbAddr
+00000000 b g_hsusbd_UsbAltInterface
+00000000 b g_hsusbd_UsbConfig
+00000000 B g_u32HsEpStallLock
+00000008 C gUsbCmd
+00000000 T HSUSBD_CtrlIn
+00000000 T HSUSBD_CtrlOut
+00000000 T HSUSBD_GetDescriptor
+00000000 T HSUSBD_Open
+00000000 T HSUSBD_PrepareCtrlIn
+00000000 T HSUSBD_ProcessSetupPacket
+00000000 T HSUSBD_SetVendorRequest
+00000000 T HSUSBD_StandardRequest
+00000000 T HSUSBD_Start
+00000000 T HSUSBD_SwReset
+00000000 T HSUSBD_UpdateDeviceState
+         U SystemCoreClock

@@ -111,6 +111,13 @@ tools.nulinkburn_m460.upload.params.verbose=
 tools.nulinkburn_m460.upload.params.quiet=
 tools.nulinkburn_m460.upload.pattern="{path}/{cmd}" "{path}" "{build.path}/{build.project_name}.bin"
 
+tools.isp_m460.cmd=isptool
+tools.isp_m460.cmd.windows=isptool.bat
+tools.isp_m460.path={runtime.platform.path}/tools/isptool
+
+tools.isp_m460.upload.params.verbose=
+tools.isp_m460.upload.params.quiet=
+tools.isp_m460.upload.pattern="{path}/{cmd}" "{path}" "{build.path}/{build.project_name}.bin"
 
 # Debugger configuration (general options)
 # ----------------------------------------
