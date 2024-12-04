@@ -11,10 +11,12 @@
 #include <string.h>
 #include "NuMicro.h"
 #if defined(__M460MINIMA__)
+#include "HardwareSerial.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 #include "vcom_serial.h"
+void TIM_scheduler_Config(void);
 /*--------------------------------------------------------------------------*/
 void USBD20_IRQHandler(void)
 {
@@ -238,13 +240,17 @@ void USBD20_IRQHandler(void)
 
         IrqSt = HSUSBD->EP[EPB].EPINTSTS & HSUSBD->EP[EPB].EPINTEN;
         gu32RxSize = HSUSBD->EP[EPB].EPDATCNT & 0xffff;
+        
         for(i = 0; i < gu32RxSize; i++)
-            gUsbRxBuf[i] = HSUSBD->EP[EPB].EPDAT_BYTE;
+            gUsbRxBuf[i] = HSUSBD->EP[EPB].EPDAT_BYTE;//[2024-12-03]byte accessible
 
         /* Set a flag to indicate bulk out ready */
-        gi8BulkOutReady = 1;
+        //gi8BulkOutReady = 1;
         HSUSBD_ENABLE_EP_INT(EPB, 0);
         HSUSBD_CLR_EP_INT_FLAG(EPB, IrqSt);
+
+        VcomRxhandler((uint8_t*)(gUsbRxBuf));
+        
     }
 
     if(IrqStL & HSUSBD_GINTSTS_EPCIF_Msk)
@@ -543,7 +549,43 @@ void VcomBegin(uint32_t baud)
             break;
         }
     }
+   
 }
+
+uint32_t VcomGetTxFifoCount(void)
+{
+    //HSUSBD_EPDATCNT_DATCNT_Msk  is  "0xfffful << 0".
+    return (HSUSBD->EP[EPA].EPDATCNT & 0xffff);
+}
+
+#if 1
+#define SERIAL_BUFFER_SIZE 16
+uint32_t VcomRxhandler(uint8_t* pch)
+{
+    int32_t i, i32Len; 
+    int k; 
+    gu32RxCount += gu32RxSize;
+	/* Process the Bulk out data when bulk out data is ready. */
+	
+    /*To fit serial buffer size: SERIAL_BUFFER_SIZE*/
+    if ( gu32RxSize > SERIAL_BUFFER_SIZE)
+        gu32RxSize = SERIAL_BUFFER_SIZE;
+	
+    //Since the USB EP bulk in data are get in batch. Always set tail to 0, 
+    //and feed from tail(0) 
+    for (k = 0; k < gu32RxSize; k++)
+    {
+       Serial._rx_buffer->buffer[k] = *pch++;
+    }
+    Serial._rx_buffer->head = k;
+    Serial._rx_buffer->tail = 0;
+    
+    gu32RxSize = 0;
+    HSUSBD_ENABLE_EP_INT(EPB, HSUSBD_EPINTEN_RXPKIEN_Msk | HSUSBD_EPINTEN_SHORTRXIEN_Msk);
+    
+}
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -6,9 +6,8 @@
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
-#ifndef __USBD_CDC_H__
-#define __USBD_CDC_H__
-#if defined(__M460MINIMA__)
+#ifndef __VCOM_SERIAL_H__
+#define __VCOM_SERIAL_H__
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -81,8 +80,10 @@ extern volatile uint16_t comTbytes;
 extern volatile uint16_t comThead;
 extern volatile uint16_t comTtail;
 extern uint32_t gu32RxSize;
+extern uint32_t gu32RxCount;
 extern uint32_t gu32TxSize;
 extern uint8_t gUsbRxBuf[];
+
 
 /*-------------------------------------------------------------*/
 void VCOM_Init(void);
@@ -95,9 +96,11 @@ void EPB_Handler(void);
 void VCOM_LineCoding(uint8_t port);
 void VCOM_TransferData(void);
 void VcomBegin(uint32_t baud);
+uint32_t VcomGetTxFifoCount(void);
+uint32_t VcomRxhandler(uint8_t* pch);
 #ifdef __cplusplus
 }
 #endif
 #endif//defined(__M460MINIMA__)
 
-#endif  /* __USBD_CDC_H_ */
+#endif  /* __VCOM_SERIAL_H__ */

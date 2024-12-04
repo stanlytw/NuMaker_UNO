@@ -33,23 +33,19 @@
 #define _HARDWARESERIAL_H_
 
 #include "Arduino.h"
-
 #include <inttypes.h>
-
 #include "Stream.h"
 #include "Pins_arduino.h"
 
 #define SERIAL_BUFFER_SIZE 16
-#if 1//defined(__M460MINIMA__)
-#include "vcom_serial.h"
 #define VCOM_T        HSUSBD_T
-#endif
-struct ring_buffer
+
+typedef struct
 {
   unsigned char buffer[SERIAL_BUFFER_SIZE];
   volatile unsigned int head;
   volatile unsigned int tail;
-};
+} ring_buffer;
 
 /*
  * IMPORTANT:

@@ -35,8 +35,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include "Arduino.h"
-
-
+#include "HardwareSerial.h"
 #if defined(__M451__)
 #if(UART_MAX_COUNT>0)
 ring_buffer rx_buffer = { { 0 }, 0, 0};
@@ -151,6 +150,7 @@ void UART1_IRQHandler(void)
     volatile uint16_t comThead = 0;
     volatile uint16_t comTtail = 0;
     uint32_t gu32RxSize = 0;
+    uint32_t gu32RxCount = 0;
     uint32_t gu32TxSize = 0;
     volatile uint8_t comRbuf[RXBUFSIZE] __attribute__((aligned(4)));
     volatile uint8_t comTbuf[TXBUFSIZE]__attribute__((aligned(4)));
@@ -161,7 +161,7 @@ void UART1_IRQHandler(void)
 //For M460Minima board, map Serial1 to VCOM
 #if defined(__M460MINIMA__)
     #if(UART_MAX_COUNT>0)
-    ring_buffer rx_buffer = { { 0 }, 0, 0};
+    ring_buffer rx_buffer= { { 0 }, 0, 0};
     HardwareSerial Serial(HSUSBD, &rx_buffer);
     #endif
 #else
@@ -670,6 +670,7 @@ int HardwareSerial::read(void)
     {
         unsigned char c = _rx_buffer->buffer[_rx_buffer->tail];
         _rx_buffer->tail = (unsigned int)(_rx_buffer->tail + 1) % SERIAL_BUFFER_SIZE;
+        gu32RxCount--;
         return c;
     }
 }
@@ -693,6 +694,7 @@ int HardwareSerial::availableForWrite(void)
         /*
             To do VCOM availability
         */
+        return ((int)(EPA_MAX_PKT_SIZE) - (int)(vcom_device->EP[EPA].EPDATCNT & 0xffff));
     }
 #else        
     if (UART_IS_TX_FULL(uart_device))
@@ -725,9 +727,11 @@ int HardwareSerial::availableForWrite(void)
 
 int HardwareSerial::available(void)
 {
-    //For __M460MINIMA__, use same ring buffer. Same availability.
+#if defined(__M460MINIMA__)    
+    return (int)(gu32RxCount);
+#else
     return (unsigned int)(SERIAL_BUFFER_SIZE + _rx_buffer->head - _rx_buffer->tail) % SERIAL_BUFFER_SIZE;
-
+#endif    
 }
 
 size_t HardwareSerial::write(const uint8_t ch)

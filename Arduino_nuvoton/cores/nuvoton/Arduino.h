@@ -124,7 +124,7 @@ void loop(void);
 #endif
 
 #if defined(__M460MINIMA__) 
-    #include "vcom_serial.h"//To support M467 VCOM function
+    #include "vcom_serial.h"
 #else
     #include "USBCore.h"
     #include "USBAPI.h"
