@@ -670,7 +670,9 @@ int HardwareSerial::read(void)
     {
         unsigned char c = _rx_buffer->buffer[_rx_buffer->tail];
         _rx_buffer->tail = (unsigned int)(_rx_buffer->tail + 1) % SERIAL_BUFFER_SIZE;
+#if defined(__M460MINIMA__)    
         gu32RxCount--;
+#endif        
         return c;
     }
 }
