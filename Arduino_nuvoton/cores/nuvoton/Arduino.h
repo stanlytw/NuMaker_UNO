@@ -125,6 +125,8 @@ void loop(void);
 
 #if defined(__M460MINIMA__) 
     #include "vcom_serial.h"
+    #include "isp_user.h"
+    #include "fmc_user.h"
 #else
     #include "USBCore.h"
     #include "USBAPI.h"

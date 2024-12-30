@@ -37,7 +37,7 @@ sdh.o:
 00000000 T SDH_Write
          U SYS_IsRegLocked
          U SystemCoreClock
-00000000 b u32SD_ClkSrc.8719
+00000000 b u32SD_ClkSrc.8821
 
 wdt.o:
          U SystemCoreClock
@@ -552,4 +552,46 @@ hsusbd.o:
 00000000 T HSUSBD_Start
 00000000 T HSUSBD_SwReset
 00000000 T HSUSBD_UpdateDeviceState
+         U SystemCoreClock
+
+rtc.o:
+00000000 b g_u32hiDay
+00000000 b g_u32hiHour
+00000000 b g_u32hiMin
+00000000 b g_u32hiMonth
+00000000 b g_u32hiSec
+00000000 b g_u32hiYear
+00000000 b g_u32loDay
+00000000 b g_u32loHour
+00000000 b g_u32loMin
+00000000 b g_u32loMonth
+00000000 b g_u32loSec
+00000000 b g_u32loYear
+00000000 T RTC_32KCalibration
+00000000 T RTC_Close
+00000000 T RTC_DisableInt
+00000000 T RTC_DisableSpareRegister
+00000000 T RTC_DynamicTamperConfig
+00000000 T RTC_DynamicTamperDisable
+00000000 T RTC_DynamicTamperEnable
+00000000 T RTC_EnableInt
+00000000 T RTC_EnableSpareAccess
+00000000 T RTC_GetAlarmDateAndTime
+00000000 T RTC_GetDateAndTime
+00000000 T RTC_GetDayOfWeek
+00000000 T RTC_Open
+00000000 T RTC_SetAlarmDate
+00000000 T RTC_SetAlarmDateAndTime
+00000000 T RTC_SetAlarmDateMask
+00000000 T RTC_SetAlarmTime
+00000000 T RTC_SetAlarmTimeMask
+00000000 T RTC_SetClockSource
+00000000 T RTC_SetDate
+00000000 T RTC_SetDateAndTime
+00000000 T RTC_SetGPIOLevel
+00000000 T RTC_SetGPIOMode
+00000000 T RTC_SetTickPeriod
+00000000 T RTC_SetTime
+00000000 T RTC_StaticTamperDisable
+00000000 T RTC_StaticTamperEnable
          U SystemCoreClock

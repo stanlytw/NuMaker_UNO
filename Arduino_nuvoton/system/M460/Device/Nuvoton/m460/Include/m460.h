@@ -797,7 +797,7 @@ typedef volatile unsigned int   vu32;       ///< Define 32-bit unsigned volatile
 #include "_spi.h"
 //#include "qspi.h"
 //#include "canfd.h"
-//#include "rtc.h"
+#include "rtc.h"
 //#include "usci_uart.h"
 #include "sdh.h"
 #include "usbd.h"

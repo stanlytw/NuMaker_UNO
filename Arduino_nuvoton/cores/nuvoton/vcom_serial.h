@@ -8,12 +8,14 @@
  ******************************************************************************/
 #ifndef __VCOM_SERIAL_H__
 #define __VCOM_SERIAL_H__
+#if defined(__M460MINIMA__)
+//#include "HardwareSerial.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
 /* Define the vendor id and product id */
 #define USBD_VID        0x0416
-#define USBD_PID        0xB002
+#define USBD_PID        0x3F00
 
 /*!<Define CDC Class Specific Request */
 #define SET_LINE_CODE           0x20
@@ -25,6 +27,7 @@ extern "C" {
 
 /*-------------------------------------------------------------*/
 /* Define EP maximum packet size */
+//EP for VCOM
 #define CEP_MAX_PKT_SIZE        64
 #define CEP_OTHER_MAX_PKT_SIZE  64
 #define EPA_MAX_PKT_SIZE        512
@@ -33,26 +36,53 @@ extern "C" {
 #define EPB_OTHER_MAX_PKT_SIZE  64
 #define EPC_MAX_PKT_SIZE        64
 #define EPC_OTHER_MAX_PKT_SIZE  64
+//EP for HID
+#define EPD_MAX_PKT_SIZE        1024
+#define EPD_OTHER_MAX_PKT_SIZE  64
+#define EPE_MAX_PKT_SIZE        1024
+#define EPE_OTHER_MAX_PKT_SIZE  64
 
-#define CEP_BUF_BASE    0
-#define CEP_BUF_LEN     CEP_MAX_PKT_SIZE
-#define EPA_BUF_BASE    0x200
-#define EPA_BUF_LEN     EPA_MAX_PKT_SIZE
-#define EPB_BUF_BASE    0x400
-#define EPB_BUF_LEN     EPB_MAX_PKT_SIZE
-#define EPC_BUF_BASE    0x600
-#define EPC_BUF_LEN     EPC_MAX_PKT_SIZE
+
+#define CEP_BUF_BASE            0
+#define CEP_BUF_LEN             CEP_MAX_PKT_SIZE
+#define EPA_BUF_BASE            0x200//0x200 offset
+#define EPA_BUF_LEN             EPA_MAX_PKT_SIZE
+#define EPB_BUF_BASE            0x400//0x200 offset
+#define EPB_BUF_LEN             EPB_MAX_PKT_SIZE
+#define EPC_BUF_BASE            0x600//0x200 offset
+#define EPC_BUF_LEN             EPC_MAX_PKT_SIZE
+#define EPD_BUF_BASE            0x800//0x400 offset
+#define EPD_BUF_LEN             EPD_MAX_PKT_SIZE
+#define EPE_BUF_BASE            0xC00//0x400 offset
+#define EPE_BUF_LEN             EPE_MAX_PKT_SIZE
+
 
 /* Define the interrupt In EP number */
-#define BULK_IN_EP_NUM      0x01
-#define BULK_OUT_EP_NUM     0x02
-#define INT_IN_EP_NUM       0x03
+#define BULK_IN_EP_NUM_VCOM      0x01
+#define BULK_OUT_EP_NUM_VCOM     0x02
+#define INT_IN_EP_NUM_VCOM       0x03
+#define INT_IN_EP_NUM_HID        0x04
+#define INT_OUT_EP_NUM_HID       0x05
+
 
 /* Define Descriptor information */
+#define HID_DEFAULT_INT_IN_INTERVAL     1
 #define USBD_SELF_POWERED               0
 #define USBD_REMOTE_WAKEUP              0
 #define USBD_MAX_POWER                  50  /* The unit is in 2mA. ex: 50 * 2mA = 100mA */
 
+
+/*!<Define HID Class Specific Request */
+#define GET_REPORT              0x01
+#define GET_IDLE                0x02
+#define GET_PROTOCOL            0x03
+#define SET_REPORT              0x09
+#define SET_IDLE                0x0A
+#define SET_PROTOCOL            0x0B
+
+
+
+#define VHID
 /************************************************/
 /* for CDC class */
 /* Line coding structure
@@ -68,6 +98,14 @@ typedef struct
     uint8_t   u8ParityType;   /* parity       */
     uint8_t   u8DataBits;     /* data bits    */
 } STR_VCOM_LINE_CODING;
+
+//#define SERIAL_BUFFER_SIZE 16
+//typedef struct
+//{
+//  unsigned char buffer[SERIAL_BUFFER_SIZE];
+//  volatile unsigned int head;
+//  volatile unsigned int tail;
+//} _RING_BUFFER;
 
 /*-------------------------------------------------------------*/
 extern volatile int8_t gi8BulkOutReady;
@@ -98,6 +136,20 @@ void VCOM_TransferData(void);
 void VcomBegin(uint32_t baud);
 uint32_t VcomGetTxFifoCount(void);
 uint32_t VcomRxhandler(uint8_t* pch);
+
+
+void HID_InitForHighSpeed(void);
+void HID_InitForFullSpeed(void);
+void HID_Init(void);
+void HID_ClassRequest(void);
+
+void HID_SetInReport(void);
+void HID_GetOutReport(uint8_t *pu8EpBuf, uint32_t u32Size);
+void HID_RebootCmdhandler(void);
+
+void VHID_Init(void);
+void EPD_Handler(void);
+void EPE_Handler(void);
 #ifdef __cplusplus
 }
 #endif

@@ -36,10 +36,25 @@
 #include <inttypes.h>
 #include "Stream.h"
 #include "Pins_arduino.h"
+#if defined(__M460MINIMA__)
+//#include "vcom_serial.h"
+#endif
+
 
 #define SERIAL_BUFFER_SIZE 16
+//#if 1//defined(__M460MINIMA__)
+//#include "vcom_serial.h"
 #define VCOM_T        HSUSBD_T
-
+//#endif
+#ifdef __cplusplus
+//extern "C" {
+#endif
+//struct ring_buffer
+//{
+//  unsigned char buffer[SERIAL_BUFFER_SIZE];
+//  volatile unsigned int head;
+//  volatile unsigned int tail;
+//};
 typedef struct
 {
   unsigned char buffer[SERIAL_BUFFER_SIZE];
@@ -47,6 +62,9 @@ typedef struct
   volatile unsigned int tail;
 } ring_buffer;
 
+#ifdef __cplusplus
+//extern "C" {
+#endif
 /*
  * IMPORTANT:
  *
