@@ -24,7 +24,7 @@
                     {"name": "NuMaker-M252"},
                     {"name": "NuMaker-M467HJ"},
                     {"name": "NuMaker-PFM-M487"},
-					{"name": "Customized-M467M"}
+		    {"name": "Customized-M467M"}
                     						
                   ],
                   "toolsDependencies": [
