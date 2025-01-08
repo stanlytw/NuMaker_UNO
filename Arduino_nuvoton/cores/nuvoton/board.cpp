@@ -159,6 +159,7 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(GPD_MODULE);//[2024-11-06]For SDH
     CLK_EnableModuleClock(GPE_MODULE);//[2024-11-06]For SDH
     CLK_EnableModuleClock(GPG_MODULE);
+    CLK_EnableModuleClock(GPH_MODULE);//[2025-01-07]For GPIO Test
 
     CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
