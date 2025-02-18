@@ -7,8 +7,8 @@
  * @copyright Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 /*!<Includes */
-#include "NuMicro.h"
 #if defined(__M460MINIMA__)
+#include "NuMicro.h"
 #include "vcom_serial.h"
 /*----------------------------------------------------------------------------*/
 /*!<USB Device Descriptor */

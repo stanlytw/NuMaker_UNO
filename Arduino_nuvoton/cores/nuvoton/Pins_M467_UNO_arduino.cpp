@@ -17,41 +17,37 @@
 */
 #include "Arduino.h"
 #include "Pins_arduino.h"
+//__M467SJHAN__
 
-
-#if defined(__UNO_M467__)
+#if defined(__M460__) && defined(__M460MINIMA__) && defined(__M467SJHAN__)
 
 #ifdef USE_BoardToPin
 BoardToPin BoardToPinInfo[] =
 {
     //{pin, type, num}//
-	{  4, UART_TYPE, 0},// 0:      (D0/UART_RX0)
-    {  3, UART_TYPE, 0},// 1:      (D1/UART_TX0)
-    { 67, PWM_TYPE, 0}, // 2:      (D2/PWM0)
-    {  7, PWM_TYPE, 1}, // 3:      (D3/PWM1)
-    {  6, PWM_TYPE, 2}, // 4:      (D4/PWM2)
-    {  5, PWM_TYPE, 3}, // 5:      (D5/PWM3)
-    {  2, PWM_TYPE, 4}, // 6:      (D6/PWM4)
-    {  1, PWM_TYPE, 5}, // 7:      (D7/PWM5)
+	{ 21, UART_TYPE,0},// 0:      (D0/PA6/UART_RX0)
+    { 20, UART_TYPE,0},// 1:      (D1/PA7/UART_TX0)
+    { 19, PWM_TYPE, 0}, // 2:      (D2/PC6/PWM)
+    { 18, PWM_TYPE, 1}, // 3:      (D3/PC7/PWM)
+    { 25, PWM_TYPE, 2}, // 4:      (D4/PA5/PWM)
+    { 26, PWM_TYPE, 3}, // 5:      (D5/PA4/PWM)
+    {  8, PWM_TYPE, 4}, // 6:      (D6/PA11/PWM)
+    { 52, PWM_TYPE, 5}, // 7:      (D7/PC14/PWM)
 
-    { 55, PWM_TYPE, 6}, // 8:      (D8/PWM6)
-    { 56, PWM_TYPE, 7}, // 9:      (D9/PWM7)
-    { 57, SPI_TYPE, 0}, //10:      (D10/SPI0_CS)
-    { 60, SPI_TYPE, 0}, //11:      (D11/SPI0_MOSI)
-    { 59, SPI_TYPE, 0}, //12:      (D12/SPI0_MISO)
-    { 58, SPI_TYPE, 0}, //13:      (D13/SPI0_SCK)
+    {  7, PWM_TYPE, 6}, // 8:      (D8/PB0/PWM)
+    { 12, PWM_TYPE, 7}, // 9:      (D9/PF6/PWM)
+    { 27, SPI_TYPE, 0}, //10:      (D10/PA3/SPI0_CS)
+    { 30, SPI_TYPE, 0}, //11:      (D11/PA0/SPI0_MOSI)
+    { 29, SPI_TYPE, 0}, //12:      (D12/PA1/SPI0_MISO)
+    { 28, SPI_TYPE, 0}, //13:      (D13/PA2/SPI0_SCK)
 	
-	{128, ADC_TYPE, 0}, //14:      (D14/A0)
-    {127, ADC_TYPE, 1}, //15:      (D15/A1)
-    {126, ADC_TYPE, 2}, //16:      (D16/A2)
-    {125, ADC_TYPE, 3}, //17:      (D17/A3)
-    
-    
-    {108, I2C_TYPE, 0}, //18:      (D18/I2C0_SDA/A4)
-    {107, I2C_TYPE, 0}, //19:      (D19/I2C0_SCL/A5)
+	{ 55, ADC_TYPE, 0}, //14:      (D14/PB13/A0)
+    { 60, ADC_TYPE, 1}, //15:      (D15/PB11/A1)
+    { 61, ADC_TYPE, 2}, //16:      (D16/PB10/A2)
+    { 62, ADC_TYPE, 3}, //17:      (D17/PB9/A3)
+    { 56, I2C_TYPE, 0}, //18:      (D18/PB12/I2C0_SDA/A4)
+    { 55, I2C_TYPE, 0}, //19:      (D19/PB13/I2C0_SCL/A5)
  
-   
-
     { -1,        0, 0}, //22: NC
     { -1,        0, 0}, //23: NC
     { -1,        0, 0}, //24: NC
@@ -71,10 +67,10 @@ BoardToPin BoardToPinInfo[] =
     { -1,        0, 0}, //38: NC
     { -1,        0, 0}, //39: NC
 
-    { 15, SPI_TYPE, 1}, //40: PA9(USCI0_DAT1)    (SPI2-MISO)
-    { 13, SPI_TYPE, 1}, //41: PA11(USCI0_CLK)    (SPI2-SS)
-    { 14, SPI_TYPE, 1}, //42: PA10(USCI0_DAT0)   (SPI2-CLK)
-    { 16, SPI_TYPE, 1}, //43: PA8(USCI0_CTL1)    (SPI2-MOSI)
+    //{ 15, SPI_TYPE, 1}, //40: PA9(USCI0_DAT1)    (SPI2-MISO)
+    //{ 13, SPI_TYPE, 1}, //41: PA11(USCI0_CLK)    (SPI2-SS)
+    //{ 14, SPI_TYPE, 1}, //42: PA10(USCI0_DAT0)   (SPI2-CLK)
+    //{ 16, SPI_TYPE, 1}, //43: PA8(USCI0_CTL1)    (SPI2-MOSI)
 
 };
 #endif
@@ -142,20 +138,20 @@ GPIOPinDescription GPIO_Desc[] =
 	{NULL, 0, {0, 0, 0}}, //51
 	    
 	{PC, BIT14, {(uint32_t) &SYS->GPC_MFP3, SYS_GPC_MFP3_PC14MFP_Msk, SYS_GPC_MFP3_PC14MFP_GPIO }}, //52
-    {PB, BIT15, {(uint32_t) &SYS->GPC_MFP3, SYS_GPC_MFP3_PB15MFP_Msk, SYS_GPC_MFP3_PB15MFP_GPIO }}, //53
-    {PB, BIT14, {(uint32_t) &SYS->GPC_MFP2, SYS_GPC_MFP2_PB14MFP_Msk, SYS_GPC_MFP3_PB14MFP_GPIO }}, //54
-    {PB, BIT13, {(uint32_t) &SYS->GPC_MFP3, SYS_GPC_MFP3_PB13MFP_Msk, SYS_GPC_MFP3_PB13MFP_GPIO }}, //55
-    {PB, BIT12, {(uint32_t) &SYS->GPC_MFP3, SYS_GPC_MFP3_PB12MFP_Msk, SYS_GPC_MFP3_PB12MFP_GPIO }}, //56
+    {PB, BIT15, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB15MFP_Msk, SYS_GPB_MFP3_PB15MFP_GPIO }}, //53
+    {PB, BIT14, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB14MFP_Msk, SYS_GPB_MFP3_PB14MFP_GPIO }}, //54
+    {PB, BIT13, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB13MFP_Msk, SYS_GPB_MFP3_PB13MFP_GPIO }}, //55
+    {PB, BIT12, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB12MFP_Msk, SYS_GPB_MFP3_PB12MFP_GPIO }}, //56
 	
 	{NULL, 0, {0, 0, 0}}, //57
 	{NULL, 0, {0, 0, 0}}, //58
 	{NULL, 0, {0, 0, 0}}, //59
 	
-	{PB, BIT11, {(uint32_t) &SYS->GPE_MFP2, SYS_GPE_MFP2_PB11MFP_Msk, SYS_GPE_MFP2_PB11MFP_GPIO }}, //60
-    {PB, BIT10, {(uint32_t) &SYS->GPE_MFP2, SYS_GPE_MFP2_PB10MFP_Msk, SYS_GPE_MFP2_PB10MFP_GPIO }}, //61
-    {PB, BIT9,  {(uint32_t) &SYS->GPE_MFP2, SYS_GPE_MFP2_PB9MFP_Msk,  SYS_GPE_MFP2_PB9MFP_GPIO  }}, //62
-    {PB, BIT8,  {(uint32_t) &SYS->GPE_MFP2, SYS_GPE_MFP2_PB8MFP_Msk,  SYS_GPE_MFP2_PB8MFP_GPIO  }}, //63
-    {PB, BIT7,  {(uint32_t) &SYS->GPE_MFP1, SYS_GPE_MFP1_PB7MFP_Msk,  SYS_GPE_MFP1_PB7MFP_GPIO  }}, //64
+	{PB, BIT11, {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB11MFP_Msk, SYS_GPB_MFP2_PB11MFP_GPIO }}, //60
+    {PB, BIT10, {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB10MFP_Msk, SYS_GPB_MFP2_PB10MFP_GPIO }}, //61
+    {PB, BIT9,  {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB9MFP_Msk,  SYS_GPB_MFP2_PB9MFP_GPIO  }}, //62
+    {PB, BIT8,  {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB8MFP_Msk,  SYS_GPB_MFP2_PB8MFP_GPIO  }}, //63
+    {PB, BIT7,  {(uint32_t) &SYS->GPB_MFP1, SYS_GPB_MFP1_PB7MFP_Msk,  SYS_GPB_MFP1_PB7MFP_GPIO  }}, //64
 
    
 };

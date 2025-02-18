@@ -18,7 +18,7 @@
 #ifndef _PINS_M467_UNO_ARDUINO_H_
 #define _PINS_M467_UNO_ARDUINO_H_
 
-#if defined(__UNO_M467__)
+#if defined(__M460__) && defined(__M460MINIMA__) && defined(__M467SJHAN__)
 /* Types used for the tables below */
 typedef struct _PinType
 {
@@ -113,7 +113,7 @@ extern BoardToPin BoardToPinInfo[];
 #endif
 
 /*========== GPIO definition ==========*/
-#define GPIO_MAX_COUNT 129
+#define GPIO_MAX_COUNT 65//129
 extern GPIOPinDescription GPIO_Desc[];
 #define GPIO_Config(Desc) outp32(Desc.Pin.MFP,(inp32(Desc.Pin.MFP) & ~Desc.Pin.Mask) | Desc.Pin.Type)
 
@@ -179,16 +179,39 @@ static const uint8_t LED_BUILTIN = 13;
 static const uint8_t SDA = 14;
 static const uint8_t SCL = 15;
 
-static const uint8_t A0  = 0;
-static const uint8_t A1  = 1;
-static const uint8_t A2  = 2;
-static const uint8_t A3  = 3;
-static const uint8_t A4  = 4;
-static const uint8_t A5  = 5;
-static const uint8_t A6  = 6;
-static const uint8_t A7  = 7;
-static const uint8_t A8  = 8;
-static const uint8_t A9  = 9;
+/*UNO-M467SJ A0~A5 sharing with D14~D19*/
+static const uint8_t A0  = 14;
+static const uint8_t A1  = 15;
+static const uint8_t A2  = 16;
+static const uint8_t A3  = 17;
+static const uint8_t A4  = 18;
+static const uint8_t A5  = 19;
+
+static const uint8_t D0  = 0;
+static const uint8_t D1  = 1;
+static const uint8_t D2  = 2;
+static const uint8_t D3  = 3;
+static const uint8_t D4  = 4;
+static const uint8_t D5  = 5;
+static const uint8_t D6  = 6;
+static const uint8_t D7  = 7;
+static const uint8_t D8  = 8;
+static const uint8_t D9  = 9;
+static const uint8_t D10  = 10;
+static const uint8_t D11  = 11;
+static const uint8_t D12  = 12;
+static const uint8_t D13  = 13;
+static const uint8_t D14  = 14;
+static const uint8_t D15  = 15;
+static const uint8_t D16  = 16;
+static const uint8_t D17  = 17;
+static const uint8_t D18  = 18;
+static const uint8_t D19  = 19;
+
+//static const uint8_t A6  = 6;
+//static const uint8_t A7  = 7;
+//static const uint8_t A8  = 8;
+//static const uint8_t A9  = 9;
 
 
 
