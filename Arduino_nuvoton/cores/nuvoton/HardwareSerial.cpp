@@ -517,6 +517,7 @@ HardwareSerial::HardwareSerial(UART_T *uart_device,
     
 }
 
+#if defined(__M460MINIMA__)
 HardwareSerial::HardwareSerial(VCOM_T *vcom_device,ring_buffer *rx_buffer)
 {
     this->use_vcom = 1;
@@ -524,7 +525,7 @@ HardwareSerial::HardwareSerial(VCOM_T *vcom_device,ring_buffer *rx_buffer)
     this->_rx_buffer = rx_buffer;
     this->vcom_init_done = 0;
 }
-
+#endif
 /*
  * Set up/tear down
  */

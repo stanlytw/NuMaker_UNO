@@ -42,10 +42,10 @@
 
 
 #define SERIAL_BUFFER_SIZE 16
-//#if 1//defined(__M460MINIMA__)
+#if defined(__M460MINIMA__)
 //#include "vcom_serial.h"
 #define VCOM_T        HSUSBD_T
-//#endif
+#endif
 #ifdef __cplusplus
 //extern "C" {
 #endif
@@ -82,9 +82,9 @@ public:
                    uint32_t u32ClkDiv,
                    IRQn_Type u32IrqId,
                    ring_buffer *rx_buffer);
-
+#if defined(__M460MINIMA__)	
     HardwareSerial(VCOM_T *vcom_device, ring_buffer *rx_buffer);
-
+#endif
     /* Set up/tear down */
     void begin(uint32_t baud);
     void end(void);
@@ -106,7 +106,9 @@ private:
     uint32_t u32ClkSrc;
     uint32_t u32ClkDiv;  
     IRQn_Type u32IrqId;
+#if defined(__M460MINIMA__)	
     VCOM_T *vcom_device;
+#endif	
     uint32_t vcom_init_done;
     uint32_t use_vcom;
 };

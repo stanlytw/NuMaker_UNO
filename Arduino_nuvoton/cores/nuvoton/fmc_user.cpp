@@ -7,9 +7,9 @@
  * @copyright Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 /*!<Includes */
+#if defined(__M460MINIMA__)
 #include <stdio.h>
 #include "NuMicro.h"
-#if defined(__M460MINIMA__)
 #include "fmc_user.h"
 #ifdef __cplusplus
 extern "C" {
