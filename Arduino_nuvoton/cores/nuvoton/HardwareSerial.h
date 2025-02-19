@@ -123,4 +123,11 @@ extern HardwareSerial Serial1;
 extern void serial1EventRun(void) __attribute__((weak));
 #endif
 
+#if defined(__M467SJHAN__)
+#if(UART_MAX_COUNT>2)
+extern HardwareSerial Serial2;
+extern void serial1EventRun(void) __attribute__((weak));
+#endif
+#endif//defined(__M467SJHAN__)
+
 #endif

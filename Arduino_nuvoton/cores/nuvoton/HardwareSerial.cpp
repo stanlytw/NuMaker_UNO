@@ -177,6 +177,13 @@ ring_buffer rx_buffer1 = { { 0 }, 0, 0};
 HardwareSerial Serial1(UART_Desc[1].U, 1, UART_Desc[1].clksrcsel, 1, UART_Desc[1].irq, &rx_buffer1);
 #endif
 
+#if defined(__M467SJHAN__)
+#if(UART_MAX_COUNT>2)
+ring_buffer rx_buffer2 = { { 0 }, 0, 0};
+HardwareSerial Serial2(UART_Desc[2].U, 2, UART_Desc[2].clksrcsel, 1, UART_Desc[2].irq, &rx_buffer2);
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -213,6 +220,26 @@ void UART0_IRQHandler(void)
 
 }
 #endif
+
+#if defined(__M467SJHAN__)
+#if(UART_MAX_COUNT>2)
+void UART4_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART4, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer2.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer2.tail)
+        {
+            rx_buffer2.buffer[rx_buffer2.head] = UART4->DAT;
+            rx_buffer2.head = i;
+        }
+    }
+
+}
+#endif
+#endif
+
+
 
 #ifdef __cplusplus
 }
@@ -569,6 +596,10 @@ void HardwareSerial::begin(uint32_t baud)
         CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV0_UART0(u32ClkDiv));
     else if(uart_device == UART1)
         CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV0_UART1(u32ClkDiv));
+    else if(uart_device == UART3)
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART3(u32ClkDiv));
+    else if(uart_device == UART4)
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART4(u32ClkDiv));
     /* Reset IP */
     //SYS_ResetModule(UART_Desc[u32Idx].module);
 
@@ -710,6 +741,10 @@ int HardwareSerial::availableForWrite(void)
             return (UART0_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
         else if(uart_device == UART1)
             return (UART1_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
+        else if(uart_device == UART3)
+            return (UART3_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
+        else if(uart_device == UART4)
+            return (UART4_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
     }
 #endif//(__M460MINIMA__)    
 #elif defined(__M032BT__) || defined(__M032KG__)|| defined(__M252__) || defined(__M480__)
