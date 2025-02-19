@@ -147,7 +147,7 @@ do { \
 }while(0);
 
 /*========== UART definition ==========*/
-#define UART_MAX_COUNT 3 //__M467SJHN__
+#define UART_MAX_COUNT 2 //__M467SJHN__
 extern UARTPinDescription UART_Desc[];
 #define UART_RX 0
 #define UART_TX 1
@@ -176,7 +176,7 @@ static const uint8_t SS   = 41;
 static const uint8_t MOSI = 43;
 static const uint8_t MISO = 40;
 static const uint8_t SCK  = 42;
-static const uint8_t LED_BUILTIN = 7;//PC14
+static const uint8_t LED_BUILTIN = 7;
 static const uint8_t SDA = 14;
 static const uint8_t SCL = 15;
 
