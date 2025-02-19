@@ -19,9 +19,10 @@
 #include "Pins_arduino.h"
 //__M467SJHAN__
 
-#if defined(__M460__) && defined(__M460MINIMA__) && defined(__M467SJHAN__)
-
+//#if defined(__M460__) && defined(__M460MINIMA__) && defined(__M467SJHAN__)
+#if defined(__M460__) && defined(__M467SJHAN__)
 #ifdef USE_BoardToPin
+//[2025-02-18] BoardToPin updated
 BoardToPin BoardToPinInfo[] =
 {
     //{pin, type, num}//
@@ -82,6 +83,7 @@ BoardToPin BoardToPinInfo[] =
     P8~P11 : MPF2
     P12~P15: MPF3
 */
+//[2025-02-17] GPIO pins updated
 GPIOPinDescription GPIO_Desc[] =
 {
     {NULL, 0, {0, 0, 0}}, //0-->0
@@ -178,41 +180,33 @@ ADCPinDescription ADC_Desc[] =
     {EADC0, EADC0_MODULE, 0, {  10, SYS_GPB_MFP0_PB0MFP_EADC0_CH0 }}, //A4 PB0
     {EADC0, EADC0_MODULE, 1, {   9, SYS_GPB_MFP0_PB1MFP_EADC0_CH1 }}, //A5 PB1
 };
-
+//[2025-02-18] SPI0 pins updated
 SPIPinDescription SPI_Desc[] =
 {
     {
         SPI0, (uint32_t)SPI0_MODULE, SPI0_IRQn, CLK_CLKSEL2_SPI0SEL_PCLK1,
-        {   {58, SYS_GPA_MFP0_PA2MFP_SPI0_CLK }, {60, SYS_GPA_MFP0_PA0MFP_SPI0_MOSI},
-            {59, SYS_GPA_MFP0_PA1MFP_SPI0_MISO}, {57, SYS_GPA_MFP0_PA3MFP_SPI0_SS  }
+        {   {28, SYS_GPA_MFP0_PA2MFP_SPI0_CLK }, {30, SYS_GPA_MFP0_PA0MFP_SPI0_MOSI},
+            {29, SYS_GPA_MFP0_PA1MFP_SPI0_MISO}, {27, SYS_GPA_MFP0_PA3MFP_SPI0_SS  }
         }
     },
-    {
-        SPI2, (uint32_t)SPI2_MODULE, SPI2_IRQn, (0x2UL << CLK_CLKSEL3_SPI2SEL_Pos),
-        {   {13, SYS_GPA_MFP2_PA11MFP_SPI2_SS }, {14, SYS_GPA_MFP2_PA10MFP_SPI2_CLK},
-            {15, SYS_GPA_MFP2_PA9MFP_SPI2_MISO}, {16, SYS_GPA_MFP2_PA8MFP_SPI2_MOSI}
-        }
-    },
-    //[2024-11-06]If use uspi0, the 8-pin connector(NU5) pin define is not compatible to UNO
-    //{
-    //    USPI0, (uint32_t)USCI0_MODULE, USCI0_IRQn, (0x1ul << CLK_APBCLK1_USCI0CKEN_Pos),
-    //    {   {13, SYS_GPA_MFP2_PA11MFP_USCI0_CLK }, {14, SYS_GPA_MFP2_PA10MFP_USCI0_DAT0},
-    //        {15, SYS_GPA_MFP2_PA9MFP_USCI0_DAT1 }, {16, SYS_GPA_MFP2_PA8MFP_USCI0_CTL1 }
-    //    }
-    //},
 
 };
-
+//[2025-02-18] UART pins updating
+/*UART0, 1, 3 and 4 related pins are defined. Check pins for UART3/CANFD */
 UARTPinDescription UART_Desc[] =
 {
-    {UART0, (uint32_t)UART0_MODULE, UART0_IRQn, {{119, SYS_GPB_MFP3_PB12MFP_UART0_RXD }, {118, SYS_GPB_MFP3_PB13MFP_UART0_TXD }}, CLK_CLKSEL1_UART0SEL_HIRC}, //ICE uart pin
-    {UART1, (uint32_t)UART1_MODULE, UART1_IRQn, {{  4, SYS_GPB_MFP0_PB2MFP_UART1_RXD }, {3, SYS_GPB_MFP0_PB3MFP_UART1_TXD }}, CLK_CLKSEL1_UART1SEL_HIRC}, //UNO uart pin
+    {UART0, (uint32_t)UART0_MODULE, UART0_IRQn, {{21, SYS_GPA_MFP1_PA6MFP_UART0_RXD },  {20, SYS_GPA_MFP1_PA7MFP_UART0_TXD }},  CLK_CLKSEL1_UART0SEL_HIRC},   //(T/R = PA7/PA6)
+    {UART1, (uint32_t)UART1_MODULE, UART1_IRQn, {{28, SYS_GPA_MFP0_PA2MFP_UART1_RXD  }, {27, SYS_GPA_MFP0_PA3MFP_UART1_TXD  }}, CLK_CLKSEL1_UART1SEL_HIRC},   //(T/R = PA3/PA2)
+	{UART4, (uint32_t)UART4_MODULE, UART4_IRQn, {{56, SYS_GPB_MFP3_PB12MFP_UART0_RXD }, {55, SYS_GPB_MFP3_PB13MFP_UART0_TXD }}, CLK_CLKSEL3_UART4SEL_HIRC},   //(T/R = PC7/PC6)
+	//{UART3, (uint32_t)UART3_MODULE, UART3_IRQn, {{, SYS_GPB_MFP3_PB12MFP_UART0_RXD }, {, SYS_GPB_MFP3_PB13MFP_UART0_TXD }}, CLK_CLKSEL3_UART3SEL_HIRC}, //
 };
 
+//[2025-02-18] I2C pins updated
 I2CPinDescription I2C_Desc[] =
 {
-    {I2C0, I2C0_MODULE, {{73, SYS_GPC_MFP0_PC1MFP_I2C0_SCL}, {74, SYS_GPC_MFP0_PC0MFP_I2C0_SDA }}},
-    //{I2C1, I2C1_MODULE, {{ 9, SYS_GPB_MFP0_PB1MFP_I2C1_SCL}, {10, SYS_GPB_MFP0_PB0MFP_I2C1_SDA }}},
+    //{I2C0, I2C0_MODULE, {{, SYS_GPC_MFP0_PC1MFP_I2C0_SCL}, {, SYS_GPC_MFP0_PC0MFP_I2C0_SDA }}},
+    {I2C1, I2C1_MODULE, {{33 , SYS_GPF_MFP0_PF0MFP_I2C1_SCL}, {34 , SYS_GPF_MFP0_PF1MFP_I2C1_SDA }}},
+	{I2C2, I2C2_MODULE, {{29 , SYS_GPA_MFP0_PA1MFP_I2C2_SCL}, {30 , SYS_GPA_MFP0_PA0MFP_I2C2_SDA }}},
 };
 
 #endif//__UNO_M467__

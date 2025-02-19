@@ -6,11 +6,10 @@
  * @copyright SPDX-License-Identifier: Apache-2.0
  * @copyright Copyright (C) 2021 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
-
 /*!<Includes */
+#if defined(__M460MINIMA__)
 #include <string.h>
 #include "NuMicro.h"
-#if defined(__M460MINIMA__)
 #include "HardwareSerial.h"
 #ifdef __cplusplus
 extern "C" {

@@ -18,7 +18,7 @@
 #ifndef _PINS_M460_ARDUINO_H_
 #define _PINS_M460_ARDUINO_H_
 
-#if defined(__M460__)
+#if defined(__M460__)&& defined(__M467HJHAN__)
 /* Types used for the tables below */
 typedef struct _PinType
 {

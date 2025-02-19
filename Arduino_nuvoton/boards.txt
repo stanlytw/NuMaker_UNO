@@ -48,7 +48,7 @@ nuvoton_m460.upload.native_usb=false
 nuvoton_m460.build.mcu=cortex-m4
 nuvoton_m460.build.f_cpu=200000000L
 nuvoton_m460.build.core=nuvoton
-nuvoton_m460.build.extra_flags=-D__M460__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m460.build.extra_flags=-D__M460__ -D__M467HJHAN__-mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m460.build.board=__NUVOTON__
 nuvoton_m460.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
 nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
@@ -122,8 +122,8 @@ nuvoton_m032kg.build.openocdscript=openocd_scripts/M032KG.cfg
 
 
 nuvoton_m460m.name=Customized-M467M
-nuvoton_m460m.upload.tool=isp_m460
-#nuvoton_m460m.upload.tool=nulinkburn_m460
+#nuvoton_m460m.upload.tool=isp_m460
+nuvoton_m460m.upload.tool=nulinkburn_m460
 nuvoton_m460m.upload.protocol=nuc-ba
 nuvoton_m460m.upload.maximum_size=524288
 nuvoton_m460m.upload.use_1200bps_touch=false
@@ -132,7 +132,7 @@ nuvoton_m460m.upload.native_usb=false
 nuvoton_m460m.build.mcu=cortex-m4
 nuvoton_m460m.build.f_cpu=200000000L
 nuvoton_m460m.build.core=nuvoton
-nuvoton_m460m.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__M467SJHAN__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m460m.build.extra_flags=-D__M460__ -D__M467SJHAN__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m460m.build.board=__NUVOTON__
 nuvoton_m460m.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
 nuvoton_m460m.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a

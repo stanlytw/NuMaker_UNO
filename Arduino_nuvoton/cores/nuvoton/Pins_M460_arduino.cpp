@@ -19,7 +19,7 @@
 #include "Pins_arduino.h"
 
 
-#if defined(__M460__)
+#if defined(__M460__)&& defined(__M467HJHAN__)
 
 #ifdef USE_BoardToPin
 BoardToPin BoardToPinInfo[] =
@@ -49,7 +49,7 @@ BoardToPin BoardToPinInfo[] =
     { 10, ADC_TYPE, 4}, //20: PB0(EADC0_CH0)    (A4/I2C1_SDA/UART2_RXD)
     {  9, ADC_TYPE, 5}, //21: PB1(EADC0_CH1)    (A5/I2C1_SCL/UART2_TXD)
 
-    { 22,        0, 0}, //22: [2025-01-07]GPIO Test
+    { -1,        0, 0}, //22: NC
     { -1,        0, 0}, //23: NC
     { -1,        0, 0}, //24: NC
     { -1,        0, 0}, //25: NC
@@ -107,7 +107,7 @@ GPIOPinDescription GPIO_Desc[] =
     {PD, BIT11, {(uint32_t) &SYS->GPD_MFP2, SYS_GPD_MFP2_PD11MFP_Msk, SYS_GPD_MFP2_PD11MFP_GPIO }}, //19
     {PD, BIT10, {(uint32_t) &SYS->GPD_MFP2, SYS_GPD_MFP2_PD10MFP_Msk, SYS_GPD_MFP2_PD10MFP_GPIO }}, //20
     {NULL, 0, {0, 0, 0}}, //21
-    {PH, BIT4, {(uint32_t)  &SYS->GPH_MFP1, SYS_GPH_MFP1_PH4MFP_Msk, SYS_GPH_MFP1_PH4MFP_GPIO }}, //22
+    {NULL, 0, {0, 0, 0}}, //22
     {NULL, 0, {0, 0, 0}}, //23
     {NULL, 0, {0, 0, 0}}, //24
     {NULL, 0, {0, 0, 0}}, //25

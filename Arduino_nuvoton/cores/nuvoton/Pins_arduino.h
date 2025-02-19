@@ -39,7 +39,7 @@
 #elif defined(__M460__) && defined(__M467SJHAN__)
 #include "Pins_M467_UNO_arduino.h"
 
-#elif defined(__M460__)//not defined(__M467SJHAN__)
+#elif defined(__M460__) && defined(__M467HJHAN__)
 #include "Pins_M460_arduino.h"
 
 #elif defined(__M032KG__)
