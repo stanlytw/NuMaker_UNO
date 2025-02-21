@@ -122,8 +122,8 @@ nuvoton_m032kg.build.openocdscript=openocd_scripts/M032KG.cfg
 
 
 nuvoton_m460m.name=Customized-M467M
-#nuvoton_m460m.upload.tool=isp_m460
-nuvoton_m460m.upload.tool=nulinkburn_m460
+nuvoton_m460m.upload.tool=isp_m460
+#nuvoton_m460m.upload.tool=nulinkburn_m460
 nuvoton_m460m.upload.protocol=nuc-ba
 nuvoton_m460m.upload.maximum_size=524288
 nuvoton_m460m.upload.use_1200bps_touch=false

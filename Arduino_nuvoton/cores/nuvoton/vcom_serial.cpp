@@ -337,7 +337,7 @@ void USBD20_IRQHandler(void)
     if(IrqStL & HSUSBD_GINTSTS_EPEIF_Msk)
     {
         IrqSt = HSUSBD->EP[EPE].EPINTSTS & HSUSBD->EP[EPE].EPINTEN;
-        printf("EPE, INT IN, IrqSr=0x%x\n", IrqSt);
+        //printf("EPE, INT IN, IrqSr=0x%x\n", IrqSt);
 			  #if 0
 			  if(HSUSBD->EP[EPE].EPINTSTS & 0x01)
 			  #else
@@ -443,6 +443,10 @@ void EPE_Handler(void)  /* Interrupt OUT handler */
 	  }
 		
 	  g_u8UsbDataReady = TRUE;
+     //[2025-02-21]move here to speed up ISP cmd response      
+      HID_RebootCmdhandler();
+
+    
 }
 
 /*--------------------------------------------------------------------------*/
@@ -824,6 +828,7 @@ void HID_RebootCmdhandler(void)
     if(g_u8UsbDataReady == TRUE)
     {
         ParseCmd((uint8_t *)g_u8OutBuff, 64);
+        /* Response ISP command */
         EPD_Handler();
 	    g_u8UsbDataReady = 0;
     }				  
@@ -837,6 +842,10 @@ void HID_RebootCmdhandler(void)
         SYS_LockReg(); 
         /* Software reset to boot to LDROM */
         NVIC_SystemReset();
+
+        /* Trap the CPU, */
+        //[2025-02-21]to guarntee ISP cmd response done and trap.      
+        while(1);
 	}
 
 }

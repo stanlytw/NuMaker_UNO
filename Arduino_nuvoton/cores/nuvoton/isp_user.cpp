@@ -102,6 +102,7 @@ int ParseCmd(uint8_t *pu8Buffer, uint8_t u8len)
 		{
             //printf("CMD_TRIGGER_HIDISP\r\n");
 			g_u8GoLDR = 1;
+            goto out;//[2025-02-20]
 		
 		}
 		

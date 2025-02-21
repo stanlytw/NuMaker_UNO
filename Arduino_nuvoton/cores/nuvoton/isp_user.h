@@ -13,7 +13,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define FW_VERSION                          0x32
+#define FW_VERSION                          0xA2
 
 #include "fmc_user.h"
 
