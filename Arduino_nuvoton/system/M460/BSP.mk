@@ -14,7 +14,7 @@
 
 CHIP=M460
 ARM_GCC_TOOLCHAIN=C:/Users/HLLIN6/AppData/Local/Arduino15/packages/arduino/tools/arm-none-eabi-gcc/7-2017q4/bin
-PROJECT_BASE_PATH=C:/Users/HLLIN6/AppData/Local/Arduino15/packages/nuvoton/hardware/nuvoton/2.0.1/system/$(CHIP)
+PROJECT_BASE_PATH=C:/Users/HLLIN6/AppData/Local/Arduino15/packages/nuvoton/hardware/nuvoton/3.0.5/system/$(CHIP)
 CORE=cortex-m4
 
 OUTPUT_BIN=./
@@ -44,7 +44,8 @@ SEP=/
 CFLAGS += -Wall -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int
 CFLAGS += -Werror-implicit-function-declaration -Wmain -Wparentheses
 CFLAGS += -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused
-CFLAGS += -Wuninitialized -Wunknown-pragmas -Wfloat-equal
+#CFLAGS += -Wuninitialized 
+CFLAGS += -Wunknown-pragmas -Wfloat-equal
 CFLAGS += -Wshadow -Wpointer-arith -Wbad-function-cast -Wwrite-strings
 CFLAGS += -Wsign-compare -Waggregate-return -Wstrict-prototypes
 CFLAGS += -Wmissing-prototypes -Wmissing-declarations

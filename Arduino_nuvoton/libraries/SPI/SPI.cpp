@@ -468,7 +468,13 @@ void SPIClass::detachInterrupt(void) {
 }
 
 #if SPI_MAX_COUNT > 0
+#if defined(__M467SJHAN__)
+#define SPI_ID0 0
+#else
 #define SPI_ID0 1
+#endif	
+
+
 static void SPI_0_Init(void) {	
 	SPI_Config(SPI_Desc[SPI_ID0]);	
 }
@@ -478,7 +484,12 @@ SPIClass SPI(SPI_Desc[SPI_ID0].S,SPI_Desc[SPI_ID0].module,SPI_Desc[SPI_ID0].clks
 #endif
 
 #if SPI_MAX_COUNT >1
+#if defined(__M467SJHAN__)
+#define SPI_ID0 0
+#else
 #define SPI_ID1 0
+#endif
+
 static void SPI_1_Init(void) {	
 	SPI_Config(SPI_Desc[SPI_ID1]);	
 }

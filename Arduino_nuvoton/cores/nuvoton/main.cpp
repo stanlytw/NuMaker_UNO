@@ -56,8 +56,12 @@ int main( void )
 
 	for (;;)
 	{
+//#if defined(__M460MINIMA__)      
+//      HID_RebootCmdhandler();
+//#endif       
       loop();
       if(serialEventRun) serialEventRun();
+     
 	}
 
 	return 0;

@@ -33,21 +33,38 @@
 #define _HARDWARESERIAL_H_
 
 #include "Arduino.h"
-
 #include <inttypes.h>
-
 #include "Stream.h"
 #include "Pins_arduino.h"
+#if defined(__M460MINIMA__)
+//#include "vcom_serial.h"
+#endif
+
 
 #define SERIAL_BUFFER_SIZE 16
-
-struct ring_buffer
+#if defined(__M460MINIMA__)
+//#include "vcom_serial.h"
+#define VCOM_T        HSUSBD_T
+#endif
+#ifdef __cplusplus
+//extern "C" {
+#endif
+//struct ring_buffer
+//{
+//  unsigned char buffer[SERIAL_BUFFER_SIZE];
+//  volatile unsigned int head;
+//  volatile unsigned int tail;
+//};
+typedef struct
 {
   unsigned char buffer[SERIAL_BUFFER_SIZE];
   volatile unsigned int head;
   volatile unsigned int tail;
-};
+} ring_buffer;
 
+#ifdef __cplusplus
+//extern "C" {
+#endif
 /*
  * IMPORTANT:
  *
@@ -65,7 +82,9 @@ public:
                    uint32_t u32ClkDiv,
                    IRQn_Type u32IrqId,
                    ring_buffer *rx_buffer);
-
+#if defined(__M460MINIMA__)	
+    HardwareSerial(VCOM_T *vcom_device, ring_buffer *rx_buffer);
+#endif
     /* Set up/tear down */
     void begin(uint32_t baud);
     void end(void);
@@ -87,6 +106,11 @@ private:
     uint32_t u32ClkSrc;
     uint32_t u32ClkDiv;  
     IRQn_Type u32IrqId;
+#if defined(__M460MINIMA__)	
+    VCOM_T *vcom_device;
+#endif	
+    uint32_t vcom_init_done;
+    uint32_t use_vcom;
 };
 
 #if(UART_MAX_COUNT>0)
@@ -98,5 +122,12 @@ extern void serialEventRun(void) __attribute__((weak));
 extern HardwareSerial Serial1;
 extern void serial1EventRun(void) __attribute__((weak));
 #endif
+
+#if defined(__M467SJHAN__)
+#if(UART_MAX_COUNT>2)
+extern HardwareSerial Serial2;
+extern void serial1EventRun(void) __attribute__((weak));
+#endif
+#endif//defined(__M467SJHAN__)
 
 #endif

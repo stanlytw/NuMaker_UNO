@@ -19,7 +19,7 @@
 #include "Pins_arduino.h"
 
 
-#if defined(__M460__)
+#if defined(__M460__)&& defined(__M467HJHAN__)
 
 #ifdef USE_BoardToPin
 BoardToPin BoardToPinInfo[] =
@@ -153,7 +153,7 @@ GPIOPinDescription GPIO_Desc[] =
 
     {PF, BIT0, {(uint32_t) &SYS->GPF_MFP0, SYS_GPF_MFP0_PF0MFP_Msk, SYS_GPF_MFP0_PF0MFP_GPIO }}, //65
     {PF, BIT1, {(uint32_t) &SYS->GPF_MFP0, SYS_GPF_MFP0_PF1MFP_Msk, SYS_GPF_MFP0_PF1MFP_GPIO }}, //66
-    {PC, BIT9, {(uint32_t) &SYS->GPC_MFP2, SYS_GPC_MFP2_PC9MFP_Pos, SYS_GPC_MFP2_PC9MFP_GPIO }}, //67
+    {PC, BIT9, {(uint32_t) &SYS->GPC_MFP2, SYS_GPC_MFP2_PC9MFP_Msk, SYS_GPC_MFP2_PC9MFP_GPIO }}, //67
     {PD, BIT8, {(uint32_t) &SYS->GPD_MFP2, SYS_GPD_MFP2_PD8MFP_Msk, SYS_GPD_MFP2_PD8MFP_GPIO }}, //68
     {PC, BIT5, {(uint32_t) &SYS->GPC_MFP1, SYS_GPC_MFP1_PC5MFP_Msk, SYS_GPC_MFP1_PC5MFP_GPIO }}, //69
     {PC, BIT4, {(uint32_t) &SYS->GPC_MFP1, SYS_GPC_MFP1_PC4MFP_Msk, SYS_GPC_MFP1_PC4MFP_GPIO }}, //70
@@ -253,8 +253,15 @@ SPIPinDescription SPI_Desc[] =
         SPI2, (uint32_t)SPI2_MODULE, SPI2_IRQn, (0x2UL << CLK_CLKSEL3_SPI2SEL_Pos),
         {   {13, SYS_GPA_MFP2_PA11MFP_SPI2_SS }, {14, SYS_GPA_MFP2_PA10MFP_SPI2_CLK},
             {15, SYS_GPA_MFP2_PA9MFP_SPI2_MISO}, {16, SYS_GPA_MFP2_PA8MFP_SPI2_MOSI}
-        }// UNO nu5 connector
+        }
     },
+    //[2024-11-06]If use uspi0, the 8-pin connector(NU5) pin define is not compatible to UNO
+    //{
+    //    USPI0, (uint32_t)USCI0_MODULE, USCI0_IRQn, (0x1ul << CLK_APBCLK1_USCI0CKEN_Pos),
+    //    {   {13, SYS_GPA_MFP2_PA11MFP_USCI0_CLK }, {14, SYS_GPA_MFP2_PA10MFP_USCI0_DAT0},
+    //        {15, SYS_GPA_MFP2_PA9MFP_USCI0_DAT1 }, {16, SYS_GPA_MFP2_PA8MFP_USCI0_CTL1 }
+    //    }
+    //},
 
 };
 
@@ -262,7 +269,6 @@ UARTPinDescription UART_Desc[] =
 {
     {UART0, (uint32_t)UART0_MODULE, UART0_IRQn, {{119, SYS_GPB_MFP3_PB12MFP_UART0_RXD }, {118, SYS_GPB_MFP3_PB13MFP_UART0_TXD }}, CLK_CLKSEL1_UART0SEL_HIRC}, //ICE uart pin
     {UART1, (uint32_t)UART1_MODULE, UART1_IRQn, {{  4, SYS_GPB_MFP0_PB2MFP_UART1_RXD }, {3, SYS_GPB_MFP0_PB3MFP_UART1_TXD }}, CLK_CLKSEL1_UART1SEL_HIRC}, //UNO uart pin
-   
 };
 
 I2CPinDescription I2C_Desc[] =
@@ -270,8 +276,5 @@ I2CPinDescription I2C_Desc[] =
     {I2C0, I2C0_MODULE, {{73, SYS_GPC_MFP0_PC1MFP_I2C0_SCL}, {74, SYS_GPC_MFP0_PC0MFP_I2C0_SDA }}},
     //{I2C1, I2C1_MODULE, {{ 9, SYS_GPB_MFP0_PB1MFP_I2C1_SCL}, {10, SYS_GPB_MFP0_PB0MFP_I2C1_SDA }}},
 };
-
-
-
 
 #endif

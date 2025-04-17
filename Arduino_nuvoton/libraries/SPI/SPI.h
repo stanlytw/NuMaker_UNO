@@ -30,7 +30,9 @@
 #else
 
 #define BOARD_SPI_DEFAULT_SS 43
-
+#ifndef NVT_SS
+#define NVT_SS BOARD_SPI_DEFAULT_SS
+#endif
 #define SPI_MODE0 SPI_MODE_0
 #define SPI_MODE1 SPI_MODE_1
 #define SPI_MODE2 SPI_MODE_2
