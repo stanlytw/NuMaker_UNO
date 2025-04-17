@@ -22,8 +22,30 @@
                     {"name": "NuMaker-M032BTAI"},
                     {"name": "NuMaker-M032KG"},
                     {"name": "NuMaker-M252"},
-                    {"name": "NuMaker-M467HJ"},
-                    {"name": "NuMaker-PFM-M487"}
+					{"name": "NuMaker-PFM-M487"}
+                    						
+                  ],
+                  "toolsDependencies": [
+                    {
+                      "packager": "arduino",
+                      "name": "arm-none-eabi-gcc",
+                      "version": "7-2017q4"
+                    }
+                  ]
+                },
+				{
+                  "name": "NuMaker",
+                  "architecture": "m4",
+                  "version": "13.3.3",
+
+                  "category": "Arduino",
+                  "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_m4.tar.bz2?raw=true",
+                  "archiveFileName": "Arduino_nuvoton_m4.tar.bz2",
+                  "checksum": "SHA-256:ace2453a5b2fed4faa6d15567e1e745b87e2710af5e18dedd6025f6c341c0faa",
+                  "size": "33433532",
+                  "boards": [
+                    {"name": "NuMaker-UNO-M467"},
+                    {"name": "NuMaker-IOT-M467"}
                     						
                   ],
                   "toolsDependencies": [
