@@ -111,6 +111,24 @@ tools.nulinkburn_m460.upload.params.verbose=
 tools.nulinkburn_m460.upload.params.quiet=
 tools.nulinkburn_m460.upload.pattern="{path}/{cmd}" "{path}" "{build.path}/{build.project_name}.bin"
 
+#Add for bootloader flashing
+tools.nulinkburn_m4.cmd=nulinkburn
+tools.nulinkburn_m4.cmd.windows=nulinkburn_m4.bat
+tools.nulinkburn_m4.path={runtime.platform.path}/tools
+
+tools.nulinkburn_m4.ldrname=LDR_UNOM4
+tools.nulinkburn_m4.appname=APP_UNOM4
+
+tools.nulinkburn_m4.erase.params.verbose=-v
+tools.nulinkburn_m4.erase.params.quiet=-q 
+tools.nulinkburn_m4.erase.pattern="{path}/NuLink" "-p"
+
+tools.nulinkburn_m4.bootloader.params.verbose=
+tools.nulinkburn_m4.bootloader.params.quiet=
+tools.nulinkburn_m4.bootloader.pattern="{path}/{cmd}" "{path}" "{path}/{ldrname}.bin" "{path}/{appname}.bin"
+
+#End of Add for bootloader
+
 tools.isp_m460.cmd=isptool
 tools.isp_m460.cmd.windows=isptool.bat
 tools.isp_m460.path={runtime.platform.path}/tools/isptool
@@ -131,4 +149,3 @@ debug.server=openocd
 debug.server.openocd.path={runtime.platform.path}/tools/OpenOCD/bin/openocd_cmsis-dap
 debug.server.openocd.scripts_dir={runtime.platform.path}/tools/OpenOCD/share/openocd/scripts/
 debug.server.openocd.script={runtime.platform.path}/variants/{build.variant}/{build.openocdscript}
-

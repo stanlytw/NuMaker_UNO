@@ -8,36 +8,21 @@
       "email": "",
       "platforms": [
         {
-          "name": "NuMaker UNO",
-          "architecture": "nuvoton",
-          "version": "2.2.3",
+          "name": "NuMaker M4",
+          "architecture": "nuvoton_m4",
+          "version": "13.3.3",
           "deprecated": false,
           "category": "Arduino",
-          "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton.tar.bz2?raw=true",
-          "archiveFileName": "Arduino_nuvoton.tar.bz2",
-          "checksum": "SHA-256:d5d9c7620f4693919b774fa0e4743d0c02f1d2836b21b9f27f577a47960b47f4",
-          "size": "37135177",
+          "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_m4.tar.bz2?raw=true",
+          "archiveFileName": "Arduino_nuvoton_m4.tar.bz2",
+          "checksum": "SHA-256:ace2453a5b2fed4faa6d15567e1e745b87e2710af5e18dedd6025f6c341c0faa",
+          "size": "33433532",
           "boards": [
             {
-              "name": "NuMaker-NUC131"
+              "name": "NuMaker-UNO-M467"
             },
             {
-              "name": "NuMaker-M032BTAI"
-            },
-            {
-              "name": "NuMaker-M032KG"
-            },
-            {
-              "name": "NuMaker-M252"
-            },
-            {
-              "name": "NuMaker-M467HJ"
-            },
-            {
-              "name": "NuMaker-PFM-M487"
-            },
-            {
-              "name": "Customized-M467M"
+              "name": "NuMaker-IOT-M467"
             }
           ],
           "help": {},
@@ -45,7 +30,7 @@
             {
               "packager": "arduino",
               "name": "arm-none-eabi-gcc",
-              "version": "10-2021q3"
+              "version": "7-2017q4"
             }
           ],
           "discoveryDependencies": [],

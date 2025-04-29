@@ -1,3 +1,25 @@
+nuvoton_m460.name=NuMaker-IOT-M467
+nuvoton_m460.upload.tool=nulinkburn_m460
+nuvoton_m460.upload.protocol=nuc-ba
+nuvoton_m460.upload.maximum_size=524288
+nuvoton_m460.upload.use_1200bps_touch=false
+nuvoton_m460.upload.wait_for_upload_port=false
+nuvoton_m460.upload.native_usb=false
+nuvoton_m460.build.mcu=cortex-m4
+nuvoton_m460.build.f_cpu=200000000L
+nuvoton_m460.build.core=nuvoton
+nuvoton_m460.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__M467HJHAN__-mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m460.build.board=__NUVOTON__
+nuvoton_m460.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
+nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+nuvoton_m460.build.variant=Nuvoton
+nuvoton_m460.build.vid=0x2341
+nuvoton_m460.build.pid=0x003e
+nuvoton_m460.build.def=M460
+nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
+nuvoton_m460.bootloader.tool=nulinkburn_m4
+nuvoton_m460.bootloader.tool.default=nulinkburn_m4
+
 nuvoton_m467sd.name=NuMaker-UNO-M467
 nuvoton_m467sd.upload.tool=isp_m460
 #nuvoton_m467sd.upload.tool=nulinkburn_m460
@@ -18,23 +40,30 @@ nuvoton_m467sd.build.vid=0x2341
 nuvoton_m467sd.build.pid=0x003e
 nuvoton_m467sd.build.def=M460
 nuvoton_m467sd.build.openocdscript=openocd_scripts/M460.cfg
+#Add for ISP
+nuvoton_m467sd.bootloader.tool=nulinkburn_m4
+nuvoton_m467sd.bootloader.tool.default=nulinkburn_m4
 
-nuvoton_m460.name=NuMaker-IOT-M467
-nuvoton_m460.upload.tool=nulinkburn_m460
-nuvoton_m460.upload.protocol=nuc-ba
-nuvoton_m460.upload.maximum_size=524288
-nuvoton_m460.upload.use_1200bps_touch=false
-nuvoton_m460.upload.wait_for_upload_port=false
-nuvoton_m460.upload.native_usb=false
-nuvoton_m460.build.mcu=cortex-m4
-nuvoton_m460.build.f_cpu=200000000L
-nuvoton_m460.build.core=nuvoton
-nuvoton_m460.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__M467HJHAN__-mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
-nuvoton_m460.build.board=__NUVOTON__
-nuvoton_m460.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
-nuvoton_m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
-nuvoton_m460.build.variant=Nuvoton
-nuvoton_m460.build.vid=0x2341
-nuvoton_m460.build.pid=0x003e
-nuvoton_m460.build.def=M460
-nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
+
+m460.name=NuMaker-M467
+m460.upload.tool=nulinkburn_m460
+m460.upload.protocol=nuc-ba
+m460.upload.maximum_size=524288
+m460.upload.use_1200bps_touch=false
+m460.upload.wait_for_upload_port=false
+m460.upload.native_usb=false
+m460.build.mcu=cortex-m4
+m460.build.f_cpu=200000000L
+m460.build.core=nuvoton
+m460.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__M467HJHAN__-mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+m460.build.board=__NUVOTON__
+m460.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
+m460.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
+m460.build.variant=Nuvoton
+m460.build.vid=0x2341
+m460.build.pid=0x003e
+m460.build.def=M460
+m460.build.openocdscript=openocd_scripts/M460.cfg
+#Add for ISP
+m460.bootloader.tool=nulinkburn_m4
+m460.bootloader.tool.default=nulinkburn_m4
