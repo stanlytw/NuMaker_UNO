@@ -1,4 +1,4 @@
-nuvoton_m460.name=NuMaker-IOT-M467
+nuvoton_m460.name=NuMaker-IoT-M467
 nuvoton_m460.upload.tool=nulinkburn_m460
 nuvoton_m460.upload.protocol=nuc-ba
 nuvoton_m460.upload.maximum_size=524288
@@ -45,7 +45,7 @@ nuvoton_m467sd.bootloader.tool=nulinkburn_m4
 nuvoton_m467sd.bootloader.tool.default=nulinkburn_m4
 
 
-m460.name=NuMaker-M467
+m460.name=NuMaker-M467HJ
 m460.upload.tool=nulinkburn_m460
 m460.upload.protocol=nuc-ba
 m460.upload.maximum_size=524288
