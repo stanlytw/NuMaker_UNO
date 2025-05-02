@@ -20,7 +20,7 @@ nuvoton_m460.build.openocdscript=openocd_scripts/M460.cfg
 nuvoton_m460.bootloader.tool=nulinkburn_m4
 nuvoton_m460.bootloader.tool.default=nulinkburn_m4
 
-nuvoton_m467sd.name=NuMaker-UNO-M467
+nuvoton_m467sd.name=NuMaker-UNO-M4
 nuvoton_m467sd.upload.tool=isp_m460
 #nuvoton_m467sd.upload.tool=nulinkburn_m460
 nuvoton_m467sd.upload.protocol=nuc-ba
