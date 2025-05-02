@@ -43,7 +43,7 @@ Note3: It would be commercial available soon.
 2. Check your network connection works fine. Sometimes intra-net would block Arduino IDE start-up downloads. <br>
    After checking, double-click arduino.exe, and then go to **File->Preferences**
 4. Paste following URL to 'Additional Boards Manager URLs' input field: 
-`https://raw.githubusercontent.com/OpenNuvoton/NuMaker_UNO/master/package_nuvoton_index.json`
+`https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json`
 5. For NuMaker UNO package, under **Tools->Board->Boards Manger**, search `NuMaker UNO`, click **Install**;<br>
    For NuMaker M4 package, under **Tools->Board->Boards Manger**, search `NuMaker M4`, click **Install**
 6. You can now select NuMaker UNO/M4 and install it in Arduino IDE.
