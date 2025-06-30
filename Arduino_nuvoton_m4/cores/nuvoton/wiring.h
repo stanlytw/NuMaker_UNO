@@ -63,6 +63,8 @@ extern void delay( uint32_t dwMs ) ;
  * \param dwUs the number of microseconds to pause (uint32_t)
  */
 static __inline__ void delayMicroseconds( uint32_t ) __attribute__((always_inline, unused)) ;
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 static __inline__ void delayMicroseconds( uint32_t usec )
 {
   if ( usec == 0 )
@@ -86,7 +88,12 @@ static __inline__ void delayMicroseconds( uint32_t usec )
 
   // VARIANT_MCK / 1000000 == cycles needed to delay 1uS
   //                     3 == cycles used in a loop
-  uint32_t n = usec * ((F_CPU / 1000000)+2) / 3;
+  volatile uint32_t n = usec * ((F_CPU / 1000000)+2) / 3;
+#if 1
+  if(n==0) return ;
+
+  while(n--);
+#else
   __asm__ __volatile__(
     "1:              \n"
     "   sub %0, #1   \n" // substract 1 from %0 (n)
@@ -95,9 +102,12 @@ static __inline__ void delayMicroseconds( uint32_t usec )
     :                    // no input
     :                    // no clobber
   );
+#endif  
   // https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
   // https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile
+  
 }
+#pragma GCC pop_options
 
 
 #ifdef __cplusplus
