@@ -92,6 +92,7 @@ public:
 	uint32_t BaudRateSelector(uint32_t u32mcpBaudRate);
 	byte BaudRateParser(uint32_t u32mcpBaudRate);
 	
+    byte CANFDx_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ); 
 private:
     /*Nuvoton CAN controller(ccan) driver function */
     void ncan_reset(void); // reset ncan
@@ -137,6 +138,7 @@ private:
    
     
 	byte nCANSel;
+    IRQn_Type irqID;
     IRQn_Type id;
     byte ext_flg; 			// identifier xxxID, either extended (the 29 LSB) or standard (the 11 LSB)
     unsigned long can_id;   // can id
@@ -154,8 +156,10 @@ private:
 extern "C" {
 #endif
 byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate);
-static void CANFD_0_Init(void);
-static byte CANFD_0_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ); 
+//static void CANFD_0_Init(void);
+//static byte CANFD_0_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ); 
+static void CANFDx_Init(byte sel); 
+//static byte CANFDx_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ); 
 static interruptCB callbackCAN0;
 void attachInterruptCAN(void (*callback)(void));
 #ifdef __cplusplus

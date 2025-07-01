@@ -85,8 +85,18 @@ void Enable_All_IPs(void)
 	//To do: If multi-CANFD mocule are required, add them here.
 	 /* Select CAN FD0 clock source is HCLK */
     CLK_SetModuleClock(CANFD0_MODULE, CLK_CLKSEL0_CANFD0SEL_HCLK, CLK_CLKDIV5_CANFD0(1));
+#if 1//def __MORECAN__ 
+    CLK_SetModuleClock(CANFD1_MODULE, CLK_CLKSEL0_CANFD1EEL_HCLK, CLK_CLKDIV5_CANFD1(1));
+    CLK_SetModuleClock(CANFD2_MODULE, CLK_CLKSEL0_CANFD2SEL_HCLK, CLK_CLKDIV5_CANFD2(1));
+    CLK_SetModuleClock(CANFD3_MODULE, CLK_CLKSEL0_CANFD3SEL_HCLK, CLK_CLKDIV5_CANFD3(1));
+#endif
     /* Enable CAN FD0 peripheral clock */
     CLK_EnableModuleClock(CANFD0_MODULE);
+#if 1//def __MORECAN__
+    CLK_EnableModuleClock(CANFD1_MODULE);
+    CLK_EnableModuleClock(CANFD2_MODULE);
+    CLK_EnableModuleClock(CANFD3_MODULE);
+ #endif   
 	/* CANFD_Config is done in nvtCAN library .begin method*/
     
 

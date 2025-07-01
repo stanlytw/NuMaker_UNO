@@ -255,6 +255,9 @@ extern CANFDPinDescription CANFD_Desc[];
 #define CANFD_CLKDIV_1           (0x01)
 #define CANFD_USE_CANFD0         (0x00)
 #define CANFD_USE_CANFD1         (0x01)
+#define CANFD_USE_CANFD2         (0x02)
+#define CANFD_USE_CANFD3         (0x03)
+
 
 #define CANFD_Config(Desc) \
 do { \

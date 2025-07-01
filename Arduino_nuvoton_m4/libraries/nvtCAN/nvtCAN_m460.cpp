@@ -34,18 +34,37 @@ nvtCAN_m460::nvtCAN_m460(byte _CANSEL)
    nReservedTx = 0;
    _canmode = CANFD_OP_CAN_MODE;
   
-   if( _CANSEL)
+   if( _CANSEL == 0)
    {
        module = CANFD0_MODULE;
        ncan = (CANFD_T *)CANFD0;
+	   irqID = CANFD00_IRQn;
     
    }
-   else//Update code for more than 2 CAN interface's device 
+   else if( _CANSEL == 1)//Update code for more than 2 CAN interface's device 
    {
-       module = CANFD0_MODULE;
-       ncan = (CANFD_T *)CANFD0;
+       module = CANFD1_MODULE;
+       ncan = (CANFD_T *)CANFD1;
+	   irqID = CANFD01_IRQn;
    }
-   
+   else if( _CANSEL == 2)//Update code for more than 2 CAN interface's device 
+   {
+       module = CANFD2_MODULE;
+       ncan = (CANFD_T *)CANFD2;
+	   irqID = CANFD10_IRQn;
+   }
+   else if( _CANSEL == 3)//Update code for more than 2 CAN interface's device 
+   {
+       module = CANFD3_MODULE;
+       ncan = (CANFD_T *)CANFD3;
+	   irqID = CANFD11_IRQn;
+   }
+   else//default
+   {
+	   module = CANFD0_MODULE;
+	   ncan = (CANFD_T *)CANFD0;
+	   irqID = CANFD00_IRQn;
+   }
    //[2025-03-17]Reset CANFD　IP.
    //This will be done in CANFD_Open
    //ncan_reset();
@@ -231,7 +250,7 @@ byte nvtCAN_m460::begin(uint32_t speedset) {
     byte speedtype;
 	byte res;
 	/* Set CANFD Pin MFP. Currently CANFD0 only */
-    CANFD_0_Init();
+    CANFDx_Init(nCANSel);
 	
 	//[2025-03-20]To combine CAN/CAN-FD setting within one begin function. MCP2515/2518 compatible
     /*
@@ -249,7 +268,7 @@ byte nvtCAN_m460::begin(uint32_t speedset) {
 		} 
 		else
 		{
-			res =  CANFD_0_SetConfig(CANFD_OP_CAN_FD_MODE, _normalspeed_set, _dataspeed_set);
+			res =  CANFDx_SetConfig(CANFD_OP_CAN_FD_MODE, _normalspeed_set, _dataspeed_set);
 		}
 	}
 	else//CAN
@@ -260,7 +279,7 @@ byte nvtCAN_m460::begin(uint32_t speedset) {
 		}
         else
         {
-			res = CANFD_0_SetConfig(CANFD_OP_CAN_MODE, _normalspeed_set, 0);
+			res = CANFDx_SetConfig(CANFD_OP_CAN_MODE, _normalspeed_set, 0);
 		}		
 	}
 	
@@ -294,7 +313,7 @@ byte nvtCAN_m460::beginCANIntLBKMode(uint32_t speedset){
     byte speedtype;
 	byte res;
 	/* Set CANFD Pin MFP. Currently CANFD0 only */
-    CANFD_0_Init();
+    CANFDx_Init(nCANSel);
 	
 	//[2025-03-20]To combine CAN/CAN-FD setting within one begin function. MCP2515/2518 compatible
     /*
@@ -316,12 +335,12 @@ byte nvtCAN_m460::beginCANIntLBKMode(uint32_t speedset){
 		}
         else
         {
-			res = CANFD_0_SetConfig(CANFD_OP_CAN_MODE, _normalspeed_set, 0);
+			res = CANFDx_SetConfig(CANFD_OP_CAN_MODE, _normalspeed_set, 0);
 				
 	        //[2025-03-31]Test CAN_FD Internal loopback mode
-	        CANFD0->CCCR |= CANFD_CCCR_MON_Msk;
-	        CANFD0->CCCR |= CANFD_CCCR_TEST_Msk;
-	        CANFD0->TEST |= CANFD_TEST_LBCK_Msk;
+	        ncan->CCCR |= CANFD_CCCR_MON_Msk;
+	        ncan->CCCR |= CANFD_CCCR_TEST_Msk;
+	        ncan->TEST |= CANFD_TEST_LBCK_Msk;
 		}		
 	}
 	
@@ -354,12 +373,12 @@ uint8_t nvtCAN_m460::ncan_configGFC(uint8_t gfc_config)
     if(gfc_config == CANFD_GFC_REJEALL)//default
 	{
        /* Reject Non-Matching Standard ID and Extended ID Filter(RX FIFO0) */
-	   CANFD_SetGFC(CANFD0, eCANFD_REJ_NON_MATCH_FRM, eCANFD_REJ_NON_MATCH_FRM, 1, 1);	   
+	   CANFD_SetGFC((CANFD_T *)(ncan), eCANFD_REJ_NON_MATCH_FRM, eCANFD_REJ_NON_MATCH_FRM, 1, 1);	   
 	}
 	else if(gfc_config == CANFD_GFC_KEEPALL)
 	{
 	   /* Reject Non-Matching Standard ID and Extended ID Filter(all to FIFO0) */
-	   CANFD_SetGFC(CANFD0, eCANFD_ACC_NON_MATCH_FRM_RX_FIFO0, eCANFD_ACC_NON_MATCH_FRM_RX_FIFO0, 0, 0);
+	   CANFD_SetGFC(ncan, eCANFD_ACC_NON_MATCH_FRM_RX_FIFO0, eCANFD_ACC_NON_MATCH_FRM_RX_FIFO0, 0, 0);
 	}
 	else
 	{
@@ -398,7 +417,7 @@ byte nvtCAN_m460::setMsgFilter(uint32_t en)
 int32_t nvtCAN_m460::ncan_syncInit(void)
 {
      /* CAN Run to Normal mode */
-	return CANFD_RunToNormal(CANFD0, 1);
+	return CANFD_RunToNormal(ncan, 1);
 }
 
 
@@ -445,7 +464,7 @@ byte nvtCAN_m460::sendMsgBuf(unsigned long id, byte ext, byte rtrBit, byte len, 
 	
 	/* Use message buffer 0 */
     
-    ires = CANFD_TransmitTxMsg(CANFD0, CANFD_TXBUF0, &sTxMsgFrame);
+    ires = CANFD_TransmitTxMsg(ncan, CANFD_TXBUF0, &sTxMsgFrame);
 	return (byte)(ires);
 
 }
@@ -483,7 +502,7 @@ byte nvtCAN_m460::sendMsgBuf(unsigned long id, byte ext, byte len, volatile cons
 	
 	/* Use message buffer 0 */
     
-    ires = CANFD_TransmitTxMsg(CANFD0, CANFD_TXBUF0, &sTxMsgFrame);
+    ires = CANFD_TransmitTxMsg(ncan, CANFD_TXBUF0, &sTxMsgFrame);
 	return (byte)(ires);
 
 }
@@ -527,7 +546,7 @@ byte nvtCAN_m460::sendMsgBuf(unsigned long id, byte ext, byte len, volatile cons
     }
 	
 	/* Use message buffer 0 */
-    ires = CANFD_TransmitTxMsg(CANFD0, CANFD_TXBUF0, &sTxMsgFrame);
+    ires = CANFD_TransmitTxMsg(ncan, CANFD_TXBUF0, &sTxMsgFrame);
 	return (byte)(ires);
 
 }
@@ -594,7 +613,7 @@ byte nvtCAN_m460::checkReceive(void)
 	    */	
 	   
 	    /* Check for any received unmatched STD messages on CAN message FIFO0 */
-		if(CANFD_ReadRxFifoMsg(CANFD0, CANFD_RXFIFO0, &sRxMsgFrame) == 1)
+		if(CANFD_ReadRxFifoMsg(ncan, CANFD_RXFIFO0, &sRxMsgFrame) == 1)
         {
             //printf("Rx FIFO 0: Received message 0x%08X (11-bit)\r\n", sRxMsgFrame.u32Id);
             //printf("Message Data : ");
@@ -617,7 +636,7 @@ byte nvtCAN_m460::checkReceive(void)
 	    /*
 	     Msg Buffer0(ID, xID)
 	    */
-	    if(CANFD_ReadRxBufMsg(CANFD0, CANFD_RXBUF0, &sRxMsgFrame) == 1)
+	    if(CANFD_ReadRxBufMsg(ncan, CANFD_RXBUF0, &sRxMsgFrame) == 1)
 	    {
 		    res = 0x03;
 	    }
@@ -685,8 +704,8 @@ byte nvtCAN_m460::ncan_disableInterrupt(void) {
 byte nvtCAN_m460::init_Mask(byte num, byte ext, unsigned long ulData)
 {
     /* configuration change enable */
-    CANFD0->CCCR = CANFD_CCCR_INIT_Msk;
-    CANFD0->CCCR |= CANFD_CCCR_CCE_Msk;
+    ncan->CCCR = CANFD_CCCR_INIT_Msk;
+    ncan->CCCR |= CANFD_CCCR_CCE_Msk;
     
 	
 	/* set GFC to reject all unmatched Msg, keep Msg in filter*/
@@ -716,19 +735,19 @@ byte nvtCAN_m460::init_Filt(byte num, byte ext, unsigned long ulData)
 {
     byte res =0;
 	/* configuration change enable */
-    CANFD0->CCCR = CANFD_CCCR_INIT_Msk;
-    CANFD0->CCCR |= CANFD_CCCR_CCE_Msk;
+    ncan->CCCR = CANFD_CCCR_INIT_Msk;
+    ncan->CCCR |= CANFD_CCCR_CCE_Msk;
 	
 	/* set Filter */
 	
 	if(ext==0)//StdID, use rx message buffer 0
 	{
-		CANFD_SetSIDFltr(CANFD0, num, CANFD_RX_BUFFER_STD(ulData, CANFD_RXBUF0));
+		CANFD_SetSIDFltr(ncan, num, CANFD_RX_BUFFER_STD(ulData, CANFD_RXBUF0));
 		
 	}
 	else if(ext==1)//ExtID, use rx message buffer 0
 	{
-		CANFD_SetXIDFltr(CANFD0, num, CANFD_RX_BUFFER_EXT_LOW(ulData, CANFD_RXBUF0), CANFD_RX_BUFFER_EXT_HIGH(ulData, CANFD_RXBUF0));
+		CANFD_SetXIDFltr(ncan, num, CANFD_RX_BUFFER_EXT_LOW(ulData, CANFD_RXBUF0), CANFD_RX_BUFFER_EXT_HIGH(ulData, CANFD_RXBUF0));
 	}
 	else 
 		res = -1;
@@ -775,15 +794,18 @@ void CANFD0_IRQHandler(void)
    
 }
 
-static void CANFD_0_Init(void) 
+static void CANFDx_Init(byte sel) 
 {	
 	/*
 	    Set CANFD MFP
 	*/
-	CANFD_Config(CANFD_Desc[CAN_ID0]);	
+	uint8_t idx = (uint8_t)(sel);
+
+	/*Mapping GPIO to MFP*/
+	CANFD_Config(CANFD_Desc[idx]);	
 }
 
-static byte CANFD_0_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ) 
+byte nvtCAN_m460::CANFDx_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint32_t u32dataBitRate ) 
 {	
 	CANFD_FD_T sCANFD_Config;
 	uint32_t nRate;
@@ -812,9 +834,9 @@ static byte CANFD_0_SetConfig(uint8_t u8OpMode, uint32_t u32normalBitRate, uint3
     sCANFD_Config.sBtConfig.sDataBitRate.u32BitRate = bRate;
 	
     /* Open the CAN FD feature */
-    CANFD_Open(CANFD0, &sCANFD_Config);
+    CANFD_Open(ncan, &sCANFD_Config);
 	
-	NVIC_EnableIRQ(CANFD00_IRQn);
+	NVIC_EnableIRQ(irqID);
 	
 	/* CAN Run to Normal mode */
     //CANFD_RunToNormal(CANFD0, TRUE);
@@ -850,7 +872,7 @@ byte BaudRateCheck(uint32_t u32BaudRate, uint32_t u32RealBaudRate)
 static void __initializeCAN() {
 	
     callbackCAN0 = NULL;
-    NVIC_EnableIRQ(CANFD00_IRQn);
+    //NVIC_EnableIRQ(irqID);
 }
 
 
