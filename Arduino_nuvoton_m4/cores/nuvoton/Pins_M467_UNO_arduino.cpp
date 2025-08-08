@@ -26,19 +26,18 @@
 BoardToPin BoardToPinInfo[] =
 {
     //{pin, type, num}//
-	{ 21, UART_TYPE, 0                 },// 0:      (D0/PA6/UART_RX0)
-    { 20, UART_TYPE, 0                 },// 1:      (D1/PA7/UART_TX0)
-    { 19, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 2:      (D2/PC6/PWM)
-    { 18, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 3:      (D3/PC7/PWM)
-    { 25, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 4:      (D4/PA5/PWM)
-    { 26, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 5:      (D5/PA4/PWM)
-    {  8, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 6:      (D6/PA11/PWM)
-    { 52, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 7:      (D7/PC14/PWM)
-
-    {  7, PWM_TYPE, PWM_DESC_IDX2      }, // 8:      (D8/PB0/PWM)
-    { 12, PWM_TYPE, PWM_DESC_IDX_NOUSE }, // 9:      (D9/PF6/PWM)
-    { 27, SPI_TYPE, 0                  }, //10:      (D10/PA3/SPI0_CS)
-    { 30, SPI_TYPE, 0                  }, //11:      (D11/PA0/SPI0_MOSI)
+	{ 21, UART_TYPE, 0                 }, // 0:      (D0/PA6/UART_RX0)
+    { 20, UART_TYPE, 0                 }, // 1:      (D1/PA7/UART_TX0)
+    { 19, 0, 0                         }, // 2:      (D2/PC6)
+    { 18, PWM_TYPE, PWM_DESC_IDX0      }, // 3:      (D3/PC7/PWM)
+    { 25, 0, 0                         }, // 4:      (D4/PA5)
+    { 26, PWM_TYPE, PWM_DESC_IDX1      }, // 5:      (D5/PA4/PWM)
+    {  8, PWM_TYPE, PWM_DESC_IDX2      }, // 6:      (D6/PA11/PWM)
+    { 52, 0, 0                         }, // 7:      (D7/PC14)
+    {  7, PWM_TYPE, PWM_DESC_IDX5      }, // 8:      (D8/PB0/PWM)
+    { 12, 0, 0                         }, // 9:      (D9/PF6)
+    { 27, PWM_TYPE, PWM_DESC_IDX3      }, //10:      (D10/PA3/SPI0_CS/PWM)
+    { 30, PWM_TYPE, PWM_DESC_IDX4      }, //11:      (D11/PA0/SPI0_MOSI/PWM)
     { 29, SPI_TYPE, 0                  }, //12:      (D12/PA1/SPI0_MISO)
     { 28, SPI_TYPE, 0                  }, //13:      (D13/PA2/SPI0_SCK)
 	
@@ -155,16 +154,14 @@ GPIOPinDescription GPIO_Desc[] =
 
 EPWMPinDescription PWM_Desc[] = 
 {
-    {(EPWM_T  *)(EPWM1), (uint32_t)EPWM1_MODULE, PWM_USE_EPWM, EPWM1P0_IRQn, PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, {55, SYS_GPB_MFP3_PB13MFP_EPWM1_CH2}}, //D3   PC7, 
-    {(EPWM_T  *)(BPWM1), (uint32_t)BPWM1_MODULE, PWM_USE_BPWM, BPWM1_IRQn,   PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, {62, SYS_GPB_MFP2_PB9MFP_BPWM1_CH2 }}, //D5   PA4,
-	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 7, SYS_GPB_MFP0_PB0MFP_EPWM0_CH5 }}, //D6   PA11,
-	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 7, SYS_GPB_MFP0_PB0MFP_EPWM0_CH5 }}, //D9   PF6,
-	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 7, SYS_GPB_MFP0_PB0MFP_EPWM0_CH5 }}, //D10  PA3,
-	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 7, SYS_GPB_MFP0_PB0MFP_EPWM0_CH5 }}, //D11  PA0,
-	
-  
+    {(EPWM_T  *)(EPWM1), (uint32_t)EPWM1_MODULE, PWM_USE_EPWM, EPWM1P0_IRQn, PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, { 18, SYS_GPC_MFP1_PC7MFP_EPWM1_CH2 }},//D3   PC7(EPWM1_CH2), 
+    {(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH1, PWM_FREQUENCY_500HZ, { 26, SYS_GPA_MFP1_PA4MFP_EPWM0_CH1 }},//D5   PA4(EPWM0_CH1),
+	{(EPWM_T  *)(BPWM0), (uint32_t)BPWM0_MODULE, PWM_USE_BPWM, BPWM0_IRQn  , PWM_CHANNEL_CH0, PWM_FREQUENCY_500HZ, {  8, SYS_GPA_MFP2_PA11MFP_BPWM0_CH0}},//D6   PA11(BPWM0_CH0),
+	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, { 27, SYS_GPA_MFP0_PA3MFP_EPWM0_CH2 }},//D10  PA3(EPWM0_CH2),
+	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 30, SYS_GPB_MFP0_PB0MFP_EPWM0_CH5 }},//D11  PA0(EPWM0_CH5),
+	{(EPWM_T  *)(EPWM1), (uint32_t)EPWM1_MODULE, PWM_USE_EPWM, EPWM1P0_IRQn, PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, {  7, SYS_GPB_MFP0_PB0MFP_EPWM1_CH5 }},//D8   PB0(EPWM1_CH5),
+ 
 };
-
 //[2025-02-25] ADC pins update done. 
 ADCPinDescription ADC_Desc[] =
 {

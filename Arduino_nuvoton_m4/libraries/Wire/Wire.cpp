@@ -139,32 +139,42 @@ void TwoWire::beginTransmission(int address) {
 uint8_t TwoWire::endTransmission(uint8_t sendStop) {
 	
 	int sent = 0;	/* Send data */
-	int timeout_=TIMEOUT;
+	int timeout_= TIMEOUT;
 	while(timeout_--)
 	{
-		/* Send start */
+		/* Send S */
 		I2C_START(i2c);	
 		I2C_WAIT_READY(i2c);			
 	
-		/* Send control byte */
+		/* Send SLA+W */
 		I2C_SET_DATA(i2c, txAddress);
 		I2C_SET_CONTROL_REG(i2c, I2C_SI);
-		I2C_WAIT_READY(i2c);			
+		I2C_WAIT_READY(i2c);
+
+		/* If not SLA+W status, continue the flow. */
 		if(I2C_GET_STATUS(i2c)!=0x18) 
 		{ 
 			I2C_SET_CONTROL_REG(i2c, I2C_STO | I2C_SI);
 			continue;
 		}
+		
+		/* Data phase, feed to I2C_DAT*/
 		sent = 0;
-		while (sent < txBufferLength) {
+		while (sent < txBufferLength) 
+		{
 			I2C_SET_DATA(i2c, txBuffer[sent++]);
 			I2C_SET_CONTROL_REG(i2c, I2C_SI);
-			I2C_WAIT_READY(i2c);	
-			if(I2C_GET_STATUS(i2c)!=0x28) { 
+			I2C_WAIT_READY(i2c);
+			
+			/* If not I2C_DAT/ACK status, continue the flow. */
+			if(I2C_GET_STATUS(i2c)!=0x28) 
+			{ 
 				I2C_SET_CONTROL_REG(i2c, I2C_STO | I2C_SI);
-				continue;
+				continue;//?? continue the "while (sent < txBufferLength)"?
 			}			
 		}
+		
+		/* STOP phase, if specified.*/
 		if(sendStop==true)
 		{
 			/* Send stop */
@@ -184,6 +194,45 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop) {
 uint8_t TwoWire::endTransmission(void)
 {
 	return endTransmission(true);
+}
+
+
+int8_t TwoWire::isDevicePresent(uint8_t uaddress)
+{
+	uint8_t pesentFlag = 0;	
+	int retryCount = 3;
+	while(retryCount--)
+	{
+		
+		/* Send S */
+		I2C_START(i2c);	
+		I2C_WAIT_READY(i2c);			
+	
+		/* Send SLA+W */
+		I2C_SET_DATA(i2c, (uaddress<<1)|I2C_W);
+		I2C_SET_CONTROL_REG(i2c, I2C_SI);
+		I2C_WAIT_READY(i2c);
+
+		/* If not SLA+W A, retry. */
+		if(I2C_GET_STATUS(i2c)!=0x18) 
+		{ 
+			/* Send stop */
+			/* do Bus Release, and query again. */
+			I2C_SET_CONTROL_REG(i2c, I2C_STO | I2C_SI);
+			continue;
+		}
+		else
+		{
+		    /* Get SLA+W A, then do Bus Release */
+			I2C_SET_CONTROL_REG(I2C0, I2C_STO | I2C_SI);
+            status = MASTER_IDLE;	
+			return 1;	
+		}
+		
+		
+	}	
+	status = MASTER_IDLE;	
+	return 0;	
 }
 
 size_t TwoWire::write(uint8_t data) {	
@@ -247,62 +296,76 @@ void TwoWire::onRequest(void(*function)(void)) {
 
 void TwoWire::I2C_SlaveTRx(uint32_t u32Status)
 {
-		//Serial.print("u32Status=");
-		//Serial.println(u32Status,HEX);
-		//Serial.print("srvBufferIndex=");
-		//Serial.println(srvBufferIndex,HEX);
-    if(u32Status == 0x60)                       /* Own SLA+W has been receive; ACK has been return */
+	
+	//Serial.print("srvBufferIndex=");
+	//Serial.println(srvBufferIndex,HEX);
+	
+	
+	/* 
+	    Not handle here:
+		u32Status: 
+		0x08 : S, nothing to to, just go on
+		0x18 : SLA+W, some data write rleated needs to handle. Left to endTransmission
+		0x28 : I2C_DAT/A, some data write rleated needs to handle. Left to endTransmission
+	*/
+	//Serial.println("I2C_SlaveTRx");
+    //Serial.print("u32Status=");
+	//Serial.println(u32Status,HEX);
+	
+    if(u32Status == 0x60)    /* Own SLA+W has been receive; ACK has been return */
     {
-    	  status = SLAVE_RECV;
+        status = SLAVE_RECV;
         srvBufferLength = 0;
         I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);
     }
-    else if(u32Status == 0x80 || u32Status==0x10)                 /* Previously address with own SLA address
-                                                   Data has been received; ACK has been returned*/
-    {
+    else if(u32Status == 0x80 || u32Status==0x10)    /* Previously address with own SLA address
+                                                       Data has been received; ACK has been returned*/
+	{
         srvBuffer[srvBufferLength] = (unsigned char) I2C_GET_DATA(i2c);
         srvBufferLength++;
 
         I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);
     }
-    else if(u32Status == 0xA8)                  /* Own SLA+R has been receive; ACK has been return */
+    else if(u32Status == 0xA8)    /* Own SLA+R has been receive; ACK has been return */
     {				    		        
      
-				// Alert calling program to generate a response ASAP
-				if (onRequestCallback && status != SLAVE_SEND)
-				{
-					srvBufferLength = 0;
-					srvBufferIndex = 0;	
-					onRequestCallback();
-				}			
-  			status = SLAVE_SEND;  							
-				if (srvBufferIndex < srvBufferLength)
-				{						
-						//Serial.print("==============>");
-						//Serial.println((char)srvBuffer[srvBufferIndex]);
-						I2C_SET_DATA(i2c, srvBuffer[srvBufferIndex++]);						
-						I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);						
-				}
-				
-				if (srvBufferIndex == srvBufferLength)
-						status = SLAVE_IDLE;
-						
-		}else if(u32Status == 0xB8)	
+		// Alert calling program to generate a response ASAP
+		if (onRequestCallback && status != SLAVE_SEND)
 		{
-				if (srvBufferIndex < srvBufferLength)
-				{				
-						//Serial.print("==============>");
-						//Serial.println((char)srvBuffer[srvBufferIndex]);		
-						I2C_SET_DATA(i2c, srvBuffer[srvBufferIndex++]);						
-						I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);						
-				}
-				
-				if (srvBufferIndex == srvBufferLength)
-						status = SLAVE_IDLE;			
+			srvBufferLength = 0;
+			srvBufferIndex = 0;	
+			onRequestCallback();
+		}			
+  		status = SLAVE_SEND;  							
+		if (srvBufferIndex < srvBufferLength)
+		{						
+			//Serial.print("==============>");
+			//Serial.println((char)srvBuffer[srvBufferIndex]);
+			I2C_SET_DATA(i2c, srvBuffer[srvBufferIndex++]);						
+			I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);						
 		}
-    else if(u32Status == 0xC0)                 /* Data byte or last data in I2CDAT has been transmitted
-                                                   Not ACK has been received */
-    {
+				
+		if (srvBufferIndex == srvBufferLength)
+		{	
+		    status = SLAVE_IDLE;
+		}
+	}		
+	else if(u32Status == 0xB8)	
+	{
+			if (srvBufferIndex < srvBufferLength)
+			{				
+				//Serial.print("==============>");
+				//Serial.println((char)srvBuffer[srvBufferIndex]);		
+				I2C_SET_DATA(i2c, srvBuffer[srvBufferIndex++]);						
+				I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);						
+			}
+				
+			if (srvBufferIndex == srvBufferLength)
+				status = SLAVE_IDLE;
+	}
+    else if(u32Status == 0xC0)    /* Data byte or last data in I2CDAT has been transmitted
+                                    Not ACK has been received */
+	{
         I2C_SET_CONTROL_REG(i2c, I2C_SI_AA);
     }
     else if(u32Status == 0x88)                 /* Previously addressed with own SLA address; NOT ACK has

@@ -146,6 +146,9 @@ extern GPIOPinDescription GPIO_Desc[];
 #define PWM_DESC_IDX0             (0x00)
 #define PWM_DESC_IDX1             (0x01)
 #define PWM_DESC_IDX2             (0x02)
+#define PWM_DESC_IDX3             (0x03)
+#define PWM_DESC_IDX4             (0x04)
+#define PWM_DESC_IDX5             (0x05)
 #define PWM_DESC_IDX_NOUSE        (0xF0)
 
 extern EPWMPinDescription PWM_Desc[];
@@ -236,7 +239,7 @@ do { \
 
 
 /*========== I2C definition ==========*/
-#define I2C_MAX_COUNT 1
+#define I2C_MAX_COUNT 2
 
 extern I2CPinDescription I2C_Desc[];
 #define I2C_SDA 0

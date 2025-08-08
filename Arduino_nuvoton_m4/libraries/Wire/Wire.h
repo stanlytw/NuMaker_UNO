@@ -27,21 +27,10 @@
 #include "Stream.h"
 
 #define BUFFER_LENGTH 32
+#define I2C_W (0x00)
+#define I2C_R (0x01)
 
-#if defined(__M451__) || defined(__M252__)
-#define I2C_STA_STO_SI 		I2C_CTL_STA_STO_SI       
-#define I2C_STA_STO_SI_AA 	I2C_CTL_STA_STO_SI_AA    
-#define I2C_STA_SI 	        I2C_CTL_STA_SI           
-#define I2C_STA_SI_AA 	    I2C_CTL_STA_SI_AA         
-#define I2C_STO_SI		    I2C_CTL_STO_SI            
-#define I2C_STO_SI_AA   	I2C_CTL_STO_SI_AA         
-#define I2C_SI 			    I2C_CTL_SI                
-#define I2C_SI_AA	        I2C_CTL_SI_AA             
-#define I2C_STA 	        I2C_CTL_STA               
-#define I2C_STO 		    I2C_CTL_STO               
-#define I2C_AA 			    I2C_CTL_AA  
-
-#elif defined(__M480__) || defined(__M460__) 
+#if defined(__M460__) 
 #define I2C_STA_SI 	        I2C_CTL_STA_SI           
 #define I2C_STA_SI_AA 	    I2C_CTL_STA_SI_AA  
 #define I2C_SI 			    I2C_CTL_SI                
@@ -49,35 +38,10 @@
 #define I2C_STA 	        I2C_CTL_STA               
 #define I2C_STO 		    I2C_CTL_STO               
 #define I2C_AA 			    I2C_CTL_AA  
-
-#elif defined(__M032BT__) || (__M032KG__)
-#define I2C_STA_STO_SI 		I2C_CTL_STA_STO_SI       
-#define I2C_STA_STO_SI_AA 	I2C_CTL_STA_STO_SI_AA    
-#define I2C_STA_SI 	        I2C_CTL_STA_SI           
-#define I2C_STA_SI_AA		I2C_CTL_STA_SI_AA         
-#define I2C_STO_SI			I2C_CTL_STO_SI            
-#define I2C_STO_SI_AA		I2C_CTL_STO_SI_AA         
-#define I2C_SI				I2C_CTL_SI                
-#define I2C_SI_AA			I2C_CTL_SI_AA             
-#define I2C_STA				I2C_CTL_STA               
-#define I2C_STO				I2C_CTL_STO               
-#define I2C_AA				I2C_CTL_AA   
-
-#elif defined(__NUC240__) | defined(__NUC131__)
-#define I2C_STA_STO_SI 		I2C_I2CON_STA_STO_SI       
-#define I2C_STA_STO_SI_AA 	I2C_I2CON_STA_STO_SI_AA    
-#define I2C_STA_SI 		I2C_I2CON_STA_SI           
-#define I2C_STA_SI_AA 		I2C_I2CON_STA_SI_AA         
-#define I2C_STO_SI		I2C_I2CON_STO_SI            
-#define I2C_STO_SI_AA   	I2C_I2CON_STO_SI_AA         
-#define I2C_SI 			I2C_I2CON_SI                
-#define I2C_SI_AA		I2C_I2CON_SI_AA             
-#define I2C_STA 		I2C_I2CON_STA               
-#define I2C_STO 		I2C_I2CON_STO               
-#define I2C_AA 			I2C_I2CON_AA                
+              
 #endif
 
-// #define I2C_SI_AA               (I2C_SI | I2C_AA)           
+        
 
 class TwoWire : public Stream {
 public:
@@ -109,6 +73,7 @@ public:
     using Print::write;
 
 	void onService(void);
+	int8_t isDevicePresent(uint8_t);
 
 private:
 	// RX Buffer
@@ -151,11 +116,12 @@ private:
 	// TWI clock frequency
 	static const uint32_t I2C_CLOCK = 100000;
 
-	// Timeouts (
+	// Timeouts(Seems licke max retry count)
 	static const uint32_t TIMEOUT = 100;	
-	
-	
+		
+	// Real implementation of I2C IRQHandler 
 	void I2C_SlaveTRx(uint32_t u32Status);
+	
 };
 
 #if I2C_MAX_COUNT > 0
