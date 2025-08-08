@@ -137,6 +137,14 @@ void Enable_All_IPs(void)
 
 #endif
 
+
+#if defined(__M467SJHAN__)
+    /* Light-ON LED1 for status indication */
+    GPIO_SetMode(PB, BIT6, GPIO_MODE_OUTPUT);
+	PB6 = 1;
+#endif
+
+
 }
 //F_CPU
 void init(void)
