@@ -36,13 +36,13 @@
 				{
                   "name": "NuMaker M4",
                   "architecture": "nuvoton_m4",
-                  "version": "13.3.8",
+                  "version": "13.3.9",
 
                   "category": "Arduino",
                   "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_m4.tar.bz2?raw=true",
                   "archiveFileName": "Arduino_nuvoton_m4.tar.bz2",
-                  "checksum": "SHA-256:762768ba646e2b0ff42e56258d955ecdd107d2bc7fdb15024bd5f7ab655cfc5d",
-                  "size": "33438557",
+                  "checksum": "SHA-256:101747209c1b8b4ee77c48eac352409c608657052716014b45d2ada75c2ad294",
+                  "size": "33436823",
                   "boards": [
                     {"name": "NuMaker-UNO-M4"},
                     {"name": "NuMaker-IoT-M467"},
