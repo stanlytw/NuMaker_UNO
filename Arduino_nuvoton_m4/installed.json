@@ -4,25 +4,28 @@
       "name": "nuvoton",
       "maintainer": "Nuvoton",
       "websiteUrl": "http://www.nuvoton.com",
-      "Url": "https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/refs/heads/master/package_nuvoton_index.json",
+      "Url": "https://raw.githubusercontent.com/OpenNuvoton/NuMaker_UNO/master/package_nuvoton_index.json",
       "email": "",
       "platforms": [
         {
           "name": "NuMaker M4",
           "architecture": "nuvoton_m4",
-          "version": "13.3.3",
+          "version": "13.3.9",
           "deprecated": false,
           "category": "Arduino",
           "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_m4.tar.bz2?raw=true",
           "archiveFileName": "Arduino_nuvoton_m4.tar.bz2",
-          "checksum": "SHA-256:ace2453a5b2fed4faa6d15567e1e745b87e2710af5e18dedd6025f6c341c0faa",
-          "size": "33433532",
+          "checksum": "SHA-256:101747209c1b8b4ee77c48eac352409c608657052716014b45d2ada75c2ad294",
+          "size": "33436823",
           "boards": [
             {
-              "name": "NuMaker-UNO-M467"
+              "name": "NuMaker-UNO-M4"
             },
             {
-              "name": "NuMaker-IOT-M467"
+              "name": "NuMaker-IoT-M467"
+            },
+            {
+              "name": "NuMaker-M467HJ"
             }
           ],
           "help": {},
@@ -37,7 +40,21 @@
           "monitorDependencies": []
         }
       ],
-      "tools": [],
+      "tools": [
+        {
+          "name": "arm-none-eabi-gcc",
+          "version": "10-2021q3",
+          "systems": [
+            {
+              "host": "i686-mingw32",
+              "url": "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip?rev=8f4a92e2ec2040f89912f372a55d8cf3\u0026hash=8A9EAF77EF1957B779C59EADDBF2DAC118170BBF",
+              "archiveFileName": "gcc-arm-none-eabi-10.3-2021.10-win32.zip",
+              "size": "200578763",
+              "checksum": "SHA-256:d287439b3090843f3f4e29c7c41f81d958a5323aecefcf705c203bfd8ae3f2e7"
+            }
+          ]
+        }
+      ],
       "help": {
         "online": "http://www.nuvoton.com"
       }
