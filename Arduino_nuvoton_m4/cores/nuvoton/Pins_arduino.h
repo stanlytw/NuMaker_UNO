@@ -197,7 +197,7 @@ typedef struct _BoardToPin
         #define BoardToPin_MAX_COUNT 18
     #endif
 #else
-    #define BoardToPin_MAX_COUNT 81
+    #define BoardToPin_MAX_COUNT 20//D0~D19
 #endif
     extern BoardToPin BoardToPinInfo[];
 #endif

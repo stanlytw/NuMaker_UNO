@@ -54,7 +54,8 @@ void loop() {
   lightNumber(1,Num2);  //Select Even Segment Display 2 and disply number i
   delay(2);
   lightNumber(0,Num1);  //Select Even Segment Display 1 and disply number j
-  delay(2);  
+  delay(2);
+  
 }
 
 
@@ -84,4 +85,7 @@ void timer_ISR(uint8_t num)
     if(Num2>9) Num2=0;
     Num1=0;
   }
+  Serial.print("Timer Count:");
+  Serial.print(Num2, DEC);
+  Serial.println(Num1, DEC);  
 }

@@ -27,8 +27,8 @@
  */
 
 // These constants won't change:
-const int sensorPin = A0;    // pin that the sensor is attached to
-int rgbLed[]={ 2, 3, 4 };    // R, G, B pin that the LED is attached to
+const int sensorPin = A4;    // UNO-M4 pin that the sensor is attached to, short R37
+int rgbLed[]={ D8, D10, D11 };    // R, G, B pin that the LED is attached to
 
 // variables:
 int sensorValue = 0;         // the sensor value

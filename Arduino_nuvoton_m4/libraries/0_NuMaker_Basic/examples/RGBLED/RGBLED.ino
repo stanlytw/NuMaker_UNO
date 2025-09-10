@@ -2,7 +2,7 @@
   This sketch fades LEDs up and down one at a time on digital pins 2 through 4.  
  	
   The circuit:
-  * LEDs attached from pins 2 through 4 to ground.
+  * LEDs attached at pins 8,10 and 11 to ground.
 
   This example code is in the public domain.
   
@@ -12,10 +12,10 @@
 const int lowestPin = 0;
 const int highestPin = 2;
 
-int rgbLed[]={ 2, 3, 4 };  /* R, G, B LED */
+int rgbLed[]={ D8, D10, D11 };  /* R, G, B LED */
 
 void setup() {
-  // set pins 2 through 4 as outputs:
+  // set 3 pins outputs:
   for (int thisPin =lowestPin; thisPin <= highestPin; thisPin++) { 
     pinMode(rgbLed[thisPin], OUTPUT); 
   }

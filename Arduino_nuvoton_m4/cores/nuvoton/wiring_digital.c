@@ -25,7 +25,10 @@ extern "C" {
 extern void pinMode(uint32_t ulPin, uint32_t ulMode)
 {
 #ifdef USE_BoardToPin
-    if (ulPin > BoardToPin_MAX_COUNT) return;
+    if (ulPin > BoardToPin_MAX_COUNT) 
+    {
+        ulPin = 18;//default to D18
+    }
     if (BoardToPinInfo[ulPin].pin == -1) return;
     ulPin = BoardToPinInfo[ulPin].pin;
 #else
@@ -65,7 +68,10 @@ extern void pinMode(uint32_t ulPin, uint32_t ulMode)
 extern void digitalWrite(uint32_t ulPin, uint32_t ulVal)
 {
 #ifdef USE_BoardToPin
-    if (ulPin > BoardToPin_MAX_COUNT) return;
+    if (ulPin > BoardToPin_MAX_COUNT) 
+    {
+        ulPin = 18;//default to D18
+    }
     if (BoardToPinInfo[ulPin].pin == -1) return;
     ulPin = BoardToPinInfo[ulPin].pin;
 #else
@@ -81,7 +87,10 @@ extern void digitalWrite(uint32_t ulPin, uint32_t ulVal)
 extern int digitalRead(uint32_t ulPin)
 {
 #ifdef USE_BoardToPin
-    if (ulPin > BoardToPin_MAX_COUNT) return 0;
+    if (ulPin > BoardToPin_MAX_COUNT) 
+    {
+        ulPin = 18;//default to D18
+    }
     if (BoardToPinInfo[ulPin].pin == -1) return 0;
     ulPin = BoardToPinInfo[ulPin].pin;
 #else
