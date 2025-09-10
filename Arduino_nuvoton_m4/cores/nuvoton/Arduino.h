@@ -85,6 +85,7 @@ extern "C" {
 //#include "wiring_shift.h"
 #include "WInterrupts.h"
 #include "itoa.h"
+#include "binary.h"
 void yield(void);
 
 #ifdef __cplusplus

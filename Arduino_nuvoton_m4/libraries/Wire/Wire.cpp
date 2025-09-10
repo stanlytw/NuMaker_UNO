@@ -46,12 +46,22 @@ void TwoWire::begin(uint8_t address) {
 		
 		I2C_SetSlaveAddr(i2c, 0, address, 0);   /* Slave Address */	        		
 		I2C_EnableInt(i2c);				    
-	I2C_SET_CONTROL_REG(i2c, I2C_SI_AA); /* I2C enter no address SLV mode */
+	    I2C_SET_CONTROL_REG(i2c, I2C_SI_AA); /* I2C enter no address SLV mode */
 }
 
 void TwoWire::begin(int address) {
 	begin((uint8_t) address);
 }
+
+//[2025-08-15] Support Adafruit LCD library
+void TwoWire::end(void) {
+	//I2C_Close(i2c);			
+}
+
+void TwoWire::setClock(uint32_t desiredclk) {
+	//I2C_Close(i2c);			
+}
+
 
 uint8_t TwoWire::requestFrom(uint8_t address, uint8_t quantity, uint8_t sendStop) {
 	if (quantity > BUFFER_LENGTH) quantity = BUFFER_LENGTH;

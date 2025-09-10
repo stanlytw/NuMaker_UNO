@@ -74,6 +74,9 @@ public:
 
 	void onService(void);
 	int8_t isDevicePresent(uint8_t);
+	void end(void);			
+    void setClock(uint32_t desiredclk);			
+
 
 private:
 	// RX Buffer
@@ -114,7 +117,7 @@ private:
 	TwoWireStatus status;
 
 	// TWI clock frequency
-	static const uint32_t I2C_CLOCK = 100000;
+	static const uint32_t I2C_CLOCK = 400000;
 
 	// Timeouts(Seems licke max retry count)
 	static const uint32_t TIMEOUT = 100;	

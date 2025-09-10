@@ -39,6 +39,8 @@ int main( void )
 
 	#if defined(__M460MINIMA__)
 	Serial.begin(115200);//[2025-03-03]Turn on VCOM
+	delay(1000);
+	
 	#endif
 
 	setup();
