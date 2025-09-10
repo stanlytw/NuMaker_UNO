@@ -15,8 +15,7 @@ uint8_t SrcArray[BYTE_PER_PAGE];
 uint8_t DestArray[BYTE_PER_PAGE];
 
 // set pin 10 as the slave select for the digital pot:
-const int slaveSelectPin = SS; //SS:43
-//const int slaveSelectPin = 10;
+const int slaveSelectPin = 10;
 
 void setup()
 {
