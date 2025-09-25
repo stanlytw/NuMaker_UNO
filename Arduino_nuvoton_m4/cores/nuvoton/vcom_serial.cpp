@@ -24,6 +24,9 @@ uint32_t g_u32EpEMaxPacketSize;
 uint8_t volatile g_u8UsbDataReady = 0;
 __attribute__((aligned(4))) uint8_t g_u8UsbRcvBuff[64];
 
+static uint8_t g_au8LEDStatus[8];
+static uint32_t u32LEDStatus = 0;
+uint8_t volatile g_u8EPFReady = 0;
 /***************************************************************/
 #define USBDCONNECT_DETECT_RETRYCNT_MAX   (100)
 
@@ -105,16 +108,24 @@ void USBD20_IRQHandler(void)
             HSUSBD->EP[EPB].EPRSPCTL = HSUSBD_EPRSPCTL_FLUSH_Msk;
             HSUSBD->EP[EPD].EPRSPCTL = HSUSBD_EPRSPCTL_FLUSH_Msk;
             HSUSBD->EP[EPE].EPRSPCTL = HSUSBD_EPRSPCTL_FLUSH_Msk;
-
+					
+            HSUSBD->EP[EPC].EPRSPCTL = HSUSBD_EPRSPCTL_FLUSH_Msk;  
+            HSUSBD->EP[EPF].EPRSPCTL = HSUSBD_EPRSPCTL_FLUSH_Msk;  
             if(HSUSBD->OPER & 0x04)   /* high speed */
             {
                 VCOM_InitForHighSpeed();
                 HID_InitForHighSpeed();
-            }
+                //[2024-12-19] Add HID
+                HIDKeyboard_InitForHighSpeed();//[2025-09-24]
+            } 
             else                    /* full speed */
             {
                 //VCOM_InitForFullSpeed();
+                //HID_InitForFullSpeed();
+                //[2024-12-19] Add HID
             }
+                
+            
             HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_SETUPPKIEN_Msk);
             HSUSBD_SET_ADDR(0);
             HSUSBD_ENABLE_BUS_INT(HSUSBD_BUSINTEN_RSTIEN_Msk | HSUSBD_BUSINTEN_RESUMEIEN_Msk | HSUSBD_BUSINTEN_SUSPENDIEN_Msk);
@@ -156,7 +167,8 @@ void USBD20_IRQHandler(void)
                 if(g_hsusbd_ShortPacket == 1)
                 {
                     HSUSBD->EP[EPA].EPRSPCTL = (HSUSBD->EP[EPA].EPRSPCTL & 0x10) | HSUSBD_EP_RSPCTL_SHORTTXEN;    // packet end
-                    HSUSBD->EP[EPD].EPRSPCTL = (HSUSBD->EP[EPD].EPRSPCTL & 0x10) | HSUSBD_EP_RSPCTL_SHORTTXEN;    // packet end
+                    //HSUSBD->EP[EPD].EPRSPCTL = (HSUSBD->EP[EPD].EPRSPCTL & 0x10) | HSUSBD_EP_RSPCTL_SHORTTXEN;    // packet end
+                    //[2025-09-22]Bulk-IN EP requires such settings.
                     g_hsusbd_ShortPacket = 0;
                 }
             }
@@ -311,19 +323,15 @@ void USBD20_IRQHandler(void)
 
         IrqSt = HSUSBD->EP[EPB].EPINTSTS & HSUSBD->EP[EPB].EPINTEN;
         gu32RxSize = HSUSBD->EP[EPB].EPDATCNT & 0xffff;
-        
         for(i = 0; i < gu32RxSize; i++)
-            gUsbRxBuf[i] = HSUSBD->EP[EPB].EPDAT_BYTE;//[2024-12-03]byte accessible
+            gUsbRxBuf[i] = HSUSBD->EP[EPB].EPDAT_BYTE;
 
         /* Set a flag to indicate bulk out ready */
-        //gi8BulkOutReady = 1;
+        gi8BulkOutReady = 1;
+        printf("gi8BulkOutReady\n");
         HSUSBD_ENABLE_EP_INT(EPB, 0);
         HSUSBD_CLR_EP_INT_FLAG(EPB, IrqSt);
-
-        VcomRxhandler((uint8_t*)(gUsbRxBuf));
-        
     }
-
 #if 1 //To do:check which EP is used for HID in this composite device
     /* interrupt in */
     if(IrqStL & HSUSBD_GINTSTS_EPDIF_Msk)
@@ -339,7 +347,7 @@ void USBD20_IRQHandler(void)
     if(IrqStL & HSUSBD_GINTSTS_EPEIF_Msk)
     {
         IrqSt = HSUSBD->EP[EPE].EPINTSTS & HSUSBD->EP[EPE].EPINTEN;
-        //printf("EPE, INT IN, IrqSr=0x%x\n", IrqSt);
+        printf("EPE, INT IN, IrqSr=0x%x\n", IrqSt);
 			  #if 0
 			  if(HSUSBD->EP[EPE].EPINTSTS & 0x01)
 			  #else
@@ -353,29 +361,31 @@ void USBD20_IRQHandler(void)
 				//g_u8GoLDR = 1;
     }
 #endif
-
     if(IrqStL & HSUSBD_GINTSTS_EPCIF_Msk)
     {
         IrqSt = HSUSBD->EP[EPC].EPINTSTS & HSUSBD->EP[EPC].EPINTEN;
         HSUSBD_CLR_EP_INT_FLAG(EPC, IrqSt);
     }
 
-#if 0
-    if(IrqStL & HSUSBD_GINTSTS_EPDIF_Msk)
-    {
-        IrqSt = HSUSBD->EP[EPD].EPINTSTS & HSUSBD->EP[EPD].EPINTEN;
-        HSUSBD_CLR_EP_INT_FLAG(EPD, IrqSt);
-    }
+//    if(IrqStL & HSUSBD_GINTSTS_EPDIF_Msk)
+//    {
+//        IrqSt = HSUSBD->EP[EPD].EPINTSTS & HSUSBD->EP[EPD].EPINTEN;
+//        HSUSBD_CLR_EP_INT_FLAG(EPD, IrqSt);
+//    }
 
-    if(IrqStL & HSUSBD_GINTSTS_EPEIF_Msk)
-    {
-        IrqSt = HSUSBD->EP[EPE].EPINTSTS & HSUSBD->EP[EPE].EPINTEN;
-        HSUSBD_CLR_EP_INT_FLAG(EPE, IrqSt);
-    }
-#endif
+//    if(IrqStL & HSUSBD_GINTSTS_EPEIF_Msk)
+//    {
+//        IrqSt = HSUSBD->EP[EPE].EPINTSTS & HSUSBD->EP[EPE].EPINTEN;
+//        HSUSBD_CLR_EP_INT_FLAG(EPE, IrqSt);
+//    }
+
+		/* interrupt in, Keyboard */  
     if(IrqStL & HSUSBD_GINTSTS_EPFIF_Msk)
     {
         IrqSt = HSUSBD->EP[EPF].EPINTSTS & HSUSBD->EP[EPF].EPINTEN;
+			  //[2025-09-22] For Keyboard
+			  HSUSBD_ENABLE_EP_INT(EPF, 0);
+        EPF_Handler();
         HSUSBD_CLR_EP_INT_FLAG(EPF, IrqSt);
     }
 
@@ -451,12 +461,44 @@ void EPE_Handler(void)  /* Interrupt OUT handler */
     
 }
 
+void EPF_Handler(void)  /* Interrupt IN handler */
+{
+    g_u8EPFReady = TRUE;
+}
+
 /*--------------------------------------------------------------------------*/
 /**
   * @brief  USBD Endpoint Config.
   * @param  None.
   * @retval None.
   */
+  
+void HIDKeyboard_InitForHighSpeed(void)
+{
+     /*****************************************************/
+    /* EPA ==> Interrupt IN endpoint, address 1 */
+    HSUSBD_SetEpBufAddr(EPF, EPF_BUF_BASE, EPF_BUF_LEN);
+    HSUSBD_SET_MAX_PAYLOAD(EPF, EPF_MAX_PKT_SIZE);
+    HSUSBD_ConfigEp(EPF, INT_IN_EP_NUM_KB, HSUSBD_EP_CFG_TYPE_INT, HSUSBD_EP_CFG_DIR_IN);
+	
+	  /* start to IN data */
+    g_u8EPFReady = 1;
+}
+
+
+void HIDKeyboard_InitForFullSpeed(void)
+{
+     /*****************************************************/
+    /* EPA ==> Interrupt IN endpoint, address 1 */
+    HSUSBD_SetEpBufAddr(EPF, EPF_BUF_BASE, EPF_BUF_LEN);
+    HSUSBD_SET_MAX_PAYLOAD(EPF, EPF_MAX_PKT_SIZE);
+    HSUSBD_ConfigEp(EPF, INT_IN_EP_NUM_KB, HSUSBD_EP_CFG_TYPE_INT, HSUSBD_EP_CFG_DIR_IN);
+	
+	  /* start to IN data */
+    g_u8EPFReady = 1;
+}
+  
+  
 void HID_InitForHighSpeed(void)
 {
     /*****************************************************/
@@ -495,9 +537,9 @@ void HID_InitForFullSpeed(void)
 
 void VHID_Init(void)
 {
-    /* Configure USB controller */
+   /* Configure USB controller */
     /* Enable USB BUS, CEP and EPA , EPB global interrupt */
-    HSUSBD_ENABLE_USB_INT(HSUSBD_GINTEN_USBIEN_Msk | HSUSBD_GINTEN_CEPIEN_Msk | HSUSBD_GINTEN_EPAIEN_Msk | HSUSBD_GINTEN_EPBIEN_Msk | HSUSBD_GINTEN_EPCIEN_Msk | HSUSBD_GINTEN_EPDIEN_Msk |HSUSBD_GINTEN_EPEIEN_Msk);
+    HSUSBD_ENABLE_USB_INT(HSUSBD_GINTEN_USBIEN_Msk | HSUSBD_GINTEN_CEPIEN_Msk | HSUSBD_GINTEN_EPAIEN_Msk | HSUSBD_GINTEN_EPBIEN_Msk | HSUSBD_GINTEN_EPCIEN_Msk | HSUSBD_GINTEN_EPDIEN_Msk |HSUSBD_GINTEN_EPEIEN_Msk |HSUSBD_GINTEN_EPFIEN_Msk);
     /* Enable BUS interrupt */
     HSUSBD_ENABLE_BUS_INT(HSUSBD_BUSINTEN_DMADONEIEN_Msk | HSUSBD_BUSINTEN_RESUMEIEN_Msk | HSUSBD_BUSINTEN_RSTIEN_Msk | HSUSBD_BUSINTEN_VBUSDETIEN_Msk);
     /* Reset Address to 0 */
@@ -509,7 +551,8 @@ void VHID_Init(void)
     HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_SETUPPKIEN_Msk | HSUSBD_CEPINTEN_STSDONEIEN_Msk);
 
     HID_InitForHighSpeed();
-	  VCOM_InitForHighSpeed();
+	VCOM_InitForHighSpeed();
+	HIDKeyboard_InitForHighSpeed();
 }
 
 void VCOM_InitForHighSpeed(void)
@@ -593,7 +636,7 @@ void VCOM_ClassRequest(void)
                 HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_INTKIEN_Msk);
                 break;
             }
-  		 		  case GET_REPORT://hid
+  		 	case GET_REPORT://hid
             case GET_IDLE://hid
             case GET_PROTOCOL://hid
             default:

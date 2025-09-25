@@ -10,6 +10,8 @@
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
 
+#include <stdint.h>
+
 /* Define the vendor id and product id */
 #define USBD_VID        0x0416
 #define USBD_PID        0x003e
@@ -64,7 +66,7 @@ extern "C" {
 
 
 /*-------------------------------------------------------------*/
-extern uint8_t volatile g_u8EP2Ready;
+extern uint8_t volatile g_u8EPKBReady;
 
 /*-------------------------------------------------------------*/
 

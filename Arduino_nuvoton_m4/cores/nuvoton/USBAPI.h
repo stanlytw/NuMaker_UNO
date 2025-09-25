@@ -18,7 +18,7 @@
 
 #ifndef __USBAPI__
 #define __USBAPI__
-
+#include <stdint.h>
 #if defined __cplusplus
 
 //================================================================================

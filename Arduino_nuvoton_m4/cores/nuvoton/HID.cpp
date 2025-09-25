@@ -8,32 +8,24 @@
  * Copyright (C) 2014 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
-#include "Arduino.h"
-
+//#include "Arduino.h"
+#include "USBCore.h"
+#include "USBAPI.h"
+#include "vcom_serial.h"
+#define __460__
 //	Singletons for mouse and keyboard
-#if defined(__M451__) | defined(__NUC240__) | defined(__NANO100__)
+#if defined(__460__) 
 Mouse_ Mouse;
 Keyboard_ Keyboard;
 
 //================================================================================
 //================================================================================
 //	Driver
-
-#define WEAK __attribute__ ((weak))
-void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
-{
-	uint8_t *p = (uint8_t *)(USBD_BUF_BASE + USBD_GET_EP_BUF_ADDR(EP2));
-	const uint8_t *d = reinterpret_cast<const uint8_t *>(data);
-
-	p[0] = id;
-	for (uint32_t i=0; i<len; i++)
-		p[i+1] = d[i];
-    g_u8EP2Ready = 0;
-    /* Set transfer length and trigger IN transfer */
-    USBD_SET_PAYLOAD_LEN(EP2, len+1);
-
-	while(!g_u8EP2Ready);
-}
+//#define WEAK __attribute__ ((weak))
+//void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
+//{
+//    NVT_HID_SendReport(id, data, len);
+//}
 
 
 //================================================================================
