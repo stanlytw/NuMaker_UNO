@@ -196,6 +196,8 @@ void EPE_Handler(void);
 
 void EPF_Handler(void);
 void HID_UpdateKeyboardData(void);
+void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len);
+   
 #ifdef __cplusplus
 }
 #endif

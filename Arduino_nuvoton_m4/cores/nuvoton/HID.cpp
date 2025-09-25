@@ -21,11 +21,11 @@ Keyboard_ Keyboard;
 //================================================================================
 //================================================================================
 //	Driver
-//#define WEAK __attribute__ ((weak))
-//void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
-//{
-//    NVT_HID_SendReport(id, data, len);
-//}
+#define WEAK __attribute__ ((weak))
+void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
+{
+    NVT_HID_SendReport(id, data, len);
+}
 
 
 //================================================================================

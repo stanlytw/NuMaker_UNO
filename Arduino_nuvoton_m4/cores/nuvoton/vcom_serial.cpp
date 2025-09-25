@@ -622,21 +622,23 @@ void VCOM_Init(void)
 
 void VCOM_ClassRequest(void)
 {
-    if(gUsbCmd.bmRequestType & 0x80)    /* request data transfer direction */
+    
+	  if(gUsbCmd.bmRequestType & 0x80)    /* request data transfer direction */
     {
-        // Device to host
+        //printf("VCOM_ClassRequest, D to H, Request:%x\n",gUsbCmd.bRequest);
+			  // Device to host
         switch(gUsbCmd.bRequest)
         {
             
 					  case GET_LINE_CODE:
             {
-                if((gUsbCmd.wIndex & 0xff) == 0)   /* VCOM-1 */
+                if((gUsbCmd.wIndex & 0xff) == 2)   /* VCOM-1 */
                     HSUSBD_PrepareCtrlIn((uint8_t *)&gLineCoding, 7);
                 HSUSBD_CLR_CEP_INT_FLAG(HSUSBD_CEPINTSTS_INTKIF_Msk);
                 HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_INTKIEN_Msk);
                 break;
             }
-  		 	case GET_REPORT://hid
+  		 		  case GET_REPORT://hid
             case GET_IDLE://hid
             case GET_PROTOCOL://hid
             default:
@@ -649,7 +651,8 @@ void VCOM_ClassRequest(void)
     }
     else
     {
-        // Host to device
+        //printf("VCOM_ClassRequest, H to D, Request:%x\n",gUsbCmd.bRequest);  
+			  // Host to device
         switch(gUsbCmd.bRequest)
         {
             case SET_REPORT:
@@ -657,10 +660,12 @@ void VCOM_ClassRequest(void)
                 if(((gUsbCmd.wValue >> 8) & 0xff) == 3)
                 {
                     /* Request Type = Feature */
+									  printf("Request Type = Feature\r\n");
                     HSUSBD_CLR_CEP_INT_FLAG(HSUSBD_CEPINTSTS_STSDONEIF_Msk);
                     HSUSBD_SET_CEP_STATE(HSUSBD_CEPCTL_NAKCLR);
                     HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_STSDONEIEN_Msk);
                 }
+								printf("Request Type != Feature\r\n");
                 break;
             }
             case SET_IDLE:
@@ -669,12 +674,13 @@ void VCOM_ClassRequest(void)
                 HSUSBD_CLR_CEP_INT_FLAG(HSUSBD_CEPINTSTS_STSDONEIF_Msk);
                 HSUSBD_SET_CEP_STATE(HSUSBD_CEPCTL_NAKCLR);
                 HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_STSDONEIEN_Msk);
+				//printf("Set idle!\r\n");
                 break;
             }
             
 					  case SET_CONTROL_LINE_STATE:
             {
-                if((gUsbCmd.wIndex & 0xff) == 0)    /* VCOM-1 */
+                if((gUsbCmd.wIndex & 0xff) == 2)    /* VCOM-1 */
                 {
                     gCtrlSignal = gUsbCmd.wValue;
                     //printf("RTS=%d  DTR=%d\n", (gCtrlSignal0 >> 1) & 1, gCtrlSignal0 & 1);
@@ -688,7 +694,7 @@ void VCOM_ClassRequest(void)
             }
             case SET_LINE_CODE:
             {
-                if((gUsbCmd.wIndex & 0xff) == 0)  /* VCOM-1 */
+                if((gUsbCmd.wIndex & 0xff) == 2)  /* VCOM-1 */
                     HSUSBD_CtrlOut((uint8_t *)&gLineCoding, 7);
 
                 /* Status stage */
@@ -697,8 +703,8 @@ void VCOM_ClassRequest(void)
                 HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_STSDONEIEN_Msk);
 
                 /* UART setting */
-                if((gUsbCmd.wIndex & 0xff) == 0)  /* VCOM-1 */
-                    //VCOM_LineCoding(0);
+                if((gUsbCmd.wIndex & 0xff) == 2)  /* VCOM-1 */
+                    VCOM_LineCoding(0);
                 break;
             }
             case SET_PROTOCOL://hid
@@ -1331,6 +1337,26 @@ void HID_SetInReport(void)
 
 }
 
+void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len)
+{
+	  uint8_t* buf = (uint8_t*)(data);
+    int volatile i;
+
+    if(g_u8EPFReady)
+    {
+        /* Update new report data */
+        //for(i = 0; i < 8; i++)
+        //    buf[i] = 0;
+			  g_u8EPFReady = 0;
+        /* Set transfer length and trigger IN transfer */
+        for(i = 0; i < 8; i++)
+            HSUSBD->EP[EPF].EPDAT_BYTE = buf[i];
+        HSUSBD->EP[EPF].EPRSPCTL = HSUSBD_EP_RSPCTL_SHORTTXEN;
+        HSUSBD_ENABLE_EP_INT(EPF, HSUSBD_EPINTEN_INTKIEN_Msk);
+    }
+		while(!g_u8EPFReady);
+		//[2025-09-25]Need to wait g_u8EPFReady=true?
+}
 
 #endif
 #ifdef __cplusplus
