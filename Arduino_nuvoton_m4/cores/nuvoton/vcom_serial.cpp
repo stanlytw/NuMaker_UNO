@@ -27,6 +27,7 @@ __attribute__((aligned(4))) uint8_t g_u8UsbRcvBuff[64];
 static uint8_t g_au8LEDStatus[8];
 static uint32_t u32LEDStatus = 0;
 uint8_t volatile g_u8EPFReady = 0;
+uint8_t volatile g_u8EPGReady = 0;
 /***************************************************************/
 #define USBDCONNECT_DETECT_RETRYCNT_MAX   (100)
 
@@ -38,6 +39,15 @@ uint8_t volatile g_u8EPFReady = 0;
 #define HID_CMD_READ     0xD2
 #define HID_CMD_WRITE    0xC3
 #define HID_CMD_TEST     0xB4
+
+
+#define INTFACENUM_HID_KB         (0)
+#define INTFACENUM_HID_XFER       (1)
+#define INTFACENUM_VCOM_CON       (2)
+#define INTFACENUM_VCOM_DATA      (3)
+
+#define REQUEST_TYPE_FEATURE      (3)
+#define REQUEST_TYPE_OUTPUT       (2) 
 
 #if (EP_MAX_PKT_SIZE == 1024)
 #define PAGE_SIZE        1024
@@ -392,6 +402,9 @@ void USBD20_IRQHandler(void)
     if(IrqStL & HSUSBD_GINTSTS_EPGIF_Msk)
     {
         IrqSt = HSUSBD->EP[EPG].EPINTSTS & HSUSBD->EP[EPG].EPINTEN;
+        //[2025-09-30] For Mouse
+        HSUSBD_ENABLE_EP_INT(EPG, 0);
+        EPG_Handler();
         HSUSBD_CLR_EP_INT_FLAG(EPG, IrqSt);
     }
 
@@ -446,24 +459,27 @@ void EPE_Handler(void)  /* Interrupt OUT handler */
 {
     uint32_t len, i;
     len = HSUSBD->EP[EPE].EPDATCNT & 0xffff;
-    //printf("Finish EPE_Handler\n");  
-	  for(i = 0; i < len; i++)
-	  {
-	      g_u8OutBuff[i] = HSUSBD->EP[EPE].EPDAT_BYTE;  
-			  //printf("0x%x\n",g_u8OutBuff[i]);
+    printf("Finish EPE_Handler\n");  
+    for(i = 0; i < len; i++)
+    {
+        g_u8OutBuff[i] = HSUSBD->EP[EPE].EPDAT_BYTE;  
+        printf("0x%x\n",g_u8OutBuff[i]);
         //HID_GetOutReport(g_u8OutBuff, len);
-	  }
-		
-	  g_u8UsbDataReady = TRUE;
-     //[2025-02-21]move here to speed up ISP cmd response      
-      HID_RebootCmdhandler();
+    }
 
-    
+    g_u8UsbDataReady = TRUE;
+    //[2025-02-21]move here to speed up ISP cmd response      
+    HID_RebootCmdhandler();
 }
 
 void EPF_Handler(void)  /* Interrupt IN handler */
 {
     g_u8EPFReady = TRUE;
+}
+
+void EPG_Handler(void)  /* Interrupt IN handler */
+{
+    g_u8EPGReady = 1;
 }
 
 /*--------------------------------------------------------------------------*/
@@ -498,6 +514,30 @@ void HIDKeyboard_InitForFullSpeed(void)
     g_u8EPFReady = 1;
 }
   
+void HIDMouse_InitForHighSpeed(void)
+{
+    /*****************************************************/
+    /* EPG ==> Interrupt IN endpoint, address 1 */
+    HSUSBD_SetEpBufAddr(EPG, EPG_BUF_BASE, EPG_BUF_LEN);
+    HSUSBD_SET_MAX_PAYLOAD(EPG, EPG_MAX_PKT_SIZE);
+    HSUSBD_ConfigEp(EPG, INT_IN_EP_NUM_MOUSE, HSUSBD_EP_CFG_TYPE_INT, HSUSBD_EP_CFG_DIR_IN);
+
+    /* start to IN data */
+    g_u8EPGReady = 1;
+}
+
+
+void HIDMouse_InitForFullSpeed(void)
+{
+     /*****************************************************/
+    /* EPG ==> Interrupt IN endpoint, address 1 */
+    HSUSBD_SetEpBufAddr(EPG, EPG_BUF_BASE, EPG_BUF_LEN);
+    HSUSBD_SET_MAX_PAYLOAD(EPG, EPG_MAX_PKT_SIZE);
+    HSUSBD_ConfigEp(EPG, INT_IN_EP_NUM_MOUSE, HSUSBD_EP_CFG_TYPE_INT, HSUSBD_EP_CFG_DIR_IN);
+
+    /* start to IN data */
+    g_u8EPGReady = 1;
+}
   
 void HID_InitForHighSpeed(void)
 {
@@ -537,9 +577,9 @@ void HID_InitForFullSpeed(void)
 
 void VHID_Init(void)
 {
-   /* Configure USB controller */
+    /* Configure USB controller */
     /* Enable USB BUS, CEP and EPA , EPB global interrupt */
-    HSUSBD_ENABLE_USB_INT(HSUSBD_GINTEN_USBIEN_Msk | HSUSBD_GINTEN_CEPIEN_Msk | HSUSBD_GINTEN_EPAIEN_Msk | HSUSBD_GINTEN_EPBIEN_Msk | HSUSBD_GINTEN_EPCIEN_Msk | HSUSBD_GINTEN_EPDIEN_Msk |HSUSBD_GINTEN_EPEIEN_Msk |HSUSBD_GINTEN_EPFIEN_Msk);
+    HSUSBD_ENABLE_USB_INT(HSUSBD_GINTEN_USBIEN_Msk | HSUSBD_GINTEN_CEPIEN_Msk | HSUSBD_GINTEN_EPAIEN_Msk | HSUSBD_GINTEN_EPBIEN_Msk | HSUSBD_GINTEN_EPCIEN_Msk | HSUSBD_GINTEN_EPDIEN_Msk |HSUSBD_GINTEN_EPEIEN_Msk |HSUSBD_GINTEN_EPFIEN_Msk|HSUSBD_GINTEN_EPGIEN_Msk);
     /* Enable BUS interrupt */
     HSUSBD_ENABLE_BUS_INT(HSUSBD_BUSINTEN_DMADONEIEN_Msk | HSUSBD_BUSINTEN_RESUMEIEN_Msk | HSUSBD_BUSINTEN_RSTIEN_Msk | HSUSBD_BUSINTEN_VBUSDETIEN_Msk);
     /* Reset Address to 0 */
@@ -551,8 +591,9 @@ void VHID_Init(void)
     HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_SETUPPKIEN_Msk | HSUSBD_CEPINTEN_STSDONEIEN_Msk);
 
     HID_InitForHighSpeed();
-	VCOM_InitForHighSpeed();
-	HIDKeyboard_InitForHighSpeed();
+    VCOM_InitForHighSpeed();
+    HIDMouse_InitForHighSpeed();
+    HIDKeyboard_InitForHighSpeed();
 }
 
 void VCOM_InitForHighSpeed(void)
@@ -625,7 +666,7 @@ void VCOM_ClassRequest(void)
     
 	  if(gUsbCmd.bmRequestType & 0x80)    /* request data transfer direction */
     {
-        //printf("VCOM_ClassRequest, D to H, Request:%x\n",gUsbCmd.bRequest);
+        printf("VCOM_ClassRequest, D to H, Request:%x\n",gUsbCmd.bRequest);
 			  // Device to host
         switch(gUsbCmd.bRequest)
         {
@@ -651,7 +692,7 @@ void VCOM_ClassRequest(void)
     }
     else
     {
-        //printf("VCOM_ClassRequest, H to D, Request:%x\n",gUsbCmd.bRequest);  
+        printf("VCOM_ClassRequest, H to D, Request:%x\n",gUsbCmd.bRequest);  
 			  // Host to device
         switch(gUsbCmd.bRequest)
         {

@@ -114,9 +114,16 @@ extern "C" {
 #define EPF_BUF_BASE    0x700//(CEP_BUF_BASE + CEP_BUF_LEN)
 #define EPF_BUF_LEN     EPF_MAX_PKT_SIZE
 
+//EP for Mouse
+#define EPG_MAX_PKT_SIZE        64
+#define EPG_OTHER_MAX_PKT_SIZE  64
+
+#define EPG_BUF_BASE    0x780//(CEP_BUF_BASE + CEP_BUF_LEN)
+#define EPG_BUF_LEN     EPG_MAX_PKT_SIZE
+
 /* Define the interrupt In EP number */
 #define INT_IN_EP_NUM_KB    0x06
-
+#define INT_IN_EP_NUM_MOUSE 0x07
 
 /* Define Descriptor information */
 //#define HID_DEFAULT_INT_IN_INTERVAL     8   /* (2^8-1) */
@@ -124,7 +131,7 @@ extern "C" {
 
 #define LEN_IAD                           8
 #define LEN_VCOM_SPECIFIED_ITERFACE      19
-#define LEN_CONFIG_AND_SUBORDINATE      (LEN_CONFIG + 4*LEN_INTERFACE + 2*LEN_HID + 6*LEN_ENDPOINT + 1*LEN_VCOM_SPECIFIED_ITERFACE + 1*LEN_IAD)
+#define LEN_CONFIG_AND_SUBORDINATE      (LEN_CONFIG + 5*LEN_INTERFACE + 3*LEN_HID + 7*LEN_ENDPOINT + 1*LEN_VCOM_SPECIFIED_ITERFACE + 1*LEN_IAD)
 //=============================================
 
 
@@ -171,10 +178,15 @@ void VCOM_InitForFullSpeed(void);
 void VCOM_ClassRequest(void);
 
 void HIDKeyboard_InitForHighSpeed(void);
-
+void HIDMouse_InitForHighSpeed(void);
 
 void EPA_Handler(void);
 void EPB_Handler(void);
+void EPD_Handler(void);
+void EPE_Handler(void);
+void EPF_Handler(void);
+void EPG_Handler(void);
+
 void VCOM_LineCoding(uint8_t port);
 void VCOM_TransferData(void);
 void VcomBegin(uint32_t baud);
@@ -191,11 +203,8 @@ void HID_GetOutReport(uint8_t *pu8EpBuf, uint32_t u32Size);
 void HID_RebootCmdhandler(void);
 
 void VHID_Init(void);
-void EPD_Handler(void);
-void EPE_Handler(void);
-
-void EPF_Handler(void);
 void HID_UpdateKeyboardData(void);
+void HID_UpdateMouseData(void);
 void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len);
    
 #ifdef __cplusplus

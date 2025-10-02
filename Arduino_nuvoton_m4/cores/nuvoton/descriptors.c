@@ -86,13 +86,13 @@ uint8_t gu8DeviceDescriptor[] =
     DESC_DEVICE,    /* bDescriptorType */
     0x00, 0x02,     /* bcdUSB */
 #if 0//def VHID	
-	  //For VCOM and HID, set to composite device
-	  0xEF,           /* bDeviceClass */
+    //For VCOM and HID, set to composite device
+    0xEF,           /* bDeviceClass */
     0x02,           /* bDeviceSubClass */
     0x01,           /* bDeviceProtocol */
 #else
-	  //0x02,           /* bDeviceClass */
-	  0x00,           /* bDeviceClass */
+	//0x02,           /* bDeviceClass */
+	0x00,           /* bDeviceClass */
     0x00,           /* bDeviceSubClass */
     0x00,           /* bDeviceProtocol */
 #endif	
@@ -154,17 +154,17 @@ uint8_t gu8ConfigDescriptor[] =
     LEN_CONFIG,     /* bLength              */
     DESC_CONFIG,    /* bDescriptorType      */
 
-	  /* wTotalLength */
-	  LEN_CONFIG_AND_SUBORDINATE & 0x00FF,
+    /* wTotalLength */
+    LEN_CONFIG_AND_SUBORDINATE & 0x00FF,
     (LEN_CONFIG_AND_SUBORDINATE & 0xFF00) >> 8,
-	  0x04,            /*  bNumInterfaces       */
-    0x01,           /* bConfigurationValue  */
-    0x00,           /* iConfiguration       */
-	  0x80 | (USBD_SELF_POWERED << 6) | (USBD_REMOTE_WAKEUP << 5),/* bmAttributes */
+    0x05,           /*  bNumInterfaces       */
+    0x01,           /*  bConfigurationValue  */
+    0x00,           /*  iConfiguration       */
+    0x80 | (USBD_SELF_POWERED << 6) | (USBD_REMOTE_WAKEUP << 5),/* bmAttributes */
     0x32,           /* MaxPower             */
 
 #if 1//HID_Transfer		
-		/* HID class device */
+    /* HID class device */
     /* I/F descr: HID */
     LEN_INTERFACE,  /* bLength */
     DESC_INTERFACE, /* bDescriptorType */
@@ -209,15 +209,49 @@ uint8_t gu8ConfigDescriptor[] =
 		
 #endif
 
-#if 1//HID_KeyBoard
-    /* I/F descr: HID - Keyboard */
+#if 1//HID_MOUSE
+    /* I/F descr: HID */
     LEN_INTERFACE,  /* bLength */
     DESC_INTERFACE, /* bDescriptorType */
     0x01,           /* bInterfaceNumber */
     0x00,           /* bAlternateSetting */
     0x01,           /* bNumEndpoints */
     0x03,           /* bInterfaceClass */
-    0x00,           /* bInterfaceSubClass */
+    0x01,           /* bInterfaceSubClass */
+    HID_MOUSE,      /* bInterfaceProtocol */
+    0x00,           /* iInterface */
+
+    /* HID Descriptor */
+    LEN_HID,        /* Size of this descriptor in UINT8s. */
+    DESC_HID,       /* HID descriptor type. */
+    0x10, 0x01,     /* HID Class Spec. release number. */
+    0x00,           /* H/W target country. */
+    0x01,           /* Number of HID class descriptors to follow. */
+    DESC_HID_RPT,   /* Descriptor type. */
+    /* Total length of report descriptor. */
+    sizeof(HID_MouseReportDescriptor) & 0x00FF,
+    ((sizeof(HID_MouseReportDescriptor) & 0xFF00) >> 8),
+
+    /* EP Descriptor: interrupt in. */
+    LEN_ENDPOINT,   /* bLength */
+    DESC_ENDPOINT,  /* bDescriptorType */
+    (INT_IN_EP_NUM_MOUSE | EP_INPUT), /* bEndpointAddress */
+    EP_INT,         /* bmAttributes */
+    /* wMaxPacketSize */
+    EPG_MAX_PKT_SIZE & 0x00FF,
+    ((EPG_MAX_PKT_SIZE & 0xFF00) >> 8),
+    HID_DEFAULT_INT_IN_INTERVAL_KB,    /* bInterval */
+#endif
+		
+#if 1//HID_KeyBoard
+    /* I/F descr: HID - Keyboard */
+    LEN_INTERFACE,  /* bLength */
+    DESC_INTERFACE, /* bDescriptorType */
+    0x02,           /* bInterfaceNumber */
+    0x00,           /* bAlternateSetting */
+    0x01,           /* bNumEndpoints */
+    0x03,           /* bInterfaceClass */
+    0x01,           /* bInterfaceSubClass */
     HID_KEYBOARD,   /* bInterfaceProtocol */
     0x00,           /* iInterface */
 
@@ -243,21 +277,22 @@ uint8_t gu8ConfigDescriptor[] =
     HID_DEFAULT_INT_IN_INTERVAL_KB,     /* bInterval */
 
 #endif
-
-		// IAD
+#if 1//CDC_VCOM	
+	// IAD
     0x08,               // bLength: Interface Descriptor size
     0x0B,               // bDescriptorType: IAD
-    0x02,               // bFirstInterface
+    0x03,               // bFirstInterface
     0x02,               // bInterfaceCount
     0x02,               // bFunctionClass: CDC
     0x02,               // bFunctionSubClass
     0x01,               // bFunctionProtocol
     0x02,               // iFunction
-#if 1//CDC_VCOM		
-		/* INTERFACE descriptor: VCOM */
+
+
+    /* INTERFACE descriptor: VCOM */
     LEN_INTERFACE,  /* bLength              */
     DESC_INTERFACE, /* bDescriptorType      */
-    0x02,           /* bInterfaceNumber     */
+    0x03,           /* bInterfaceNumber     */
     0x00,           /* bAlternateSetting    */
     0x01,           /* bNumEndpoints        */
     0x02,           /* bInterfaceClass      */
@@ -306,7 +341,7 @@ uint8_t gu8ConfigDescriptor[] =
     /* INTERFACE descriptor */
     LEN_INTERFACE,  /* bLength              */
     DESC_INTERFACE, /* bDescriptorType      */
-    0x03,           /* bInterfaceNumber     */
+    0x04,           /* bInterfaceNumber     */
     0x00,           /* bAlternateSetting    */
     0x02,           /* bNumEndpoints        */
     0x0A,           /* bInterfaceClass      */
@@ -331,8 +366,10 @@ uint8_t gu8ConfigDescriptor[] =
     EP_BULK,                        /* bmAttributes     */
     /* wMaxPacketSize */
     EPB_MAX_PKT_SIZE & 0x00FF,
-    ((EPB_MAX_PKT_SIZE & 0xFF00) >> 8),
-#endif			
+    ((EPB_MAX_PKT_SIZE & 0xFF00) >> 8)
+#endif
+
+
 
 };
 
@@ -643,26 +680,29 @@ uint8_t *gpu8UsbString[4] =
     NULL
 };
 
-uint8_t *gu8UsbHidReport[4] =
+uint8_t *gu8UsbHidReport[5] =
 {
     gu8HIDDeviceReportDescriptor,
-	  HID_KeyboardReportDescriptor,
-	  0,0
+    HID_MouseReportDescriptor,
+    HID_KeyboardReportDescriptor,
+    0,0
 };
 
-uint32_t gu32UsbHidReportLen[4] =
+uint32_t gu32UsbHidReportLen[5] =
 {
     sizeof(gu8HIDDeviceReportDescriptor),
-		sizeof(HID_KeyboardReportDescriptor),
-		0,0
+    sizeof(HID_MouseReportDescriptor),
+    sizeof(HID_KeyboardReportDescriptor),
+    0,0
 };
 
-uint32_t gu32ConfigHidDescIdx[4] =
+uint32_t gu32ConfigHidDescIdx[5] =
 {
     (LEN_CONFIG + LEN_INTERFACE),
-	  (LEN_CONFIG + 2*LEN_INTERFACE + LEN_HID + 2*LEN_ENDPOINT),
-	  0,0
-	  
+    (LEN_CONFIG + 2*LEN_INTERFACE + LEN_HID + 2*LEN_ENDPOINT),
+    (LEN_CONFIG + 3*LEN_INTERFACE + 2*LEN_HID + 3*LEN_ENDPOINT),		  
+    0,0
+
 };
 
 S_HSUSBD_INFO_T gsHSInfo =
