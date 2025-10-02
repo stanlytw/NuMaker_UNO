@@ -163,12 +163,83 @@ uint8_t gu8ConfigDescriptor[] =
     0x80 | (USBD_SELF_POWERED << 6) | (USBD_REMOTE_WAKEUP << 5),/* bmAttributes */
     0x32,           /* MaxPower             */
 
+
+#if 1//HID_MOUSE
+    /* I/F descr: HID */
+    LEN_INTERFACE,  /* bLength */
+    DESC_INTERFACE, /* bDescriptorType */
+    0x00,           /* bInterfaceNumber */
+    0x00,           /* bAlternateSetting */
+    0x01,           /* bNumEndpoints */
+    0x03,           /* bInterfaceClass */
+    0x01,           /* bInterfaceSubClass */
+    HID_MOUSE,      /* bInterfaceProtocol */
+    0x00,           /* iInterface */
+
+    /* HID Descriptor */
+    LEN_HID,        /* Size of this descriptor in UINT8s. */
+    DESC_HID,       /* HID descriptor type. */
+    0x10, 0x01,     /* HID Class Spec. release number. */
+    0x00,           /* H/W target country. */
+    0x01,           /* Number of HID class descriptors to follow. */
+    DESC_HID_RPT,   /* Descriptor type. */
+    /* Total length of report descriptor. */
+    sizeof(HID_MouseReportDescriptor) & 0x00FF,
+    ((sizeof(HID_MouseReportDescriptor) & 0xFF00) >> 8),
+
+    /* EP Descriptor: interrupt in. */
+    LEN_ENDPOINT,   /* bLength */
+    DESC_ENDPOINT,  /* bDescriptorType */
+    (INT_IN_EP_NUM_MOUSE | EP_INPUT), /* bEndpointAddress */
+    EP_INT,         /* bmAttributes */
+    /* wMaxPacketSize */
+    EPG_MAX_PKT_SIZE & 0x00FF,
+    ((EPG_MAX_PKT_SIZE & 0xFF00) >> 8),
+    HID_DEFAULT_INT_IN_INTERVAL_KB,    /* bInterval */
+#endif
+		
+#if 1//HID_KeyBoard
+    /* I/F descr: HID - Keyboard */
+    LEN_INTERFACE,  /* bLength */
+    DESC_INTERFACE, /* bDescriptorType */
+    0x01,           /* bInterfaceNumber */
+    0x00,           /* bAlternateSetting */
+    0x01,           /* bNumEndpoints */
+    0x03,           /* bInterfaceClass */
+    0x01,           /* bInterfaceSubClass */
+    HID_KEYBOARD,   /* bInterfaceProtocol */
+    0x00,           /* iInterface */
+
+    /* HID Descriptor */
+    LEN_HID,        /* Size of this descriptor in UINT8s. */
+    DESC_HID,       /* HID descriptor type. */
+    0x10, 0x01,     /* HID Class Spec. release number. */
+    0x00,           /* H/W target country. */
+    0x01,           /* Number of HID class descriptors to follow. */
+    DESC_HID_RPT,   /* Descriptor type. */
+    /* Total length of report descriptor. */
+    sizeof(HID_KeyboardReportDescriptor) & 0x00FF,
+    ((sizeof(HID_KeyboardReportDescriptor) & 0xFF00) >> 8),
+
+    /* EP Descriptor: interrupt in. */
+    LEN_ENDPOINT,   /* bLength */
+    DESC_ENDPOINT,  /* bDescriptorType */
+    (INT_IN_EP_NUM_KB | EP_INPUT), /* bEndpointAddress */
+    EP_INT,         /* bmAttributes */
+    /* wMaxPacketSize */
+    EPF_MAX_PKT_SIZE & 0x00FF,
+    ((EPF_MAX_PKT_SIZE & 0xFF00) >> 8),
+    HID_DEFAULT_INT_IN_INTERVAL_KB,     /* bInterval */
+
+#endif
+
+
 #if 1//HID_Transfer		
     /* HID class device */
     /* I/F descr: HID */
     LEN_INTERFACE,  /* bLength */
     DESC_INTERFACE, /* bDescriptorType */
-    0x00,           /* bInterfaceNumber */
+    0x02,           /* bInterfaceNumber */
     0x00,           /* bAlternateSetting */
     0x02,           /* bNumEndpoints */
     0x03,           /* bInterfaceClass */
@@ -209,74 +280,7 @@ uint8_t gu8ConfigDescriptor[] =
 		
 #endif
 
-#if 1//HID_MOUSE
-    /* I/F descr: HID */
-    LEN_INTERFACE,  /* bLength */
-    DESC_INTERFACE, /* bDescriptorType */
-    0x01,           /* bInterfaceNumber */
-    0x00,           /* bAlternateSetting */
-    0x01,           /* bNumEndpoints */
-    0x03,           /* bInterfaceClass */
-    0x01,           /* bInterfaceSubClass */
-    HID_MOUSE,      /* bInterfaceProtocol */
-    0x00,           /* iInterface */
 
-    /* HID Descriptor */
-    LEN_HID,        /* Size of this descriptor in UINT8s. */
-    DESC_HID,       /* HID descriptor type. */
-    0x10, 0x01,     /* HID Class Spec. release number. */
-    0x00,           /* H/W target country. */
-    0x01,           /* Number of HID class descriptors to follow. */
-    DESC_HID_RPT,   /* Descriptor type. */
-    /* Total length of report descriptor. */
-    sizeof(HID_MouseReportDescriptor) & 0x00FF,
-    ((sizeof(HID_MouseReportDescriptor) & 0xFF00) >> 8),
-
-    /* EP Descriptor: interrupt in. */
-    LEN_ENDPOINT,   /* bLength */
-    DESC_ENDPOINT,  /* bDescriptorType */
-    (INT_IN_EP_NUM_MOUSE | EP_INPUT), /* bEndpointAddress */
-    EP_INT,         /* bmAttributes */
-    /* wMaxPacketSize */
-    EPG_MAX_PKT_SIZE & 0x00FF,
-    ((EPG_MAX_PKT_SIZE & 0xFF00) >> 8),
-    HID_DEFAULT_INT_IN_INTERVAL_KB,    /* bInterval */
-#endif
-		
-#if 1//HID_KeyBoard
-    /* I/F descr: HID - Keyboard */
-    LEN_INTERFACE,  /* bLength */
-    DESC_INTERFACE, /* bDescriptorType */
-    0x02,           /* bInterfaceNumber */
-    0x00,           /* bAlternateSetting */
-    0x01,           /* bNumEndpoints */
-    0x03,           /* bInterfaceClass */
-    0x01,           /* bInterfaceSubClass */
-    HID_KEYBOARD,   /* bInterfaceProtocol */
-    0x00,           /* iInterface */
-
-    /* HID Descriptor */
-    LEN_HID,        /* Size of this descriptor in UINT8s. */
-    DESC_HID,       /* HID descriptor type. */
-    0x10, 0x01,     /* HID Class Spec. release number. */
-    0x00,           /* H/W target country. */
-    0x01,           /* Number of HID class descriptors to follow. */
-    DESC_HID_RPT,   /* Descriptor type. */
-    /* Total length of report descriptor. */
-    sizeof(HID_KeyboardReportDescriptor) & 0x00FF,
-    ((sizeof(HID_KeyboardReportDescriptor) & 0xFF00) >> 8),
-
-    /* EP Descriptor: interrupt in. */
-    LEN_ENDPOINT,   /* bLength */
-    DESC_ENDPOINT,  /* bDescriptorType */
-    (INT_IN_EP_NUM_KB | EP_INPUT), /* bEndpointAddress */
-    EP_INT,         /* bmAttributes */
-    /* wMaxPacketSize */
-    EPF_MAX_PKT_SIZE & 0x00FF,
-    ((EPF_MAX_PKT_SIZE & 0xFF00) >> 8),
-    HID_DEFAULT_INT_IN_INTERVAL_KB,     /* bInterval */
-
-#endif
 #if 1//CDC_VCOM	
 	// IAD
     0x08,               // bLength: Interface Descriptor size
@@ -682,25 +686,27 @@ uint8_t *gpu8UsbString[4] =
 
 uint8_t *gu8UsbHidReport[5] =
 {
-    gu8HIDDeviceReportDescriptor,
     HID_MouseReportDescriptor,
     HID_KeyboardReportDescriptor,
+	gu8HIDDeviceReportDescriptor,
     0,0
 };
 
 uint32_t gu32UsbHidReportLen[5] =
 {
-    sizeof(gu8HIDDeviceReportDescriptor),
     sizeof(HID_MouseReportDescriptor),
     sizeof(HID_KeyboardReportDescriptor),
+	sizeof(gu8HIDDeviceReportDescriptor),
     0,0
 };
 
 uint32_t gu32ConfigHidDescIdx[5] =
 {
     (LEN_CONFIG + LEN_INTERFACE),
-    (LEN_CONFIG + 2*LEN_INTERFACE + LEN_HID + 2*LEN_ENDPOINT),
-    (LEN_CONFIG + 3*LEN_INTERFACE + 2*LEN_HID + 3*LEN_ENDPOINT),		  
+	(LEN_CONFIG + 2*LEN_INTERFACE + LEN_HID + LEN_ENDPOINT),
+    (LEN_CONFIG + 3*LEN_INTERFACE + 2*LEN_HID + 2*LEN_ENDPOINT),	
+    //(LEN_CONFIG + 2*LEN_INTERFACE + LEN_HID + 2*LEN_ENDPOINT),
+    //(LEN_CONFIG + 3*LEN_INTERFACE + 2*LEN_HID + 3*LEN_ENDPOINT),		  
     0,0
 
 };

@@ -589,11 +589,12 @@ void VHID_Init(void)
     /* Control endpoint */
     HSUSBD_SetEpBufAddr(CEP, CEP_BUF_BASE, CEP_BUF_LEN);
     HSUSBD_ENABLE_CEP_INT(HSUSBD_CEPINTEN_SETUPPKIEN_Msk | HSUSBD_CEPINTEN_STSDONEIEN_Msk);
-
+    
+	HIDMouse_InitForHighSpeed();
+    HIDKeyboard_InitForHighSpeed();
     HID_InitForHighSpeed();
     VCOM_InitForHighSpeed();
-    HIDMouse_InitForHighSpeed();
-    HIDKeyboard_InitForHighSpeed();
+   
 }
 
 void VCOM_InitForHighSpeed(void)
