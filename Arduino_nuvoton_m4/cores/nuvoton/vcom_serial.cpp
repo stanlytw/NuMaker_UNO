@@ -1381,23 +1381,46 @@ void HID_SetInReport(void)
 
 void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len)
 {
-	  uint8_t* buf = (uint8_t*)(data);
+	uint8_t* buf = (uint8_t*)(data);
     int volatile i;
 
-    if(g_u8EPFReady)
-    {
-        /* Update new report data */
-        //for(i = 0; i < 8; i++)
-        //    buf[i] = 0;
-			  g_u8EPFReady = 0;
-        /* Set transfer length and trigger IN transfer */
-        for(i = 0; i < 8; i++)
-            HSUSBD->EP[EPF].EPDAT_BYTE = buf[i];
-        HSUSBD->EP[EPF].EPRSPCTL = HSUSBD_EP_RSPCTL_SHORTTXEN;
-        HSUSBD_ENABLE_EP_INT(EPF, HSUSBD_EPINTEN_INTKIEN_Msk);
-    }
-		while(!g_u8EPFReady);
-		//[2025-09-25]Need to wait g_u8EPFReady=true?
+    if(id==2)
+	{
+	    if(g_u8EPFReady)
+        {
+            /* Update new report data */
+            //for(i = 0; i < 8; i++)
+            //    buf[i] = 0;
+			g_u8EPFReady = 0;
+            /* Set transfer length and trigger IN transfer */
+            for(i = 0; i < 8; i++)
+                HSUSBD->EP[EPF].EPDAT_BYTE = buf[i];
+            HSUSBD->EP[EPF].EPRSPCTL = HSUSBD_EP_RSPCTL_SHORTTXEN;
+            HSUSBD_ENABLE_EP_INT(EPF, HSUSBD_EPINTEN_INTKIEN_Msk);
+        }
+	    while(!g_u8EPFReady);
+	    //[2025-09-25]Need to wait g_u8EPFReady=true?
+	}
+	else if(id==1)
+	{
+		if(g_u8EPGReady)
+        {
+            /* Update new report data */
+            //for(i = 0; i < 8; i++)
+            //    buf[i] = 0;
+			g_u8EPGReady = 0;
+            /* Set transfer length and trigger IN transfer */
+            for(i = 0; i < 4; i++)
+                HSUSBD->EP[EPG].EPDAT_BYTE = buf[i];
+            HSUSBD->EP[EPG].EPRSPCTL = HSUSBD_EP_RSPCTL_SHORTTXEN;
+            HSUSBD_ENABLE_EP_INT(EPG, HSUSBD_EPINTEN_INTKIEN_Msk);
+        }
+	    while(!g_u8EPGReady);
+	}
+    
+	
+	
+	
 }
 
 #endif
