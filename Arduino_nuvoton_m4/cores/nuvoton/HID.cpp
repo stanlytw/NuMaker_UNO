@@ -11,7 +11,11 @@
 //#include "Arduino.h"
 #include "USBCore.h"
 #include "USBAPI.h"
+#if (defined(__NVTKB__))
+#include "vcom_serial_kb.h"
+#else
 #include "vcom_serial.h"
+#endif
 #define __460__
 //	Singletons for mouse and keyboard
 #if defined(__460__) 
@@ -24,7 +28,12 @@ Keyboard_ Keyboard;
 #define WEAK __attribute__ ((weak))
 void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
 {
-    NVT_HID_SendReport(id, data, len);
+#if (defined(__NVTKB__))
+	NVT_HID_SendReport(id, data, len);
+#else
+	
+#endif
+
 }
 
 

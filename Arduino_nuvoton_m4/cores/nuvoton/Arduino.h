@@ -125,7 +125,11 @@ void loop(void);
 #endif
 
 #if defined(__M460MINIMA__) 
+#if (defined(__NVTKB__))
+	#include "vcom_serial_kb.h"
+#else
     #include "vcom_serial.h"
+#endif
     #include "isp_user.h"
     #include "fmc_user.h"
 #else
