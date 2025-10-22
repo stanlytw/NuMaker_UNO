@@ -41,8 +41,8 @@
                   "category": "Arduino",
                   "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_m4.tar.bz2?raw=true",
                   "archiveFileName": "Arduino_nuvoton_m4.tar.bz2",
-                  "checksum": "SHA-256:82b7e513369390916e7fba305e421bce14e566e35569c013d8fb01bc4b7e0881",
-                  "size": "33411965",
+                  "checksum": "SHA-256:b35f4b99462a7f27832a6d2c6ea27b5b704419a8b34621d13bb82cf957ff585e",
+                  "size": "33411912",
                   "boards": [
                     {"name": "NuMaker-UNO-M4"},
 					{"name": "NuMaker-UNO-M4KB"},
