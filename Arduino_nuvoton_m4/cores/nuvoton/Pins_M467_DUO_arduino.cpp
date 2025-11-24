@@ -193,6 +193,13 @@ SPIPinDescription SPI_Desc[] =
             {29, SYS_GPA_MFP0_PA1MFP_SPI0_MISO}, {27, SYS_GPA_MFP0_PA3MFP_SPI0_SS  }
         }
     },
+	//Add for DUO
+	{
+        SPI2, (uint32_t)SPI2_MODULE, SPI2_IRQn, CLK_CLKSEL3_SPI2SEL_PCLK1,
+        {   {8, SYS_GPA_MFP2_PA10MFP_SPI2_CLK }, {10, SYS_GPA_MFP2_PA8MFP_SPI2_MOSI},
+            {9, SYS_GPA_MFP2_PA9MFP_SPI2_MISO },  {7, SYS_GPA_MFP2_PA11MFP_SPI2_SS }
+        }
+    },
 
 };
 //[2025-02-25] UART pins update done.
