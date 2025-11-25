@@ -42,7 +42,7 @@ static void EMAC_ModuleInit(void)
     SET_EMAC0_RMII_RXD1_PC6();
     SET_EMAC0_RMII_CRSDV_PA7();
     SET_EMAC0_RMII_RXERR_PA6();
-    SET_EMAC0_PPS_PB6();
+    //SET_EMAC0_PPS_PB6();
 #else
     SET_EMAC0_RMII_MDC_PB11();
     SET_EMAC0_RMII_MDIO_PB10();
@@ -54,7 +54,7 @@ static void EMAC_ModuleInit(void)
     SET_EMAC0_RMII_RXD1_PB3();
     SET_EMAC0_RMII_CRSDV_PB2();
     SET_EMAC0_RMII_RXERR_PB1();
-    SET_EMAC0_PPS_PB6();
+    //SET_EMAC0_PPS_PB6();
 
 #endif    
 }
