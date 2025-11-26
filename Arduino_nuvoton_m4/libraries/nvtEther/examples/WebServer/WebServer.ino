@@ -17,7 +17,7 @@
  */
 
 #include <nvtEthernet.h>
-
+#define ADC_ETHER_SHARE	//For UNO
 // Enter an IP address for your controller below.
 // The IP address will be dependent on your local network:
 IPAddress ip(192, 168, 1, 177);
@@ -68,7 +68,11 @@ void loop() {
           client.println("<html>");
           // output the value of each analog input pin
           for (int analogChannel = 0; analogChannel < 6; analogChannel++) {
-            int sensorReading = analogRead(analogChannel);
+#ifndef ADC_ETHER_SHARE			  
+            int sensorReading = analogRead(analogChannel);//loop 6 channel, for non UNO version
+#else
+	        int sensorReading = analogRead(5);//read non-share channel only
+#endif
             client.print("analog input ");
             client.print(analogChannel);
             client.print(" is ");
