@@ -1,0 +1,7 @@
+nuvoton_icp.name=NuLink-ICE(Nuvoton)
+nuvoton_icp.communication=usb
+nuvoton_icp.protocol=
+nuvoton_icp.program.protocol=
+nuvoton_icp.program.tool=nulinkburn_m4
+nuvoton_icp.program.tool.default=nulinkburn_m4
+
