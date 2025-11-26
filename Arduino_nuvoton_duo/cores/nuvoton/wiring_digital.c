@@ -35,8 +35,7 @@ extern void pinMode(uint32_t ulPin, uint32_t ulMode)
     if (ulPin > GPIO_MAX_COUNT || GPIO_Desc[ulPin].P == NULL) return;
 #endif
     GPIO_Config(GPIO_Desc[ulPin]);
-#if defined(__M451__) || defined(__M252__) || defined(__M480__)|| defined(__M460__)
-//#if defined(__M480__)
+
     switch (ulMode)
     {
     case INPUT:
@@ -54,15 +53,7 @@ extern void pinMode(uint32_t ulPin, uint32_t ulMode)
     default:
         break;
     }
-#elif defined(__M032BT__)|| defined(__M032KG__)
 
-#elif defined(__NUC240__)
-
-#elif defined(__NANO100__) || defined(__NANO1X2__)
-
-#elif defined(__NUC131__)
-
-#endif
 }
 
 extern void digitalWrite(uint32_t ulPin, uint32_t ulVal)

@@ -25,7 +25,7 @@
  *****************************************************************************/
 
 #include "HardwareTimer.h"
-#if defined(__M480__) || defined(__M460__)
+#if defined(__M460__)
 	#if(NR_TIMERS>0)
 		HardwareTimer Timer1(0,TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_HIRC);
 	#endif

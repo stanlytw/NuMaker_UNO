@@ -36,18 +36,12 @@
 #include <inttypes.h>
 #include "Stream.h"
 #include "Pins_arduino.h"
-#if defined(__M460MINIMA__)
-//#include "vcom_serial.h"
-#endif
 
 
 #define SERIAL_BUFFER_SIZE 256
+
 #if defined(__M460MINIMA__)
-//#include "vcom_serial.h"
 #define VCOM_T        HSUSBD_T
-#endif
-#ifdef __cplusplus
-//extern "C" {
 #endif
 
 typedef struct
@@ -57,9 +51,6 @@ typedef struct
   volatile unsigned int tail;
 } ring_buffer;
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
 /*
  * IMPORTANT:
  *
@@ -123,11 +114,10 @@ extern HardwareSerial Serial1;
 extern void serial1EventRun(void) __attribute__((weak));
 #endif
 
-#if defined(__M467SJHAN__)
 #if(UART_MAX_COUNT>2)
 extern HardwareSerial Serial2;
 extern void serial2EventRun(void) __attribute__((weak));
 #endif
-#endif//defined(__M467SJHAN__)
+
 
 #endif

@@ -13,36 +13,8 @@
 
 #include "Arduino.h"
 
-#if defined(__M252__) || defined(__M480__)|| defined(__M460__) 
+#if defined(__M460__) 
 #undef SPI1
-#endif
-
-#if defined(__M032BT__) || defined(__M032KG__)
-
-#define BOARD_SPI_DEFAULT_SS 6 //M032BT not support SS in USPI
-
-#define SPI_MODE0 USPI_MODE_0
-#define SPI_MODE1 USPI_MODE_1
-#define SPI_MODE2 USPI_MODE_2
-#define SPI_MODE3 USPI_MODE_3
-#define SPI_MODE_Msk (USPI_MODE_0|USPI_MODE_1|USPI_MODE_2|USPI_MODE_3)
-
-#else
-
-#define BOARD_SPI_DEFAULT_SS 43
-#ifndef NVT_SS
-#define NVT_SS BOARD_SPI_DEFAULT_SS
-#endif
-#define SPI_MODE0 SPI_MODE_0
-#define SPI_MODE1 SPI_MODE_1
-#define SPI_MODE2 SPI_MODE_2
-#define SPI_MODE3 SPI_MODE_3
-#define SPI_MODE_Msk (SPI_MODE_0|SPI_MODE_1|SPI_MODE_2|SPI_MODE_3)
-#endif
-
-
-#if defined(__M451__)
-#define SPI_TRIGGER SPI_ENABLE
 #endif
 
 enum SPITransferMode {
@@ -87,16 +59,6 @@ class SPIClass {
 	uint16_t transfer16(uint16_t _data, SPITransferMode _mode = SPI_LAST) { return transfer16(BOARD_SPI_DEFAULT_SS, _data, _mode); }
 	void transfer(void *_buf, size_t _count, SPITransferMode _mode = SPI_LAST) { transfer(BOARD_SPI_DEFAULT_SS, _buf, _count, _mode); }
 	
-#if 0
-	// Transfer functions
-	byte transfer(byte _pin, uint8_t _data, SPITransferMode _mode = SPI_LAST);
-	uint16_t transfer16(byte _pin, uint16_t _data, SPITransferMode _mode = SPI_LAST);
-	void transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _mode = SPI_LAST);
-	// Transfer functions on default pin BOARD_SPI_DEFAULT_SS
-	byte transfer(uint8_t _data, SPITransferMode _mode = SPI_LAST) { return transfer(BOARD_SPI_DEFAULT_SS, _data, _mode); }
-	uint16_t transfer16(uint16_t _data, SPITransferMode _mode = SPI_LAST) { return transfer16(BOARD_SPI_DEFAULT_SS, _data, _mode); }
-	void transfer(void *_buf, size_t _count, SPITransferMode _mode = SPI_LAST) { transfer(BOARD_SPI_DEFAULT_SS, _buf, _count, _mode); }
-#endif
 
 	// Transaction Functions
 	void usingInterrupt(uint8_t interruptNumber);
@@ -129,9 +91,9 @@ class SPIClass {
 	union{
 		void *_vspi;
 		SPI_T *spi;
-#if defined(__M460__) 
+ 
 		USPI_T *uspi;
-#endif
+
 	};
 	uint32_t module;
 	uint32_t clksel;

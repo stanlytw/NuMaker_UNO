@@ -36,7 +36,8 @@
 #include <inttypes.h>
 #include "Arduino.h"
 #include "HardwareSerial.h"
-#if defined(__M460__)
+
+//Common for __M460MINIMA__ 
 #if defined(__M460MINIMA__)
     #define RXBUFSIZE           512 /* RX buffer size */
     #define TXBUFSIZE           512 /* TX buffer size */
@@ -57,8 +58,9 @@
     uint8_t gUsbRxBuf[RXBUFSIZE] __attribute__((aligned(4))) = {0};
     volatile int8_t gi8BulkOutReady = 0;
 #endif
-//For M460Minima board, map Serial1 to VCOM
-#if defined(__M460MINIMA__)//VCOM, UART0, UART1
+
+//Common for __M460MINIMA__ board, map Serial to VCOM
+#if defined(__M460MINIMA__)//VCOM, UART[1], UART1[2]
     #if(UART_MAX_COUNT>0)
     ring_buffer rx_buffer= { { 0 }, 0, 0};
     HardwareSerial Serial(HSUSBD, UART_Desc[UART_DESC_IDX0].modulenum, &rx_buffer);//VCOM
@@ -76,7 +78,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if defined(__M460MINIMA__)//VCOM, UART0, UART1
+
+#if defined(__M460MINIMA__)
+#if defined(__NUNO__)//VCOM, UART0, UART1
 #if(UART_MAX_COUNT>1)
 void UART0_IRQHandler(void)
 {
@@ -116,17 +120,54 @@ void UART1_IRQHandler(void)
 
 }
 #endif
- 
-#else//defined(__M460MINIMA__), UART0, UART1, UART4(dummy)
 
+#elif defined(__DUNO__)//VCOM, UART5, UART0
+#if(UART_MAX_COUNT>1)
+void UART5_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART5, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer1.tail)
+        {
+            rx_buffer1.buffer[rx_buffer1.head] = UART5->DAT;
+            rx_buffer1.head = i;
+        }
+		else//i == rx_buffer1.tail
+		{
+			unsigned char dummy = UART5->DAT;
+		}
+    }
 
-#endif//defined(__M460MINIMA__)
+}
+#endif  
+
+#if(UART_MAX_COUNT>2)
+void UART0_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer2.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer2.tail)
+        {
+            rx_buffer2.buffer[rx_buffer2.head] = UART0->DAT;
+            rx_buffer2.head = i;
+        }
+		else//i == rx_buffer1.tail
+		{
+			unsigned char dummy = UART0->DAT;
+		}
+    }
+
+}
+#endif
+#endif//defined(__NDUO__)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+
 
 #if(UART_MAX_COUNT>0)
     void serialEvent() __attribute__((weak));
@@ -136,11 +177,9 @@ void UART1_IRQHandler(void)
     void serial1Event() __attribute__((weak));
 #endif
 
-#if defined(__M467SJHAN__)
 #if(UART_MAX_COUNT>2)
   void serial2Event() __attribute__((weak));
 #endif
-#endif//defined(__M467SJHAN__)
 
 void serialEventRun(void)
 {
@@ -152,11 +191,10 @@ void serialEventRun(void)
     if (Serial1.available()) serial1Event();
 #endif
 
-#if defined(__M467SJHAN__)
 #if(UART_MAX_COUNT>2)
    if (Serial2.available()) serial2Event();
 #endif
-#endif//defined(__M467SJHAN__)
+
 }
 
 HardwareSerial::HardwareSerial(UART_T *uart_device,
@@ -233,8 +271,6 @@ void HardwareSerial::begin(uint32_t baud)
        SYS_UnlockReg();		
 	}
 	
-#if defined(__M460__)
-
 	/* Enable IP clock */
     CLK_EnableModuleClock(UART_Desc[u32Idx].module);
 
@@ -272,8 +308,6 @@ void HardwareSerial::begin(uint32_t baud)
         uart_device->MODEM = (uart_device->MODEM & (~UART_MODEM_RTSACTLV_Msk)) | UART_RTS_IS_HIGH_LEV_ACTIVE;
 	}
 	    
-
-#endif//#if defined(__M451__)
     SYS_LockReg();
 
 }
@@ -324,7 +358,7 @@ int HardwareSerial::read(void)
 int HardwareSerial::availableForWrite(void)
 {
     /* For M460 */
-#if defined(__M460__)
+
     if(u32ModuleNum == UART_USE_VCOM)
     {
 		/*
@@ -359,8 +393,6 @@ int HardwareSerial::availableForWrite(void)
         }
 	}
 
-#endif
-
 }
 
 int HardwareSerial::available(void)
@@ -386,7 +418,7 @@ int HardwareSerial::available(void)
 
 size_t HardwareSerial::write(const uint8_t ch)
 {
-#if defined(__M460__)
+
 	if(u32ModuleNum == UART_USE_VCOM)
     {
 #if defined(__M460MINIMA__) 
@@ -409,7 +441,7 @@ size_t HardwareSerial::write(const uint8_t ch)
 	}	  
     return 1;
 
-#endif
+
 }
 
 void HardwareSerial::flush(void)
