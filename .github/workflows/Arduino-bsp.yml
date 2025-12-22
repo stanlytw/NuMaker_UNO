@@ -36,7 +36,7 @@ jobs:
           # 將 URL 加入到 Arduino CLI 的設定檔中
           # 使用 'config add' 指令來新增第三方 Boards Manager URL
           arduino-cli config init
-          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/OpenNuvoton/NuMaker_UNO/master/package_nuvoton_index.json
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json
           # **關鍵診斷點**：印出設定檔，檢查 URL 是否已存在
           echo "--- Current Arduino CLI Configuration ---"
           arduino-cli config dump
@@ -75,7 +75,7 @@ jobs:
         shell: bash
         run: |
           # 0. BSP包安裝路徑測試
-          INSTALL_PATH="C:\\Users\\runneradmin\\AppData\\Local\\Arduino15\\packages\\nuvoton\\hardware\\nuvoton_m4"
+          INSTALL_PATH="C:\\Users\\runneradmin\\AppData\\Local\\Arduino15\\packages\\nuvoton\\hardware\\nuvoton_duo"
           echo "---  安裝路徑: ${INSTALL_PATH} ---"
           echo "---  顯示安裝路徑內容 ---"
           ls -al $INSTALL_PATH
@@ -161,7 +161,7 @@ jobs:
           #cd ../../../
           #ls -al
           #arduino-cli compile -b arduino:avr:uno Arduinot_Action_Test.ino    
-          arduino-cli compile -b nuvoton:nuvoton_m4:nuvoton_m467sd Arduinot_Action_Test.ino 
+          #arduino-cli compile -b nuvoton:nuvoton_duo:nuvoton_m467sd Arduinot_Action_Test.ino 
       
       # 步驟 1 將專案程式碼複製到虛擬機
       #- name: Checkout code
