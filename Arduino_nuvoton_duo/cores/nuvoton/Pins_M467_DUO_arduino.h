@@ -15,11 +15,9 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-#ifndef _PINS_M467_UNO_ARDUINO00_H_
-#define _PINS_M467_UNO_ARDUINO00_H_
+#ifndef _PINS_M467_DUO_ARDUINO_H_
+#define _PINS_M467_DUO_ARDUINO_H_
 
-//#if defined(__M460__) && defined(__M460MINIMA__) && defined(__M467SJHAN__)
-#if defined(__M460__) && defined(__M467SJHANV00__)
 /* Types used for the tables below */
 typedef struct _PinType
 {
@@ -133,7 +131,7 @@ extern GPIOPinDescription GPIO_Desc[];
 #define GPIO_Config(Desc) outp32(Desc.Pin.MFP,(inp32(Desc.Pin.MFP) & ~Desc.Pin.Mask) | Desc.Pin.Type)
 
 /*========== PWM definition ==========*/
-#define PWM_MAX_COUNT 8
+#define PWM_MAX_COUNT 6
 #define PWM_USE_BPWM              (0xE0)
 #define PWM_USE_EPWM              (0xE1)
 #define PWM_CHANNEL_CH0           (0x00)
@@ -149,23 +147,6 @@ extern GPIOPinDescription GPIO_Desc[];
 #define PWM_DESC_IDX3             (0x03)
 #define PWM_DESC_IDX4             (0x04)
 #define PWM_DESC_IDX5             (0x05)
-#define PWM_DESC_IDX6             (0x06)
-#define PWM_DESC_IDX7             (0x07)
-#define PWM_DESC_IDX8             (0x08)
-#define PWM_DESC_IDX9             (0x09)
-#define PWM_DESC_IDX10            (0x0a)
-#define PWM_DESC_IDX11            (0x0b)
-#define PWM_DESC_IDX12            (0x0c)
-#define PWM_DESC_IDX13            (0x0d)
-#define PWM_DESC_IDX14            (0x0e)
-#define PWM_DESC_IDX15            (0x0f)
-#define PWM_DESC_IDX16            (0x10)
-#define PWM_DESC_IDX17            (0x11)
-#define PWM_DESC_IDX18            (0x12)
-#define PWM_DESC_IDX19            (0x13)
-
-
-
 #define PWM_DESC_IDX_NOUSE        (0xF0)
 
 extern EPWMPinDescription PWM_Desc[];
@@ -189,6 +170,9 @@ extern EPWMPinDescription PWM_Desc[];
 #define ADC_CHANNEL_CH11          (11)
 #define ADC_CHANNEL_CH12          (12)
 #define ADC_CHANNEL_CH13          (13)
+#define ADC_CHANNEL_CH14          (14)
+#define ADC_CHANNEL_CH15          (15)
+
 #define ADC_DESC_IDX0             (0x00)
 #define ADC_DESC_IDX1             (0x01)
 #define ADC_DESC_IDX2             (0x02)
@@ -202,15 +186,10 @@ extern ADCPinDescription ADC_Desc[];
 #define ADC_Config(Desc) outp32(GPIO_Desc[Desc.pintype.num].Pin.MFP,(inp32(GPIO_Desc[Desc.pintype.num].Pin.MFP) & ~GPIO_Desc[Desc.pintype.num].Pin.Mask) | Desc.pintype.type);
 
 /*========== SPI definition ==========*/
-//#define SPI_MAX_COUNT 1// Kept SPI1 PA8~PA11
-#define SPI_MAX_COUNT 1//[2024-11-06]Add support to UNO nu5 connector
+#define SPI_MAX_COUNT 2//[2025-11-26]
 #define SPI_CHANNELS_NUM 1
 extern SPIPinDescription SPI_Desc[];
 
-// #define SPI_SCK   0 //defined but not used
-// #define SPI_MOSI  1 //defined but not used
-// #define SPI_MISO  2 //defined but not used
-// #define SPI_SS    3 //defined but not used
 #define SPI_Config(Desc) \
 do { \
     uint8_t i; \
@@ -220,7 +199,7 @@ do { \
 }while(0);
 
 /*========== UART definition ==========*/
-#define UART_MAX_COUNT 3//Test GPIO 3 //__M467SJHN__
+#define UART_MAX_COUNT 3// __DUO__
 extern UARTPinDescription UART_Desc[];
 extern PinType DEPin_Desc[];
 #define UART_RX 0
@@ -230,6 +209,7 @@ extern PinType DEPin_Desc[];
 #define UART_USE_UART2           (0x02)
 #define UART_USE_UART3           (0x03)
 #define UART_USE_UART4           (0x04)
+#define UART_USE_UART5           (0x05)
 #define UART_USE_VCOM            (0x0C)
 #define UART_USE_NOUSE           (0x0F)
 #define UART_CLKDIV_1            (0x01)
@@ -256,7 +236,7 @@ do { \
 
 
 /*========== I2C definition ==========*/
-#define I2C_MAX_COUNT 1
+#define I2C_MAX_COUNT 1 //Sync to R4
 
 extern I2CPinDescription I2C_Desc[];
 #define I2C_SDA 0
@@ -270,7 +250,7 @@ do { \
 
 
 /*========== CANFD definition ==========*/
-#define CANFD_MAX_COUNT 1
+#define CANFD_MAX_COUNT 1  //Sync to R4
 extern CANFDPinDescription CANFD_Desc[];
 #define CANFD_CLKDIV_1           (0x01)
 #define CANFD_USE_CANFD0         (0x00)
@@ -288,13 +268,12 @@ static const uint8_t SS   = 41;
 static const uint8_t MOSI = 43;
 static const uint8_t MISO = 40;
 static const uint8_t SCK  = 42;
-static const uint8_t LED_BUILTIN = 7;
 static const uint8_t SDA = 14;
 static const uint8_t SCL = 15;
+static const uint8_t LED_BUILTIN = 7;
 
 /*
-   UNO-M467SJ A0~A5 sharing with D14~D19
-   However, ADC pin number(ulPin)does not use USE_BoardToPin scheme.
+   ADC pin number(ulPin)does not use USE_BoardToPin scheme.
    example : ADC_Desc[ulPin]
 */
 static const uint8_t A0  = 0;//0th element in ADC_Desc[]
@@ -302,7 +281,7 @@ static const uint8_t A1  = 1;//1th element in ADC_Desc[]
 static const uint8_t A2  = 2;//2th element in ADC_Desc[]
 static const uint8_t A3  = 3;//3th element in ADC_Desc[]
 static const uint8_t A4  = 4;//4th element in ADC_Desc[]
-static const uint8_t A5  = 5;//5th element in ADC_Desc[], PB0 for test ADC
+static const uint8_t A5  = 5;//5th element in ADC_Desc[]
 
 static const uint8_t D0  = 0;
 static const uint8_t D1  = 1;
@@ -325,12 +304,4 @@ static const uint8_t D17  = 17;
 static const uint8_t D18  = 18;
 static const uint8_t D19  = 19;
 
-//static const uint8_t A6  = 6;
-//static const uint8_t A7  = 7;
-//static const uint8_t A8  = 8;
-//static const uint8_t A9  = 9;
-
-
-
-#endif
-#endif
+#endif//_PINS_M467_DUO_ARDUINO_H_

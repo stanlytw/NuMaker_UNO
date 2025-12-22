@@ -17,14 +17,14 @@
 */
 #ifndef _PINS_ARDUINO_H_
 #define _PINS_ARDUINO_H_
-
+#include "m460.h"
 #define USE_BoardToPin
-
 #if defined(__NDUO__) 
-#include "Pins_M467_UNO_arduino.h"
+#include "Pins_M467_DUO_arduino.h"
 #elif defined(__NUNO__) 
 #include "Pins_M467_UNO_arduino.h"
-#else "error: No Board defined"
+#else 
+#error "No Board defined"
 #endif
 
 #endif // end of _PINS_ARDUINO_H_

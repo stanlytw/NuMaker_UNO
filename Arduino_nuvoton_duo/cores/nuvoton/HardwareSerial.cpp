@@ -79,7 +79,6 @@
 extern "C" {
 #endif
 
-#if defined(__M460MINIMA__)
 #if defined(__NUNO__)//VCOM, UART0, UART1
 #if(UART_MAX_COUNT>1)
 void UART0_IRQHandler(void)
@@ -161,6 +160,7 @@ void UART0_IRQHandler(void)
 
 }
 #endif
+
 #endif//defined(__NDUO__)
 
 #ifdef __cplusplus
@@ -287,9 +287,9 @@ void HardwareSerial::begin(uint32_t baud)
 	{	
         CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART3(u32ClkDiv));
 	}
-	else if(uart_device == UART4)
+	else if(uart_device == UART5)
 	{	
-        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART4(u32ClkDiv));
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART5(u32ClkDiv));
 	}   
 	/* Reset IP */
     //SYS_ResetModule(UART_Desc[u32Idx].module);
@@ -388,8 +388,8 @@ int HardwareSerial::availableForWrite(void)
                 return (UART1_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
 		    else if(uart_device == UART3)
                 return (UART3_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
-            else if(uart_device == UART4)
-                return (UART4_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
+            else if(uart_device == UART5)
+                return (UART5_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
         }
 	}
 

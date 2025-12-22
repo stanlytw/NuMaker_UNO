@@ -17,9 +17,7 @@
 */
 #include "Arduino.h"
 #include "Pins_arduino.h"
-//__M467SJHAN__
 
-#if defined(__M460__) && defined(__M460DUO__)
 #ifdef USE_BoardToPin
 //[2025-11-25] BoardToPin updated
 BoardToPin BoardToPinInfo[] =
@@ -158,7 +156,7 @@ EPWMPinDescription PWM_Desc[] =
 	PWM_CHANNEL_CH4, PWM_FREQUENCY_500HZ, { 39, SYS_GPA_MFP3_PA14MFP_BPWM1_CH4 }}, //PA14, BPWM1_CH4
 	//D9, 
 	{(EPWM_T  *)(BPWM1), (uint32_t)BPWM1_MODULE, PWM_USE_BPWM, BPWM1_IRQn,   \
-	PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 40, SYS_GPA_MFP3_PA15MFP_EPWM1_CH5  }}, //PA15  BPWM1_CH5 
+	PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { 40, SYS_GPA_MFP3_PA15MFP_BPWM1_CH5  }}, //PA15  BPWM1_CH5 
 	//D10,
 	{(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, \
 	PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, { 27, SYS_GPA_MFP0_PA3MFP_EPWM0_CH2  }}, //PA3,  EPWM0_CH2
@@ -209,7 +207,7 @@ UARTPinDescription UART_Desc[] =
 	{(UART_T *)(0),  (uint32_t)(0), (uint32_t)(UART_USE_VCOM), (IRQn_Type)(0), {{-1, (uint32_t)(0) },               {-1, (uint32_t)(0) }}              ,  (uint32_t)(0)            , UART_CLKDIV_1},   //(USE VCOM)
 	
 	//For WiFi
-	{UART5, (uint32_t)UART5_MODULE, (uint32_t)(UART_USE_UART5), UART5_IRQn, {{, SYS_GPA_MFP0_PA2MFP_UART1_RXD  }, {, SYS_GPA_MFP0_PA3MFP_UART1_TXD }},  CLK_CLKSEL1_UART1SEL_HIRC, UART_CLKDIV_1},   //(T/R = PA3/PA2)
+	{UART5, (uint32_t)UART5_MODULE, (uint32_t)(UART_USE_UART5), UART5_IRQn, {{28, SYS_GPA_MFP0_PA2MFP_UART1_RXD  }, {27, SYS_GPA_MFP0_PA3MFP_UART1_TXD }},  CLK_CLKSEL1_UART1SEL_HIRC, UART_CLKDIV_1},   //(T/R = PA3/PA2)
 
     //For more uart requirement
 	{UART0, (uint32_t)UART0_MODULE, (uint32_t)(UART_USE_UART0), UART0_IRQn, {{21, SYS_GPA_MFP1_PA6MFP_UART0_RXD },  {20, SYS_GPA_MFP1_PA7MFP_UART0_TXD }},  CLK_CLKSEL1_UART0SEL_HIRC, UART_CLKDIV_1},   //(T/R = PA7/PA6)
@@ -249,5 +247,3 @@ CANFDPinDescription CANFD_Desc[] =
 };
 
 
-
-#endif//__UNO_M467__
