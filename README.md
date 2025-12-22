@@ -1,3 +1,5 @@
+![Arduino_Bsp](https://github.com/stanlytw/Arduinot_Action_Test/actions/workflows/Arduino-bsp.yml/badge.svg)
+
 - [NuMaker UNO board package for Arduino IDE](#numaker-uno-board-package-for-arduino-ide)
 - [NuMaker M4 board package for Arduino IDE](#numaker-m4-board-package-for-arduino-ide)
 - [Board Package Installation Steps](#board-package-installation-steps)
