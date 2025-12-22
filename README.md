@@ -1,27 +1,11 @@
 ![Arduino_Bsp](https://github.com/stanlytw/Arduinot_Action_Test/actions/workflows/Arduino-bsp.yml/badge.svg)
 
-- [NuMaker UNO board package for Arduino IDE](#numaker-uno-board-package-for-arduino-ide)
 - [NuMaker M4 board package for Arduino IDE](#numaker-m4-board-package-for-arduino-ide)
 - [Board Package Installation Steps](#board-package-installation-steps)
 - [VCOM Driver Installation Steps (Optional for M032BT)](#vcom-driver-installation-steps-optional-for-m032bt)
 - [Compatible Versions of Arduino IDE](#compatible-versions-of-arduino-ide)
 - [Disclaimer](#disclaimer)
 - [Important Notice](#important-notice)
-
-# NuMaker UNO board package for Arduino IDE
-This package contains the NuMaker UNO board descriptors.
-
-## Supported Boards & Features
-
-| NuMaker Boards | Rich GPIO |Embedded CAN<br>nvtCAN(*Note) |Bluetooth Low Energy<br>ArduinoBLE(***1.2.1***) |
-| -------------- | ---------------- | ----------------------------------------------- |----------------------------------------------- |
-| **[NuMaker-NUC131U](https://direct.nuvoton.com/en/numaker-nuc131u)**     | ✔️              | ✔️                                               | ❌                                          |
-| **[NuMaker-M032BT](https://direct.nuvoton.com/en)**     | ✔️              | ❌                                               | ✔️                                           |
-| **[NuMaker-M032KG](https://direct.nuvoton.com/en/numaker-m032kg)**     | ✔️              | ❌                                               | ️❌                                         |
-| **[NuMaker-M252SD](https://direct.nuvoton.com/en/numaker-m252sd)**       | ✔️              | ❌                                               | ❌                                           |
-| **[NuMaker-PFM-M487](https://direct.nuvoton.com/en/numaker-pfm-m487)**       | ✔️              | ❌                                               | ❌                                           |
-
-Note: Compatible to [Seeed_Arduino_CAN](https://github.com/Seeed-Studio/Seeed_Arduino_CAN)
 
 # NuMaker M4 board package for Arduino IDE
 This package contains the NuMaker M4 board descriptors.
@@ -90,3 +74,4 @@ owners.
 
 
 **Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved**
+
