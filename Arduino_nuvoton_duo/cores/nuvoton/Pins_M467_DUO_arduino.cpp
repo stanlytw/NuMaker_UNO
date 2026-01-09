@@ -46,13 +46,13 @@ BoardToPin BoardToPinInfo[] =
 	
     { 29, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //12:      (D12/PA1/SPI0_MISO)
     { 28, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //13:      (D13/PA2/SPI0_SCK)
-	{ -1, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //14:      (D14/VSS)
+	{ 56, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //14:      (D14/PB12), also A0
     
-	{ -1, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //15:      (D15/VREF)
-    { -1, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //16:      (D16/MISSING)
-    { -1, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //17:      (D17/MISSING)
-    { 34, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //18:      (D18/PF1/)
-    { 33, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //19:      (D19/PF0/) 
+	{ 55, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //15:      (D15/PB13), also A1
+    { 54, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //16:      (D16/PB14), also A2
+    { 53, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //17:      (D17/PB15), also A3 
+    { 34, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //18:      (D18/PF1) , also A4
+    { 33, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //19:      (D19/PF0) , also A5 
     { 37, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //20:      (D20/PA12/)
     { 25, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //21:      (D21/PA11/) 
 	{ 12, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //22:      (D22/PF6/) 
