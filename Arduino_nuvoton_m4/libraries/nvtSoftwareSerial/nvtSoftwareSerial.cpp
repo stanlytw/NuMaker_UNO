@@ -42,7 +42,7 @@ http://arduiniana.org.
 #include <Arduino.h>
 #include <nvtSoftwareSerial.h>
 
-
+#define GPIO_BASE (GPIOA_BASE)
 //
 // Statics
 //
@@ -65,35 +65,7 @@ extern GPIO_T* g_u8Softserail_port_base;
 static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
 {    
     
-#if defined(__M032BT__)
-    SYS_UnlockReg();
-    
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_PCLK0, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1SEL_PCLK0, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2SEL_PCLK1, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE, CLK_CLKSEL1_TMR3SEL_PCLK1, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-    
-       
-    SYS_LockReg();
-     /*For 48MHz CPU*/
-    SOFTWARE_UART_TIMER->CTL = 0;
-    
-    /* For 48MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (48-1); 
-    
-    SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-#elif defined(__M252__) 
+#if defined(__M460__) 
     SYS_UnlockReg();
     
     #if (SOFTWARE_UART_TIMER_SELECT==(0))
@@ -115,101 +87,38 @@ static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
     SYS_LockReg();
     
 
-     /*For 50MHz CPU*/
-    SOFTWARE_UART_TIMER->CTL = 0;
+     /*For 50MHz CPU->200MHz*/
+    //SOFTWARE_UART_TIMER->CTL = 0;
     
-    /* For 50MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (50-1); 
+    /* For 50MHz->200MHz CPU: 1 us / 1 tick */
+    //SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (200-1); 
     
-    SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-#elif defined(__M480__)|| defined(__M460__) 
-    SYS_UnlockReg();
+    //SOFTWARE_UART_TIMER->CMP = u32DelayUs;
     
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE,CLK_CLKSEL1_TMR3SEL_HIRC, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-           
-    SYS_LockReg();
-    
-
-     /*For 50MHz CPU*/
-    SOFTWARE_UART_TIMER->CTL = 0;
-    
-    /* For 50MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (50-1); 
-    
-    SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-
-#else
-
-    SYS_UnlockReg();
-    
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE, CLK_CLKSEL1_TMR3_S_HCLK, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-    
-       
-    SYS_LockReg();
-    
-
-     /*For 50MHz CPU*/
-    SOFTWARE_UART_TIMER->TCSR = 0;
-    
-    /* For 50MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->TCSR |=  TIMER_ONESHOT_MODE | (50-1); 
-    
-    SOFTWARE_UART_TIMER->TCMPR = u32DelayUs;
+	nvtEthernet_printf("BSP_TimerDelaySetting\r\n");
 #endif
 }
 
 static inline void BPS_delay() //using systick
 {
 
-#if defined(__M032BT__) || defined(__M252__)  || defined(__M480__) || defined(__M460__) 
+#if defined(__M460__)
+    //nvtEthernet_printf("BPS_delay start\r\n");
     SOFTWARE_UART_TIMER->INTSTS = TIMER_INTSTS_TIF_Msk;
     SOFTWARE_UART_TIMER->CTL |= TIMER_CTL_CNTEN_Msk;
-    __NOP(); //for 48MHz CPU
+    //__NOP(); //for 48MHz CPU
     
     while(SOFTWARE_UART_TIMER->CTL & TIMER_CTL_ACTSTS_Msk);
     while(!(SOFTWARE_UART_TIMER->INTSTS & TIMER_INTSTS_TIF_Msk));
-
-#else /*for legency mcu, like M031*/
-    SOFTWARE_UART_TIMER->TISR = TIMER_TISR_TIF_Msk;
-    SOFTWARE_UART_TIMER->TCSR |= TIMER_TCSR_CEN_Msk/* | TIMER_ONESHOT_MODE | 50 */;
-    __NOP(); //for 50MHz CPU
-    
-    while(SOFTWARE_UART_TIMER->TCSR & TIMER_TCSR_CACT_Msk);
-    while(!(SOFTWARE_UART_TIMER->TISR & TIMER_TISR_TIF_Msk));
+	//nvtEthernet_printf("BPS_delay end\r\n");
 #endif
 }
 
 static inline uint32_t digitalPinToPort(uint32_t pin_num)
 {
-    return ((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40);
+    //Serial.print("digitalPinToPort:");
+	//Serial.println(((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40), DEC);
+	return ((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40);
 }
 
 static inline uint32_t PortToPortNum(GPIO_T* port)
@@ -227,6 +136,35 @@ static inline uint32_t digitalPinToPinNum(uint32_t tx)
     
     return 0xDEADBEEF; //error
 }
+
+
+static inline uint32_t BaudSetbyTimer(uint32_t u32Baud)
+{
+    uint32_t u32Clk = TIMER_GetModuleClock(SOFTWARE_UART_TIMER);
+    uint32_t u32Cmpr = 0UL, u32Prescale = 0UL;
+    nvtEthernet_printf("\n\n u32Clk = %d \r\n", u32Clk);
+    /* Fastest possible timer working freq is (u32Clk / 2). While cmpr = 2, prescaler = 0. */
+    if(u32Baud > (u32Clk / 2UL))
+    {
+        u32Cmpr = 2UL;
+    }
+    else
+    {
+        u32Cmpr = u32Clk / u32Baud;
+        u32Prescale = (u32Cmpr >> 24);  /* for 24 bits CMPDAT */
+        if (u32Prescale > 0UL)
+            u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
+    }
+
+    SOFTWARE_UART_TIMER->CTL = TIMER_ONESHOT_MODE | u32Prescale;
+    SOFTWARE_UART_TIMER->CMP = u32Cmpr;
+
+	nvtEthernet_printf("\n\n u32Prescale = %d \r\n", u32Prescale);
+	nvtEthernet_printf("\n\n u32Cmpr = %d \r\n", u32Cmpr);
+    return(u32Clk / (u32Cmpr * (u32Prescale + 1UL)));
+}
+
+
 //
 // Private methods
 //
@@ -293,7 +231,7 @@ bool SoftwareSerial::stopListening()
 
 void SoftwareSerial::recv()
 {
-    
+    nvtEthernet_printf("SoftwareSerial recv\r\n");
     if(GPIO_GET_INT_FLAG(this->_pu32ReceivePort,this->_receiveBitMask)) //RX
     {
         uint8_t u8RcvByteTmp=0;
@@ -362,8 +300,13 @@ SoftwareSerial::SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inv
   _buffer_overflow(false),
   _inverse_logic(inverse_logic)
 {
-    setTX(transmitPin);
-    setRX(receivePin);
+    nvtEthernet_printf("SoftwareSerial constructor start\r\n");
+	nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", receivePin, transmitPin);
+	//setTX(transmitPin);
+    //setRX(receivePin);
+	_RXPin = receivePin;
+    _TXPin = transmitPin;
+	nvtEthernet_printf("SoftwareSerial constructor end\r\n");
 }
 
 //
@@ -390,6 +333,7 @@ void SoftwareSerial::setTX(uint8_t tx)
   _p_transmit_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_transmitPinNum)<<2)));
   _pu32TransmitPort = GPIO_Desc[BoardToPinInfo[tx].pin].P;
   _transmitBoardPin = tx;
+  nvtEthernet_printf("SoftwareSerial setTX\r\n");
 }
 
 void SoftwareSerial::setRX(uint8_t rx)
@@ -404,6 +348,7 @@ void SoftwareSerial::setRX(uint8_t rx)
   _p_receive_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_receivePinNum)<<2)));
   _pu32ReceivePort = GPIO_Desc[BoardToPinInfo[rx].pin].P;
   _receiveBoardPin = rx;
+  nvtEthernet_printf("SoftwareSerial setRx\r\n");
 }
 
 uint16_t SoftwareSerial::subtract_cap(uint16_t num, uint16_t sub) {
@@ -423,13 +368,12 @@ void SoftwareSerial::begin(long speed)
 
   // Precalculate the various delays, in number of 4-cycle delays
   //uint16_t bit_delay = (F_CPU / speed) / 4;
-  uint16_t bit_time = 1000000/speed; 
+  //uint16_t bit_time = 1000000/speed; 
 
-#if defined(__M480__)
-  bit_time>>=2;//for M480 CPU=192MHz, divided by 4 to meet base frequency(48MHz)
-#endif
-
-  BSP_TimerDelaySetting(bit_time);
+  BSP_TimerDelaySetting(0);
+  uint32_t ss = BaudSetbyTimer((uint32_t)(speed));
+  nvtEthernet_printf("\n\n ss = %d \r\n", ss);
+  
   
   // 12 (gcc 4.8.2) or 13 (gcc 4.3.2) cycles from start bit to first bit,
   // 15 (gcc 4.8.2) or 16 (gcc 4.3.2) cycles between bits,
@@ -489,8 +433,13 @@ void SoftwareSerial::begin(long speed)
 
     tunedDelay(_tx_delay); // if we were low this establishes the end
   }*/
-    
+  setTX(_TXPin);
+  setRX(_RXPin);   
   listen();
+  nvtEthernet_printf("SoftwareSerial begin\r\n");
+  nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", this->_receivePinNum, this->_transmitPinNum);
+  nvtEthernet_printf("rxPort=0x%x, txPort=0x%x \r\n", this->_pu32ReceivePort, this->_pu32TransmitPort);
+  uint8_t _transmitPinNum;
 }
 
 void SoftwareSerial::setRxIntMsk(bool enable)
@@ -502,6 +451,7 @@ void SoftwareSerial::setRxIntMsk(bool enable)
     } else {
       GPIO_DisableInt(this->_pu32ReceivePort, this->_receivePinNum);;
     }
+	nvtEthernet_printf("SoftwareSerial setRxIntMsk\r\n");
 }
 
 
@@ -544,57 +494,7 @@ int SoftwareSerial::available()
 
 size_t SoftwareSerial::write(uint8_t b)
 {
-#if 0
-  if (_tx_delay == 0) {
-    setWriteError();
-    return 0;
-  }
 
-  // By declaring these as local variables, the compiler will put them
-  // in registers _before_ disabling interrupts and entering the
-  // critical timing sections below, which makes it a lot easier to
-  // verify the cycle timings
-  volatile uint8_t *reg = _transmitPortRegister;
-  uint8_t reg_mask = _transmitBitMask;
-  uint8_t inv_mask = ~_transmitBitMask;
-  uint8_t oldSREG = SREG;
-  bool inv = _inverse_logic;
-  uint16_t delay = _tx_delay;
-
-  if (inv)
-    b = ~b;
-
-  cli();  // turn off interrupts for a clean txmit
-
-  // Write the start bit
-  if (inv)
-    *reg |= reg_mask;
-  else
-    *reg &= inv_mask;
-
-  tunedDelay(delay);
-
-  // Write each of the 8 bits
-  for (uint8_t i = 8; i > 0; --i)
-  {
-    if (b & 1) // choose bit
-      *reg |= reg_mask; // send 1
-    else
-      *reg &= inv_mask; // send 0
-
-    tunedDelay(delay);
-    b >>= 1;
-  }
-
-  // restore pin to natural state
-  if (inv)
-    *reg &= inv_mask;
-  else
-    *reg |= reg_mask;
-
-  SREG = oldSREG; // turn interrupts back on
-  tunedDelay(_tx_delay);
-#else
     bool inv = _inverse_logic;
     
     if (inv)
@@ -603,15 +503,22 @@ size_t SoftwareSerial::write(uint8_t b)
     //cli();  // turn off interrupts for a clean txmit
     __set_PRIMASK(1); // turn off interrupts for a clean txmit
     
-    if (inv)  
+
+    if (inv)
+	{
         *(this->_p_transmit_pin)=1; //START bit
-    else
+		//nvtEthernet_printf("SoftwareSerial write 1\r\n");
+    }
+	else
+	{
         *(this->_p_transmit_pin)=0; //START bit
-    
+		//nvtEthernet_printf("SoftwareSerial write 0\r\n");
+    }
     tunedDelay();
 
     for(uint8_t i=0 ;i < 8; i++) {
         *(this->_p_transmit_pin) = (b >> i) & 0x1;
+		//nvtEthernet_printf("SoftwareSerial write 0x%x\r\n", (b >> i) & 0x1);
         tunedDelay();
     }
     
@@ -624,11 +531,8 @@ size_t SoftwareSerial::write(uint8_t b)
     __set_PRIMASK(0); // turn interrupts back on
     
     tunedDelay();
-
-#endif
-  
-
-  
+    //nvtEthernet_printf("SoftwareSerial write\r\n");
+	//nvtEthernet_printf("this->_p_transmit_pin=0x%x\r\n", this->_p_transmit_pin);
   return 1;
 }
 
@@ -655,4 +559,5 @@ int SoftwareSerial::peek()
   // Read from "head"
   return _receive_buffer[idx_peek];
 }
+
 

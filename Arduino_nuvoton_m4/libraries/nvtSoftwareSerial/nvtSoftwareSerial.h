@@ -71,6 +71,9 @@ private:
   GPIO_T * _pu32TransmitPort;
   volatile uint32_t * _p_transmit_pin;
   
+  
+  uint8_t _RXPin;
+  uint8_t _TXPin;
   // Expressed as 4-cycle delays (must never be 0!)
   //uint16_t _rx_delay_centering;
   //uint16_t _rx_delay_intrabit;
