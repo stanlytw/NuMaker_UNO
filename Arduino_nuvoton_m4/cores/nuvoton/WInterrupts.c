@@ -23,8 +23,8 @@ typedef void (*interruptCB)(void);
 static interruptCB callbacksGPA[GNUM];
 static interruptCB callbacksGPB[GNUM];
 static interruptCB callbacksGPC[GNUM];
-static interruptCB callbacksGPD[GNUM];
-static interruptCB callbacksGPE[GNUM];
+//static interruptCB callbacksGPD[GNUM];
+//static interruptCB callbacksGPE[GNUM];
 static interruptCB callbacksGPF[GNUM];
 
 /* for software serial */
@@ -43,22 +43,23 @@ static void __initialize()
 		callbacksGPA[i] = NULL;
 		callbacksGPB[i] = NULL;
 		callbacksGPC[i] = NULL;
-		callbacksGPD[i] = NULL;
-		callbacksGPE[i] = NULL;
+		//callbacksGPD[i] = NULL;
+		//callbacksGPE[i] = NULL;
 		callbacksGPF[i] = NULL;
 	}
 	
 	NVIC_EnableIRQ(GPA_IRQn);
 	NVIC_EnableIRQ(GPB_IRQn);
 	NVIC_EnableIRQ(GPC_IRQn);
-	NVIC_EnableIRQ(GPD_IRQn);
-	NVIC_EnableIRQ(GPE_IRQn);
+	//NVIC_EnableIRQ(GPD_IRQn);
+	//NVIC_EnableIRQ(GPE_IRQn);
 	NVIC_EnableIRQ(GPF_IRQn);	
 }
 
 void attachInterrupt(uint32_t pin, void (*callback)(void), uint32_t mode)
 {
 	static int enabled = 0;
+	//nvtEthernet_printf("attachInterrupt, pin = 0x%x, mode = 0x%x\r\n", pin, mode);
 	
 #ifdef USE_BoardToPin	
 	if(pin > BoardToPin_MAX_COUNT) return;
@@ -86,22 +87,23 @@ void attachInterrupt(uint32_t pin, void (*callback)(void), uint32_t mode)
         &&(pos == g_u8Softserail_pin_num) 
     ) { //check if the softserial rx pin
         pfn_software_uart_handler = callback;
-        
+        //nvtEthernet_printf("attachInterrupt, Softserial special. \r\n");
+		//nvtEthernet_printf("pio = 0x%x, pos = 0x%x\r\n", pio, pos);
     } else { //origin path
 
 
 	// Set callback function
-	
+	//nvtEthernet_printf("attachInterrupt, NOT Softserial special. \r\n");
 	if (pio == PA )
 		callbacksGPA[pos] = callback;
 	else if (pio == PB )
 		callbacksGPB[pos] = callback;
 	else if (pio == PC )
 		callbacksGPC[pos] = callback;
-	else if (pio == PD )
-		callbacksGPD[pos] = callback;
-	else if (pio == PE )
-		callbacksGPE[pos] = callback;
+	//else if (pio == PD )
+	//	callbacksGPD[pos] = callback;
+	//else if (pio == PE )
+	//	callbacksGPE[pos] = callback;
 	else if (pio == PF )
 		callbacksGPF[pos] = callback;
 	
@@ -162,10 +164,10 @@ void detachInterrupt(uint32_t pin)
 		    callbacksGPB[pos] = NULL;
 	    else if (pio == PC )
 		    callbacksGPC[pos] = NULL;
-	    else if (pio == PD )
-		    callbacksGPD[pos] = NULL;
-	    else if (pio == PE )
-		    callbacksGPE[pos] = NULL;
+	    //else if (pio == PD )
+		//    callbacksGPD[pos] = NULL;
+	    //else if (pio == PE )
+		//    callbacksGPE[pos] = NULL;
 	    else if (pio == PF )
 		    callbacksGPF[pos] = NULL;			
 
@@ -203,6 +205,7 @@ void GPB_IRQHandler(void)
 {
 
 	uint32_t i;		
+	//nvtEthernet_printf("GPB_IRQHandler \r\n");
 	/* For SoftSerial patch */  
     /* put handler here for better responding time for higher baudrate. */
     if( pfn_software_uart_handler) 
@@ -242,6 +245,7 @@ void GPC_IRQHandler(void)
 	}  
 }
 
+#if 0
 void GPD_IRQHandler(void)
 {
 
@@ -284,7 +288,7 @@ void GPE_IRQHandler(void)
 	  	}
 	}  
 }
-
+#endif
 void GPF_IRQHandler(void)
 {
 
