@@ -216,7 +216,7 @@ void SoftwareSerial::recv()
     {
         uint8_t u8RcvByteTmp=0;
 
-        if (_inverse_logic ? !rx_pin_read() : rx_pin_read())
+        if (_inverse_logic ? !rx_pin_read() : rx_pin_read())//Falling egde logic check
         {
             //START bit
 		//	nvtEthernet_printf("SoftwareSerial recv error\r\n");
@@ -238,8 +238,8 @@ void SoftwareSerial::recv()
             }
             //nvtEthernet_printf("Final SoftwareSerial rxing u8RcvByteTmp = 0x%x\r\n", u8RcvByteTmp);
             //nvtEthernet_printf("Final SoftwareSerial str   u8RcvByteTmp = %s\r\n", u8RcvByteTmp);			
-            //if (_inverse_logic)
-            //    u8RcvByteTmp = ~u8RcvByteTmp;
+            if (_inverse_logic)
+                u8RcvByteTmp = ~u8RcvByteTmp;
             
             if(idx_next!=_receive_buffer_head){
                 _receive_buffer[idx_next] = u8RcvByteTmp;

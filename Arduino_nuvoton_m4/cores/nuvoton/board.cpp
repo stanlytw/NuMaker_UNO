@@ -111,7 +111,7 @@ void Enable_All_IPs(void)
     SET_SD1_DAT2_PA10();
     SET_SD1_DAT3_PA11();
 
-#if 1//do debug	
+#if 0//do debug	
 	/* Enable UART0 module clock */
     CLK_EnableModuleClock(UART0_MODULE);
 
@@ -142,9 +142,6 @@ void Enable_All_IPs(void)
     /* Light-ON LED1 for status indication */
     GPIO_SetMode(PB, BIT6, GPIO_MODE_OUTPUT);
 	PB6 = 1;
-	
-	GPIO_SetMode(PF, BIT6, GPIO_MODE_OUTPUT);
-	//PF6 = 1;
 	
 	/* Default 5V on */
 	GPIO_SetMode(PA, BIT12, GPIO_MODE_OUTPUT);

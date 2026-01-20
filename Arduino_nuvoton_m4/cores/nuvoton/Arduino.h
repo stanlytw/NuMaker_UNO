@@ -32,7 +32,7 @@
   #include "M480.h"
 #elif defined(__M460__)
   #include "m460.h"
-  #include "nvtEthernet_helper.h"
+  //#include "nvtEthernet_helper.h"
 #elif defined(__M032KG__)
   #include "M031Series.h"
 #elif defined(__M032BT__)
