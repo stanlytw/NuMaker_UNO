@@ -1,5 +1,5 @@
 # 工作流程名稱
-name: Build Arduino BSP
+name: Build Arduino DUO BSP
 
 # 觸發條件：當程式碼被推送到 main 分支時
 on:
