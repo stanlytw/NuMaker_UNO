@@ -9,7 +9,7 @@
 - [Important Notice](#important-notice)
 
 # NuMaker M4 board package for Arduino IDE
-This package contains the NuMaker M4 board descriptors.
+This package contains the NuMaker M4 IOT/UNO/DUO board descriptors.
 
 ## Supported Boards & Features
 
@@ -32,9 +32,10 @@ Note2: Require dedicated loader and application code.
    After checking, double-click arduino.exe, and then go to **File->Preferences**
 4. Paste following URL to 'Additional Boards Manager URLs' input field: 
 `https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json`
-5. For NuMaker UNO package, under **Tools->Board->Boards Manger**, search `NuMaker UNO`, click **Install**;<br>
-   For NuMaker M4 package, under **Tools->Board->Boards Manger**, search `NuMaker M4`, click **Install**
-6. You can now select NuMaker UNO/M4 and install it in Arduino IDE.
+5. For NuMaker DUO package, under **Tools->Board->Boards Manger**, search `NuMaker DUO`, click **Install**;<br>
+   For NuMaker M4 package, under **Tools->Board->Boards Manger**, search `NuMaker M4`, click **Install**;<br>
+   LEGACY: For NuMaker UNO package, under **Tools->Board->Boards Manger**, search `NuMaker UNO`, click **Install**;
+7. You can now select NuMaker UNO/M4 and install it in Arduino IDE.
 
 # VCOM Driver Installation Steps (Optional for M032BT)
 The Virtual COM (VCOM) interface requires a VCOM driver to be installed on PC first. 
@@ -76,6 +77,7 @@ owners.
 
 
 **Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved**
+
 
 
 
