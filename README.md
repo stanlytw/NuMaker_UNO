@@ -16,14 +16,15 @@ This package contains the NuMaker M4 board descriptors.
 | NuMaker Boards | Rich GPIO | Embedded SD |Embedded CAN/FD<br>nvtCAN(*Note1)  | RS485 | Ethernet | Firmware Upload<br>by ISP(*Note2) |
 | -------------- | ---------------- | ------|----------------------------------------------- |------|----|----|
 | **[NuMaker-IOT-M467](https://direct.nuvoton.com/en/numaker-iot-m467)**       | ✔️  | ✔️| ✔️| ✔️| ✔️ | ✔️                                            ||
-| NuMaker-UNO-M4<br>(*Note3)       |✔️              | ✔️                              | ❌  | ✔️| ✔️| ✔️| ✔️                               ||
+|  **[NuMaker-UNO-M4](https://direct.nuvoton.com/en/numaker-uno-m4)**       |✔️              | ✔️                              | ❌  | ✔️| ✔️| ✔️| ✔️                               ||
+| NuMaker-DUO-M4<br>       |✔️              | ✔️                              | ❌  | ✔️| ✔️| ✔️| ✔️                               ||
 
 
 Note1: Compatible to [Seeed_Arduino_CAN](https://github.com/Seeed-Studio/Seeed_Arduino_CAN)
 
 Note2: Require dedicated loader and application code.
 
-Note3: It would be commercial available soon.
+
 
 # Board Package Installation Steps
 1. Download and Install Arduino IDE from https://www.arduino.cc/en/Main/Software.
@@ -75,6 +76,7 @@ owners.
 
 
 **Copyright (C) 2023 Nuvoton Technology Corp. All rights reserved**
+
 
 
 
