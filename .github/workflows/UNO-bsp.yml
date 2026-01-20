@@ -1,0 +1,193 @@
+# 工作流程名稱
+name: Build Arduino UNO BSP
+
+# 觸發條件：當程式碼被推送到 main 分支時
+on:
+  workflow_dispatch:  # 允許手動觸發此工作流程
+  push:
+    branches:
+      - master
+
+# 定義一個名為 build 的工作
+jobs:
+  build:
+    # 指定在 windows-latest 虛擬機上執行##
+    runs-on: windows-latest
+
+    # 工作中的步驟
+    steps:
+    # 步驟 1 將專案程式碼複製到虛擬機
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Install Arduino CLI
+        shell: bash 
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          echo "./bin" >> $GITHUB_PATH  
+          echo "$PWD/bin" >> $GITHUB_PATH
+          ls -al $PWD
+
+      - name: Add UNO-M4 Boards Manager URL
+        run: |
+          # UNO-M4 平台的 JSON 檔案連結
+          #UNO_M4_URL="https://raw.githubusercontent.com/OpenNuvoton/NuMaker_UNO/master/package_nuvoton_index.json"
+          
+          # 將 URL 加入到 Arduino CLI 的設定檔中
+          # 使用 'config add' 指令來新增第三方 Boards Manager URL
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json
+          # **關鍵診斷點**：印出設定檔，檢查 URL 是否已存在
+          echo "--- Current Arduino CLI Configuration ---"
+          arduino-cli config dump
+          echo "-----------------------------------------"
+          
+                    
+      - name: Install board(AVR and NVT)
+        shell: bash 
+        run: |
+          #arduino-cli config init
+          arduino-cli core update-index
+          #arduino-cli core install arduino:avr
+
+          # 安裝 UNO_M4 核心
+          # 核心名稱通常是供應商名稱:架構名稱
+          arduino-cli core install nuvoton:nuvoton_m4 -v
+          #arduino-cli board listall
+          arduino-cli core update-index
+          echo "-------core list --json------"
+          arduino-cli core list --json
+          echo " HOME is ${HOME} "
+          
+      - name: Run INO project(AVR and NVT)
+        shell: bash 
+        run: |
+          ls -al $PWD
+          ls -al $GITHUB_WORKSPACE
+          #cd $GITHUB_WORKSPACE
+          #ls -al
+          #cd ../../../
+          #ls -al
+          #arduino-cli compile -b arduino:avr:uno Arduinot_Action_Test.ino    
+          #arduino-cli compile -b nuvoton:nuvoton_m4:nuvoton_m467sd Arduinot_Action_Test.ino
+      
+      - name: Find and Compile Examples(NVT)
+        shell: bash
+        run: |
+          # 0. BSP包安裝路徑測試
+          INSTALL_PATH="C:\\Users\\runneradmin\\AppData\\Local\\Arduino15\\packages\\nuvoton\\hardware\\nuvoton_m4"
+          echo "---  安裝路徑: ${INSTALL_PATH} ---"
+          echo "---  顯示安裝路徑內容 ---"
+          ls -al $INSTALL_PATH
+          
+          # 1. 定義目標板子 FQBN 和核心名稱
+          # 這裡選擇一個 STM32 板子進行測試
+          FQBN="nuvoton.nuvoton_m4.nuvoton_m467sd"
+          CORE_NAME="nuvoton:nuvoton_m4"
+
+          CORE_PATH=$(arduino-cli core list --json | jq -r '.platforms[0].releases | .[keys | .[0]] | .boards[] | .fqbn' )
+          CORE_VERSION=$(arduino-cli core list --json | jq -r '.platforms[0].installed_version' )
+
+          echo "CORE_VERSION = ${CORE_VERSION}"
+          echo "CORE_PATH = ${CORE_PATH}"
+
+          FINAL_PATH="${INSTALL_PATH}\\${CORE_VERSION}"
+          echo "---  完整安裝路徑(帶版本號): ${FINAL_PATH} ---"
+
+          echo "--- 正在處理找到的 .ino 檔案 ---"
+          # find ... -print0：用 null 字符分隔輸出，確保路徑中空格不會出錯。
+          # while IFS= read -r -d $'\0' SKETCH_PATH：安全地讀取 null 字符分隔的路徑。
+          
+          #find "$FINAL_PATH" -type f -name "*.ino" -print0 | while IFS= read -r -d $'\0' SKETCH_PATH; do
+          #echo "找到檔案: $SKETCH_PATH"
+    
+          echo "--- 正在處理找到的前 5 個 .ino 檔案 ---"
+          find "$FINAL_PATH" -type f -name "*.ino" | head -n 5 | while IFS= read -r SKETCH_PATH; do
+          # 檢查是否讀取到空行或錯誤路徑
+          if [ -z "$SKETCH_PATH" ]; then
+          continue
+          fi
+    
+          echo "找到檔案: $SKETCH_PATH"
+          # 提取 .ino 檔案所在的父目錄 (Sketch 資料夾路徑)
+          SKETCH_DIR=$(dirname "$SKETCH_PATH")
+          echo "  -> Sketch 資料夾: $SKETCH_DIR"
+
+          # --- 這裡可以加入您的編譯邏輯 ---
+          arduino-cli compile -b nuvoton:nuvoton_m4:nuvoton_m467sd ${SKETCH_PATH}
+          done
+
+          #if [ -z "$CORE_PATH" ]; then
+          #  echo "Error: No path found."
+          #  # 列印 JSON 輸出幫助調試
+          #  echo "--- Debug: arduino-cli core list JSON output ---"
+          #  arduino-cli core list --json
+          #  echo "------------------------------------------------"
+          #  exit 1
+          #fi
+
+          while IFS=':' read -r PACKAGER ARCHITECTURE BOARD_ID; do
+    
+          # 檢查是否讀取到空的行 (如果 jq 輸出最後有空行會發生)
+          if [ -z "$PACKAGER" ]; then
+            continue
+          fi
+    
+          CURRENT_FQBN="${PACKAGER}:${ARCHITECTURE}:${BOARD_ID}"
+    
+          #echo "--- 正在處理: $CURRENT_FQBN ---"
+          #echo "  供應商 (Packager): $PACKAGER"
+          #echo "  架構 (Architecture): $ARCHITECTURE"
+          #echo "  板子 ID (FQBN): $BOARD_ID"
+    
+          # *** 這裡可以放置你的主要邏輯 ***
+          # 例如：使用這些變數來編譯特定的 Sketch
+          # arduino-cli compile --fqbn "$PACKAGER:$ARCHITECTURE:$BOARD_ID" "$SKETCH_PATH"
+          NEW_BOARD_PATH_LABEL="${PACKAGER}/${ARCHITECTURE}/${CORE_VERSION}"
+          NEW_QFBN="${PACKAGER}:${ARCHITECTURE}:${BOARD_ID}"
+          # 輸出檢查
+          echo "路徑標籤是: $NEW_BOARD_PATH_LABEL"
+          echo "QFBN是: $NEW_QFBN"
+          #arduino-cli compile -fqbn $NEW_QFBN Arduinot_Action_Test.ino
+          done <<< "$CORE_PATH"
+          
+      - name: List library example(NVT)
+        shell: bash 
+        run: |
+          ls -al $PWD
+          ls -al $GITHUB_WORKSPACE
+          #cd $GITHUB_WORKSPACE
+          #ls -al
+          #cd ../../../
+          #ls -al
+          #arduino-cli compile -b arduino:avr:uno Arduinot_Action_Test.ino    
+          #arduino-cli compile -b nuvoton:nuvoton_duo:nuvoton_m467sd Arduinot_Action_Test.ino 
+      
+      # 步驟 1 將專案程式碼複製到虛擬機
+      #- name: Checkout code
+      #  uses: actions/checkout@v4
+
+      # 步驟 2 設定並使用 MSYS2 環境以確保 GCC 可用
+      # GitHub Actions 的 Windows Runner 預設不包含 GCC，但通常有 MSYS2 環境
+      #- name: Set up MSYS2
+      #  uses: msys2/setup-msys2@v2
+      #  with:
+      #    msystem: MINGW64
+      #    # 安裝 GCC 工具鏈
+      #    update: true
+      #    install: mingw-w64-x86_64-gcc
+      #
+      # 步驟 3 編譯程式碼並將輸出寫入檔案
+      #- name: Compile and log output
+      #  shell: msys2 {0}  # 指定使用 MSYS2 shell 來執行指令
+      #  run: | 
+          # 編譯 test.c，將可執行檔命名為 test.exe
+          # 編譯過程中的標準輸出（stdout）和錯誤輸出（stderr）都會被重定向到 build_log.txt
+      #    gcc test.c -o test.exe  build_log.txt 2>&1
+
+      # 步驟 4 將產生的日誌檔案作為工作產物（artifact）上傳
+      #- name: Upload build log as artifact
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: build-log
+      #    path: build_log.txt
