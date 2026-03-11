@@ -16,6 +16,15 @@
 #if defined(__M460__) 
 #undef SPI1
 #endif
+#define BOARD_SPI_DEFAULT_SS 43 //dummy
+#ifndef NVT_SS
+#define NVT_SS BOARD_SPI_DEFAULT_SS
+#endif
+#define SPI_MODE0 SPI_MODE_0
+#define SPI_MODE1 SPI_MODE_1
+#define SPI_MODE2 SPI_MODE_2
+#define SPI_MODE3 SPI_MODE_3
+#define SPI_MODE_Msk (SPI_MODE_0|SPI_MODE_1|SPI_MODE_2|SPI_MODE_3)
 
 enum SPITransferMode {
 	SPI_CONTINUE,
