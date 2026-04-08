@@ -101,8 +101,8 @@ jobs:
           #find "$FINAL_PATH" -type f -name "*.ino" -print0 | while IFS= read -r -d $'\0' SKETCH_PATH; do
           #echo "找到檔案: $SKETCH_PATH"
     
-          echo "--- 正在處理找到的前 27 個 .ino 檔案 ---"
-          find "$FINAL_PATH" -type f -name "*.ino" | head -n 27 | while IFS= read -r SKETCH_PATH; do
+          echo "--- 正在處理找到的前 10 個 .ino 檔案 ---"
+          find "$FINAL_PATH" -type f -name "*.ino" | head -n 10 | while IFS= read -r SKETCH_PATH; do
           # 檢查是否讀取到空行或錯誤路徑
           if [ -z "$SKETCH_PATH" ]; then
           continue
