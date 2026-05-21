@@ -98,11 +98,11 @@ jobs:
           # find ... -print0：用 null 字符分隔輸出，確保路徑中空格不會出錯。
           # while IFS= read -r -d $'\0' SKETCH_PATH：安全地讀取 null 字符分隔的路徑。
           
-          find "$FINAL_PATH" -type f -name "*.ino" -print0 | while IFS= read -r -d $'\0' SKETCH_PATH; do
-          echo "找到檔案: $SKETCH_PATH"
+          #find "$FINAL_PATH" -type f -name "*.ino" -print0 | while IFS= read -r -d $'\0' SKETCH_PATH; do
+          #echo "找到檔案: $SKETCH_PATH"
     
-          #echo "--- 正在處理找到的前 5 個 .ino 檔案 ---"
-          #find "$FINAL_PATH" -type f -name "*.ino" | head -n 5 | while IFS= read -r SKETCH_PATH; do
+          echo "--- 正在處理找到的前 10 個 .ino 檔案 ---"
+          find "$FINAL_PATH" -type f -name "*.ino" | head -n 10 | while IFS= read -r SKETCH_PATH; do
           # 檢查是否讀取到空行或錯誤路徑
           if [ -z "$SKETCH_PATH" ]; then
           continue
