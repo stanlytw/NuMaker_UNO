@@ -10,7 +10,7 @@
 #define __VCOM_SERIAL_KB_H__
 #if defined(__M460MINIMA__)
 //#include "HardwareSerial.h"
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -211,7 +211,7 @@ void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len);
 #ifdef __cplusplus
 }
 #endif
-#endif //(defined(__NVTKB__))
+#endif //(defined(__NVT_USB_KB_PROFILE__))
 #endif//defined(__M460MINIMA__)
 
 #endif  /* __VCOM_SERIAL_KB_H__ */

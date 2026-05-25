@@ -10,7 +10,7 @@
 #define __VCOM_SERIAL_H__
 #if defined(__M460MINIMA__)
 //#include "HardwareSerial.h"
-#if (!defined(__NVTKB__))
+#if (!defined(__NVT_USB_KB_PROFILE__))
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -154,7 +154,7 @@ void EPE_Handler(void);
 #ifdef __cplusplus
 }
 #endif
-#endif //(!defined(__NVTKB__))
+#endif //(!defined(__NVT_USB_KB_PROFILE__))
 #endif//defined(__M460MINIMA__)
 
 #endif  /* __VCOM_SERIAL_H__ */

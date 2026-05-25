@@ -11,7 +11,7 @@
 //#include "Arduino.h"
 #include "USBCore.h"
 #include "USBAPI.h"
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 #include "vcom_serial_kb.h"
 #else
 #include "vcom_serial.h"
@@ -28,7 +28,7 @@ Keyboard_ Keyboard;
 #define WEAK __attribute__ ((weak))
 void WEAK HID_SendReport(uint8_t id, const void* data, uint32_t len)
 {
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 	NVT_HID_SendReport(id, data, len);
 #else
 	

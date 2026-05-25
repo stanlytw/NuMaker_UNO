@@ -9,7 +9,7 @@
 /*!<Includes */
 #if defined(__M460MINIMA__)
 #include "NuMicro.h"
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 #include "vcom_serial_kb.h"
 /*----------------------------------------------------------------------------*/
 /*!<USB HID Report Descriptor */
@@ -727,5 +727,5 @@ S_HSUSBD_INFO_T gsHSInfo =
     gu32ConfigHidDescIdx
 };
 
-#endif //(defined(__NVTKB__))
+#endif //(defined(__NVT_USB_KB_PROFILE__))
 #endif//#if defined(__M460MINIMA__)

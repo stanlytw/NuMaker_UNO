@@ -5,7 +5,7 @@
 
   
 */
-#ifndef __NVTKB__
+#ifndef __NVT_USB_KB_PROFILE__
 #error Select Numaker-UNO-M4KB board for KeyboardMouse demo!
 #endif
 

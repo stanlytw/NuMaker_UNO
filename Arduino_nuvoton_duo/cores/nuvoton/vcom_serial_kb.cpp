@@ -8,7 +8,7 @@
  ******************************************************************************/
 /*!<Includes */
 #if defined(__M460MINIMA__)
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 #include <string.h>
 #include "NuMicro.h"
 #include "HardwareSerial.h"
@@ -1428,5 +1428,5 @@ void NVT_HID_SendReport(uint8_t id, const void* data, uint32_t len)
 #ifdef __cplusplus
 }
 #endif
-#endif //(defined(__NVTKB__))
+#endif //(defined(__NVT_USB_KB_PROFILE__))
 #endif//#if defined(__M460MINIMA__)

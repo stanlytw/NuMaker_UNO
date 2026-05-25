@@ -24,6 +24,27 @@ extern "C" {
 
 #include "Wire.h"
 
+/*
+ * NUVOTON_WIRE_HW_BASE_INDEX defines how logical Wire bus descriptors map to
+ * physical I2C peripherals.
+ *
+ * 0: I2C_Desc[0] -> I2C0, I2C_Desc[1] -> I2C1
+ * 1: I2C_Desc[0] -> I2C1, I2C_Desc[1] -> I2C2
+ */
+#ifndef NUVOTON_WIRE_HW_BASE_INDEX
+#define NUVOTON_WIRE_HW_BASE_INDEX 0
+#endif
+
+#if (NUVOTON_WIRE_HW_BASE_INDEX == 0)
+#define NUVOTON_WIRE_IRQ_INDEX0 I2C0_IRQn
+#define NUVOTON_WIRE_IRQ_INDEX1 I2C1_IRQn
+#elif (NUVOTON_WIRE_HW_BASE_INDEX == 1)
+#define NUVOTON_WIRE_IRQ_INDEX0 I2C1_IRQn
+#define NUVOTON_WIRE_IRQ_INDEX1 I2C2_IRQn
+#else
+#error "Unsupported NUVOTON_WIRE_HW_BASE_INDEX value"
+#endif
+
 TwoWire::TwoWire(I2C_T *_i2c, void(*_beginCb)(void)) :
 	i2c(_i2c), rxBufferIndex(0), rxBufferLength(0), txAddress(0),
 			txBufferLength(0), srvBufferIndex(0), srvBufferLength(0), status(
@@ -423,12 +444,7 @@ void TwoWire::onService(void) {
 
 #if I2C_MAX_COUNT > 0
 static void Wire_Init(void) {
-	
-#if defined(__M467SJHAN__) /* For UNO-M467, I2C1, I2C2 */
-    IRQn_Type irq=I2C1_IRQn;
-#else
-	IRQn_Type irq=I2C0_IRQn;
-#endif	
+	IRQn_Type irq = NUVOTON_WIRE_IRQ_INDEX0;
 
 	I2C_Config(I2C_Desc[0]);	
 	/* Enable IP clock */       
@@ -447,13 +463,15 @@ TwoWire Wire = TwoWire(I2C_Desc[0].I, Wire_Init);
 
 #ifdef __cplusplus
 
-#if defined(__M467SJHAN__) /* For UNO-M467, I2C1, I2C2 */
-extern "C" void I2C1_IRQHandler(void) {
-#else
+#if (NUVOTON_WIRE_HW_BASE_INDEX == 0)
 extern "C" void I2C0_IRQHandler(void) {
-#endif	
 	Wire.onService();
 }
+#elif (NUVOTON_WIRE_HW_BASE_INDEX == 1)
+extern "C" void I2C1_IRQHandler(void) {
+	Wire.onService();
+}
+#endif
 #endif
 
 #endif
@@ -462,12 +480,7 @@ extern "C" void I2C0_IRQHandler(void) {
 
 #if I2C_MAX_COUNT > 1
 static void Wire1_Init(void) {
-
-#if defined(__M467SJHAN__) /* For UNO-M467, I2C1, I2C2 */
-    IRQn_Type irq=I2C2_IRQn;
-#else
-	IRQn_Type irq=I2C1_IRQn;
-#endif
+	IRQn_Type irq = NUVOTON_WIRE_IRQ_INDEX1;
 	
 	I2C_Config(I2C_Desc[1]);
 	
@@ -486,13 +499,15 @@ static void Wire1_Init(void) {
 TwoWire Wire1 = TwoWire(I2C_Desc[1].I, Wire1_Init);
 #ifdef __cplusplus
 
-#if defined(__M467SJHAN__) /* For UNO-M467, I2C1, I2C2 */
-extern "C" void I2C2_IRQHandler(void) {
-#else
+#if (NUVOTON_WIRE_HW_BASE_INDEX == 0)
 extern "C" void I2C1_IRQHandler(void) {
-#endif	
 	Wire1.onService();
 }
+#elif (NUVOTON_WIRE_HW_BASE_INDEX == 1)
+extern "C" void I2C2_IRQHandler(void) {
+	Wire1.onService();
+}
+#endif
 #endif
 
 

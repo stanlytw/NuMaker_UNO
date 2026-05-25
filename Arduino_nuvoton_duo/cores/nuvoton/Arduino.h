@@ -48,7 +48,7 @@ void noTone(uint8_t _pin);
 
 
 #if defined(__M460MINIMA__) 
-#if (defined(__NVTKB__))
+#if (defined(__NVT_USB_KB_PROFILE__))
 	#include "vcom_serial_kb.h"
 #else
     #include "vcom_serial.h"

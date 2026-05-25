@@ -40,9 +40,8 @@
 
 #define SERIAL_BUFFER_SIZE 256
 
-#if defined(__M460MINIMA__)
+//Remove #if defined(__M460MINIMA__), since DUO supports VCOM and ISP.
 #define VCOM_T        HSUSBD_T
-#endif
 
 typedef struct
 {
@@ -69,10 +68,10 @@ public:
                    IRQn_Type u32IrqId,
 				   uint32_t u32ModuleNum,
                    ring_buffer *rx_buffer);
-#if defined(__M460MINIMA__)	
+
     //HardwareSerial(VCOM_T *vcom_device, ring_buffer *rx_buffer);
 	HardwareSerial(VCOM_T *vcom_device, uint32_t u32ModuleNum, ring_buffer *rx_buffer);//[2025-02-24]Add Idx to tell the module in use for this instantiation.
-#endif
+
     /* Set up/tear down */
     void begin(uint32_t baud);
 	void begin(uint32_t baud, uint16_t config);
@@ -95,9 +94,9 @@ private:
     uint32_t u32ClkSrc;
     uint32_t u32ClkDiv;  
     IRQn_Type u32IrqId;
-#if defined(__M460MINIMA__)	
+
     VCOM_T *vcom_device;
-#endif	
+
     uint32_t vcom_init_done;
     uint32_t use_vcom;
 	uint32_t u32ModuleNum;

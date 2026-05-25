@@ -36,20 +36,16 @@ int main( void )
 {
 
 	init();	//nuvoton board init
-
-	#if defined(__M460MINIMA__)
-	Serial.begin(115200);//[2025-03-03]Turn on VCOM
-	delay(1000);
-	
-	#endif
+  #ifndef __DEBUG_VCOM__
+	  Serial.begin(115200);//[2025-03-03]Turn on VCOM
+	  delay(1000);
+  #endif
 
 	setup();
 
 	for (;;)
 	{
-//#if defined(__M460MINIMA__)      
-//      HID_RebootCmdhandler();
-//#endif       
+      
       loop();
       if(serialEventRun) serialEventRun();
      

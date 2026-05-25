@@ -37,90 +37,48 @@
 #include "Arduino.h"
 #include "HardwareSerial.h"
 
-//Common for __M460MINIMA__ 
-#if defined(__M460MINIMA__)
-    #define RXBUFSIZE           512 /* RX buffer size */
-    #define TXBUFSIZE           512 /* TX buffer size */
-    uint16_t gCtrlSignal = 0;     /* BIT0: DTR(Data Terminal Ready) , BIT1: RTS(Request To Send) */
-    STR_VCOM_LINE_CODING gLineCoding = {115200, 0, 0, 8};   /* Baud rate : 115200    */
-    volatile uint16_t comRbytes = 0;
-    volatile uint16_t comRhead = 0;
-    volatile uint16_t comRtail = 0;
-    volatile uint16_t comTbytes = 0;
-    volatile uint16_t comThead = 0;
-    volatile uint16_t comTtail = 0;
-    uint32_t gu32RxSize = 0;
-    uint32_t gu32RxCount = 0;
-    uint32_t gu32TxSize = 0;
-    volatile uint8_t comRbuf[RXBUFSIZE] __attribute__((aligned(4)));
-    volatile uint8_t comTbuf[TXBUFSIZE]__attribute__((aligned(4)));
-    uint8_t gRxBuf[RXBUFSIZE] __attribute__((aligned(4))) = {0};
-    uint8_t gUsbRxBuf[RXBUFSIZE] __attribute__((aligned(4))) = {0};
-    volatile int8_t gi8BulkOutReady = 0;
-#endif
+//Remove #if defined(__M460MINIMA__), since DUO supports VCOM and ISP.
+#define RXBUFSIZE           512 /* RX buffer size */
+#define TXBUFSIZE           512 /* TX buffer size */
+uint16_t gCtrlSignal = 0;     /* BIT0: DTR(Data Terminal Ready) , BIT1: RTS(Request To Send) */
+STR_VCOM_LINE_CODING gLineCoding = {115200, 0, 0, 8};   /* Baud rate : 115200    */
+volatile uint16_t comRbytes = 0;
+volatile uint16_t comRhead = 0;
+volatile uint16_t comRtail = 0;
+volatile uint16_t comTbytes = 0;
+volatile uint16_t comThead = 0;
+volatile uint16_t comTtail = 0;
+uint32_t gu32RxSize = 0;
+uint32_t gu32RxCount = 0;
+uint32_t gu32TxSize = 0;
+volatile uint8_t comRbuf[RXBUFSIZE] __attribute__((aligned(4)));
+volatile uint8_t comTbuf[TXBUFSIZE]__attribute__((aligned(4)));
+uint8_t gRxBuf[RXBUFSIZE] __attribute__((aligned(4))) = {0};
+uint8_t gUsbRxBuf[RXBUFSIZE] __attribute__((aligned(4))) = {0};
+volatile int8_t gi8BulkOutReady = 0;
 
-//Common for __M460MINIMA__ board, map Serial to VCOM
-#if defined(__M460MINIMA__)//VCOM, UART[1], UART1[2]
-    #if(UART_MAX_COUNT>0)
+
+//Remove #if defined(__M460MINIMA__), since DUO supports VCOM and ISP.
+//VCOM, UART_Desc[1], UART1_Desc[2], abstract so no board dependency here.
+#if(UART_MAX_COUNT>0)
     ring_buffer rx_buffer= { { 0 }, 0, 0};
     HardwareSerial Serial(HSUSBD, UART_Desc[UART_DESC_IDX0].modulenum, &rx_buffer);//VCOM
-    #endif
-	#if(UART_MAX_COUNT>1)
+#endif
+#if(UART_MAX_COUNT>1)
     ring_buffer rx_buffer1 = { { 0 }, 0, 0};
     HardwareSerial Serial1(UART_Desc[1].U, UART_DESC_IDX1 , UART_Desc[1].clksrcsel, UART_Desc[1].clkdiv, UART_Desc[1].irq, UART_Desc[1].modulenum, &rx_buffer1);//UART0
-    #endif
-	#if(UART_MAX_COUNT>2)
+#endif
+#if(UART_MAX_COUNT>2)
     ring_buffer rx_buffer2 = { { 0 }, 0, 0};
     HardwareSerial Serial2(UART_Desc[2].U, UART_DESC_IDX2, UART_Desc[2].clksrcsel, UART_Desc[2].clkdiv, UART_Desc[2].irq, UART_Desc[2].modulenum, &rx_buffer2);//UART1
-    #endif
 #endif
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if defined(__NUNO__)//VCOM, UART0, UART1
-#if(UART_MAX_COUNT>1)
-void UART0_IRQHandler(void)
-{
-    while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
-    {
-        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
-        if (i != rx_buffer1.tail)
-        {
-            rx_buffer1.buffer[rx_buffer1.head] = UART0->DAT;
-            rx_buffer1.head = i;
-        }
-		else//i == rx_buffer1.tail
-		{
-			unsigned char dummy = UART0->DAT;
-		}
-    }
-
-}
-#endif  
-
-#if(UART_MAX_COUNT>2)
-void UART1_IRQHandler(void)
-{
-    while (UART_GET_INT_FLAG(UART1, UART_INTEN_RDAIEN_Msk))
-    {
-        int i = (unsigned int)(rx_buffer2.head + 1) % SERIAL_BUFFER_SIZE;
-        if (i != rx_buffer2.tail)
-        {
-            rx_buffer2.buffer[rx_buffer2.head] = UART1->DAT;
-            rx_buffer2.head = i;
-        }
-		else//i == rx_buffer1.tail
-		{
-			unsigned char dummy = UART1->DAT;
-		}
-    }
-
-}
-#endif
-
-#elif defined(__DUNO__)//VCOM, UART5, UART0
+#if defined(__NVT_BOARD_DUO__)//VCOM, UART5, UART0, UART_Desc[x] to IP dependency for DUO board.
 #if(UART_MAX_COUNT>1)
 void UART5_IRQHandler(void)
 {
@@ -161,7 +119,7 @@ void UART0_IRQHandler(void)
 }
 #endif
 
-#endif//defined(__NDUO__)
+#endif//defined(__NVT_BOARD_DUO__)
 
 #ifdef __cplusplus
 }
@@ -216,7 +174,7 @@ HardwareSerial::HardwareSerial(UART_T *uart_device,
     
 }
 
-#if defined(__M460MINIMA__)
+//Remove #if defined(__M460MINIMA__), since DUO supports VCOM and ISP.
 HardwareSerial::HardwareSerial(VCOM_T *vcom_device, uint32_t u32ModuleNum, ring_buffer *rx_buffer)
 {
     this->use_vcom = 1;
@@ -225,7 +183,7 @@ HardwareSerial::HardwareSerial(VCOM_T *vcom_device, uint32_t u32ModuleNum, ring_
     this->_rx_buffer = rx_buffer;
     this->vcom_init_done = 0;
 }
-#endif
+
 /*
  * Set up/tear down
  */
@@ -247,9 +205,7 @@ void HardwareSerial::begin(uint32_t baud)
        {
            if( vcom_init_done == 0 ) 
            {
-#if defined(__M460MINIMA__)           
                 VcomBegin(baud);
-#endif                
                 vcom_init_done = 1;//
            }
        }
@@ -345,12 +301,10 @@ int HardwareSerial::read(void)
     {
         unsigned char c = _rx_buffer->buffer[_rx_buffer->tail];
         _rx_buffer->tail = (unsigned int)(_rx_buffer->tail + 1) % SERIAL_BUFFER_SIZE;
-#if defined(__M460MINIMA__)  
         if(u32ModuleNum == UART_USE_VCOM)
         {
             gu32RxCount--;
 	    }
-#endif		
 		return c;
     }
 }
@@ -364,11 +318,7 @@ int HardwareSerial::availableForWrite(void)
 		/*
             To do VCOM availability
         */
-#if defined(__M460MINIMA__)          
         return ((int)(EPA_MAX_PKT_SIZE) - (int)(vcom_device->EP[EPA].EPDATCNT & 0xffff));
-#else
-        return 0;
-#endif        
 	}
     else if(u32ModuleNum == UART_USE_NOUSE)
 	{
@@ -399,11 +349,8 @@ int HardwareSerial::available(void)
 {
     if(u32ModuleNum == UART_USE_VCOM)
     {
-#if defined(__M460MINIMA__)         
 		return (int)(gu32RxCount);
-#else
-        return 0;
-#endif        
+       
 	}
     else if(u32ModuleNum == UART_USE_NOUSE)
 	{
@@ -421,13 +368,12 @@ size_t HardwareSerial::write(const uint8_t ch)
 
 	if(u32ModuleNum == UART_USE_VCOM)
     {
-#if defined(__M460MINIMA__) 
 		/*To do:VCOM Tx, single byte TX*/
         vcom_device->EP[EPA].EPDAT_BYTE = ch;
         vcom_device->EP[EPA].EPRSPCTL = HSUSBD_EP_RSPCTL_SHORTTXEN;    // packet end
         vcom_device->EP[EPA].EPTXCNT = 1;
         HSUSBD_ENABLE_EP_INT(EPA, HSUSBD_EPINTEN_INTKIEN_Msk);
-#endif        
+
 	}
     else if(u32ModuleNum == UART_USE_NOUSE)
 	{

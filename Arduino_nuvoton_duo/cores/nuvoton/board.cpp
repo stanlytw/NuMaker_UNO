@@ -38,9 +38,13 @@ void Enable_All_IPs(void)
     //CLK_SetModuleClock(EADC0_MODULE, 0, CLK_CLKDIV0_EADC0(8));
     CLK_SetModuleClock(EADC0_MODULE, CLK_CLKSEL0_EADC0SEL_HCLK, CLK_CLKDIV0_EADC0(8));
 
-    //Enable PWM0 ~PWM1 module
+     //Enable EPWM0 ~EPWM1 module
     CLK_EnableModuleClock(EPWM0_MODULE);
     CLK_EnableModuleClock(EPWM1_MODULE);
+
+    //Enable BPWM0 ~BPWM1 module
+	CLK_EnableModuleClock(BPWM0_MODULE);
+    CLK_EnableModuleClock(BPWM1_MODULE);
 
     /*M467SJ: PA, PB, PC, PF*/
     CLK_EnableModuleClock(GPA_MODULE);
@@ -48,13 +52,16 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(GPC_MODULE);
     CLK_EnableModuleClock(GPF_MODULE);
 
-    CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
+    /* Select EPWM module clock source */
+	CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
+	
+	/* Select BPWM module clock source */
+    CLK_SetModuleClock(BPWM0_MODULE, CLK_CLKSEL2_BPWM0SEL_PCLK0, 0);
+	CLK_SetModuleClock(BPWM1_MODULE, CLK_CLKSEL2_BPWM1SEL_PCLK1, 0);
 
-#if defined(__M460MINIMA__)
     /* Enable RTC module clock */
     CLK_EnableModuleClock(RTC_MODULE);
-#endif
 	
 	/* Enable CANFD module clock source and proper divide by 1, ref Std sample code */
 	/* CANFD Pin Configuarion left in NVT CAN library*/
@@ -81,7 +88,6 @@ void init(void)
     /* Unlock protected registers */
     SYS_UnlockReg();
 
-#if defined(__M460MINIMA__)
     /* Enable HIRC and HXT clock */
     CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk | CLK_PWRCTL_HXTEN_Msk);
 
@@ -91,14 +97,6 @@ void init(void)
     /* Enable LXT and Waiting for clock ready */
     CLK_EnableXtalRC(CLK_PWRCTL_LXTEN_Msk);
     CLK_WaitClockReady(CLK_STATUS_LXTSTB_Msk);
-#else
-
-   /* Enable HIRC clock */
-    CLK_EnableXtalRC(CLK_PWRCTL_HIRCEN_Msk);
-
-    /* Wait for HIRC clock ready */
-    CLK_WaitClockReady(CLK_STATUS_HIRCSTB_Msk);
-#endif
     
     /* Set PCLK0 and PCLK1 to HCLK/2 */
     CLK->PCLKDIV = (CLK_PCLKDIV_APB0DIV_DIV2 | CLK_PCLKDIV_APB1DIV_DIV2);
@@ -121,11 +119,10 @@ void init(void)
     SystemCoreClockUpdate();
     /* Enable All of IP */
     Enable_All_IPs();
-#if defined(__M460MINIMA__)    
+
     /* Do not Lock protected register for code jumping*/
     // Not to Lock
-#else
     /* Lock protected registers */
-    SYS_LockReg();
-#endif    
+
+
 }
