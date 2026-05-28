@@ -257,7 +257,7 @@ extern ADCPinDescription ADC_Desc[];
 #define ADC_Config(Desc) outp32(GPIO_Desc[Desc.pintype.num].Pin.MFP,(inp32(GPIO_Desc[Desc.pintype.num].Pin.MFP) & ~GPIO_Desc[Desc.pintype.num].Pin.Mask) | Desc.pintype.type);
 
 /*========== SPI definition ==========*/
-#define SPI_MAX_COUNT 2//[2025-11-26]
+#define SPI_MAX_COUNT 1//[2025-11-26]
 #define SPI_CHANNELS_NUM 1
 extern SPIPinDescription SPI_Desc[];
 
@@ -270,7 +270,7 @@ do { \
 }while(0);
 
 /*========== UART definition ==========*/
-#define UART_MAX_COUNT 3// __DUO__
+#define UART_MAX_COUNT 1// __DUO__
 extern UARTPinDescription UART_Desc[];
 extern PinType DEPin_Desc[];
 #define UART_RX 0

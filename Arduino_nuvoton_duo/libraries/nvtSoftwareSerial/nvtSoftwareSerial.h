@@ -45,7 +45,7 @@ http://arduiniana.org.
 ******************************************************************************/
 
 #ifndef _SS_MAX_RX_BUFF
-#define _SS_MAX_RX_BUFF 64 // RX buffer size
+#define _SS_MAX_RX_BUFF 256//64 // RX buffer size
 #endif
 
 /*
@@ -71,14 +71,17 @@ private:
   GPIO_T * _pu32TransmitPort;
   volatile uint32_t * _p_transmit_pin;
   
+  
+  uint8_t _RXPin;
+  uint8_t _TXPin;
   // Expressed as 4-cycle delays (must never be 0!)
   //uint16_t _rx_delay_centering;
   //uint16_t _rx_delay_intrabit;
   //uint16_t _rx_delay_stopbit;
   //uint16_t _tx_delay;
 
-  uint16_t _buffer_overflow:1;
-  uint16_t _inverse_logic:1;
+  uint16_t _buffer_overflow;//:1;
+  uint16_t _inverse_logic;//:1;
 
   // static data
   static uint8_t _receive_buffer[_SS_MAX_RX_BUFF]; 

@@ -76,7 +76,19 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(CANFD0_MODULE);
 	/* CANFD_Config is done in nvtCAN library .begin method*/
     
+#if 1//do debug	
+	/* Enable UART0 module clock */
+    CLK_EnableModuleClock(UART0_MODULE);
 
+    /* Select UART0 module clock source as HIRC and UART0 module clock divider as 1 */
+    CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL1_UART0SEL_HIRC, CLK_CLKDIV0_UART0(1));
+	
+	/* Set multi-function pins for UART0 RXD and TXD */
+    SET_UART0_RXD_PA6();
+    SET_UART0_TXD_PA7();
+		
+	UART_Open(UART0, 9600);
+#endif
     /*
     todo DUO LED lighting.
     */
