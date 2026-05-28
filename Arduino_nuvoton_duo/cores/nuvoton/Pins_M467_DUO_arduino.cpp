@@ -34,14 +34,14 @@ BoardToPin BoardToPinInfo[] =
     { GPIO_DESC_IDX_PA14, PWM_TYPE,  PWM_DESC_IDX2        }, // 6:      (D6/PA14/)
     { GPIO_DESC_IDX_PA13, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, // 7:      (D7/PA13/)
     { GPIO_DESC_IDX_PC14, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, // 8:      (D8/PC14/)
-    { GPIO_DESC_IDX_PA15, GPIO_TYPE, PWM_DESC_IDX3        }, // 9:      (D9/PA15/)
+    { GPIO_DESC_IDX_PA15, PWM_TYPE , PWM_DESC_IDX3        }, // 9:      (D9/PA15/)
     
 #if (SPI_MAX_COUNT == 1)//Run Wifi SPI only, no conflict to SPI[1]    
 	{ GPIO_DESC_IDX_PA3,  PWM_TYPE,  PWM_DESC_IDX4        }, //10:      (D10/PA3/SPI0_CS)
     { GPIO_DESC_IDX_PA0,  PWM_TYPE,  PWM_DESC_IDX5        }, //11:      (D11/PA0/SPI0_MOSI)
 #else	
-    { GPIO_DESC_IDX_PA3,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //10:      (D10/PA3/SPI0_CS)
-    { GPIO_DESC_IDX_PA0,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //11:      (D11/PA0/SPI0_MOSI)
+    { GPIO_DESC_IDX_PA3,  GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //10:      (D10/PA3/SPI0_CS)
+    { GPIO_DESC_IDX_PA0,  GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //11:      (D11/PA0/SPI0_MOSI)
 #endif
 	
     { GPIO_DESC_IDX_PA1,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //12:      (D12/PA1/SPI0_MISO)
