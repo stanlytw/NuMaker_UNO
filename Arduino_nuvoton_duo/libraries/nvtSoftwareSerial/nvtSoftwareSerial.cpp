@@ -65,35 +65,7 @@ extern GPIO_T* g_u8Softserail_port_base;
 static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
 {    
     
-#if defined(__M032BT__)
-    SYS_UnlockReg();
-    
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_PCLK0, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1SEL_PCLK0, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2SEL_PCLK1, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE, CLK_CLKSEL1_TMR3SEL_PCLK1, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-    
-       
-    SYS_LockReg();
-     /*For 48MHz CPU*/
-    SOFTWARE_UART_TIMER->CTL = 0;
-    
-    /* For 48MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (48-1); 
-    
-    SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-#elif defined(__M252__) 
+#if defined(__M460__) 
     SYS_UnlockReg();
     
     #if (SOFTWARE_UART_TIMER_SELECT==(0))
@@ -122,88 +94,19 @@ static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
     SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (50-1); 
     
     SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-#elif defined(__M480__)|| defined(__M460__) 
-    SYS_UnlockReg();
-    
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2SEL_HIRC, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE,CLK_CLKSEL1_TMR3SEL_HIRC, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-           
-    SYS_LockReg();
-    
-
-     /*For 50MHz CPU*/
-    SOFTWARE_UART_TIMER->CTL = 0;
-    
-    /* For 50MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (50-1); 
-    
-    SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-
-#else
-
-    SYS_UnlockReg();
-    
-    #if (SOFTWARE_UART_TIMER_SELECT==(0))
-        CLK_EnableModuleClock(TMR0_MODULE);
-        CLK_SetModuleClock(TMR0_MODULE,CLK_CLKSEL1_TMR0_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(1))
-        CLK_EnableModuleClock(TMR1_MODULE);
-        CLK_SetModuleClock(TMR1_MODULE,CLK_CLKSEL1_TMR1_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(2))
-        CLK_EnableModuleClock(TMR2_MODULE);
-        CLK_SetModuleClock(TMR2_MODULE,CLK_CLKSEL1_TMR2_S_HCLK, 0);
-    #elif (SOFTWARE_UART_TIMER_SELECT==(3))
-        CLK_EnableModuleClock(TMR3_MODULE);
-        CLK_SetModuleClock(TMR3_MODULE, CLK_CLKSEL1_TMR3_S_HCLK, 0); 
-    #else
-        #error "SOFTWARE_UART_TIMER def error!"
-    #endif
-    
-       
-    SYS_LockReg();
-    
-
-     /*For 50MHz CPU*/
-    SOFTWARE_UART_TIMER->TCSR = 0;
-    
-    /* For 50MHz CPU: 1 us / 1 tick */
-    SOFTWARE_UART_TIMER->TCSR |=  TIMER_ONESHOT_MODE | (50-1); 
-    
-    SOFTWARE_UART_TIMER->TCMPR = u32DelayUs;
 #endif
 }
 
 static inline void BPS_delay() //using systick
 {
 
-#if defined(__M032BT__) || defined(__M252__)  || defined(__M480__) || defined(__M460__) 
+#if defined(__M460__) 
     SOFTWARE_UART_TIMER->INTSTS = TIMER_INTSTS_TIF_Msk;
     SOFTWARE_UART_TIMER->CTL |= TIMER_CTL_CNTEN_Msk;
     __NOP(); //for 48MHz CPU
     
     while(SOFTWARE_UART_TIMER->CTL & TIMER_CTL_ACTSTS_Msk);
     while(!(SOFTWARE_UART_TIMER->INTSTS & TIMER_INTSTS_TIF_Msk));
-
-#else /*for legency mcu, like M031*/
-    SOFTWARE_UART_TIMER->TISR = TIMER_TISR_TIF_Msk;
-    SOFTWARE_UART_TIMER->TCSR |= TIMER_TCSR_CEN_Msk/* | TIMER_ONESHOT_MODE | 50 */;
-    __NOP(); //for 50MHz CPU
-    
-    while(SOFTWARE_UART_TIMER->TCSR & TIMER_TCSR_CACT_Msk);
-    while(!(SOFTWARE_UART_TIMER->TISR & TIMER_TISR_TIF_Msk));
 #endif
 }
 
@@ -425,10 +328,6 @@ void SoftwareSerial::begin(long speed)
   //uint16_t bit_delay = (F_CPU / speed) / 4;
   uint16_t bit_time = 1000000/speed; 
 
-#if defined(__M480__)
-  bit_time>>=2;//for M480 CPU=192MHz, divided by 4 to meet base frequency(48MHz)
-#endif
-
   BSP_TimerDelaySetting(bit_time);
   
   // 12 (gcc 4.8.2) or 13 (gcc 4.3.2) cycles from start bit to first bit,
@@ -544,57 +443,7 @@ int SoftwareSerial::available()
 
 size_t SoftwareSerial::write(uint8_t b)
 {
-#if 0
-  if (_tx_delay == 0) {
-    setWriteError();
-    return 0;
-  }
 
-  // By declaring these as local variables, the compiler will put them
-  // in registers _before_ disabling interrupts and entering the
-  // critical timing sections below, which makes it a lot easier to
-  // verify the cycle timings
-  volatile uint8_t *reg = _transmitPortRegister;
-  uint8_t reg_mask = _transmitBitMask;
-  uint8_t inv_mask = ~_transmitBitMask;
-  uint8_t oldSREG = SREG;
-  bool inv = _inverse_logic;
-  uint16_t delay = _tx_delay;
-
-  if (inv)
-    b = ~b;
-
-  cli();  // turn off interrupts for a clean txmit
-
-  // Write the start bit
-  if (inv)
-    *reg |= reg_mask;
-  else
-    *reg &= inv_mask;
-
-  tunedDelay(delay);
-
-  // Write each of the 8 bits
-  for (uint8_t i = 8; i > 0; --i)
-  {
-    if (b & 1) // choose bit
-      *reg |= reg_mask; // send 1
-    else
-      *reg &= inv_mask; // send 0
-
-    tunedDelay(delay);
-    b >>= 1;
-  }
-
-  // restore pin to natural state
-  if (inv)
-    *reg &= inv_mask;
-  else
-    *reg |= reg_mask;
-
-  SREG = oldSREG; // turn interrupts back on
-  tunedDelay(_tx_delay);
-#else
     bool inv = _inverse_logic;
     
     if (inv)
@@ -625,8 +474,6 @@ size_t SoftwareSerial::write(uint8_t b)
     
     tunedDelay();
 
-#endif
-  
 
   
   return 1;

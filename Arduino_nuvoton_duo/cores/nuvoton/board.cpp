@@ -38,12 +38,12 @@ void Enable_All_IPs(void)
     //CLK_SetModuleClock(EADC0_MODULE, 0, CLK_CLKDIV0_EADC0(8));
     CLK_SetModuleClock(EADC0_MODULE, CLK_CLKSEL0_EADC0SEL_HCLK, CLK_CLKDIV0_EADC0(8));
 
-     //Enable EPWM0 ~EPWM1 module
+    //Enable EPWM0 ~EPWM1 module
     CLK_EnableModuleClock(EPWM0_MODULE);
     CLK_EnableModuleClock(EPWM1_MODULE);
 
     //Enable BPWM0 ~BPWM1 module
-	CLK_EnableModuleClock(BPWM0_MODULE);
+    CLK_EnableModuleClock(BPWM0_MODULE);
     CLK_EnableModuleClock(BPWM1_MODULE);
 
     /*M467SJ: PA, PB, PC, PF*/
@@ -53,12 +53,13 @@ void Enable_All_IPs(void)
     CLK_EnableModuleClock(GPF_MODULE);
 
     /* Select EPWM module clock source */
-	CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
+    CLK_SetModuleClock(EPWM0_MODULE, CLK_CLKSEL2_EPWM0SEL_PCLK0, 0);
     CLK_SetModuleClock(EPWM1_MODULE, CLK_CLKSEL2_EPWM1SEL_PCLK1, 0);
-	
-	/* Select BPWM module clock source */
+
+    /* Select BPWM module clock source */
     CLK_SetModuleClock(BPWM0_MODULE, CLK_CLKSEL2_BPWM0SEL_PCLK0, 0);
-	CLK_SetModuleClock(BPWM1_MODULE, CLK_CLKSEL2_BPWM1SEL_PCLK1, 0);
+    CLK_SetModuleClock(BPWM1_MODULE, CLK_CLKSEL2_BPWM1SEL_PCLK1, 0);
+
 
     /* Enable RTC module clock */
     CLK_EnableModuleClock(RTC_MODULE);
