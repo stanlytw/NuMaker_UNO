@@ -62,13 +62,13 @@
 				{
                   "name": "NuMaker DUO",
                   "architecture": "nuvoton_duo",
-                  "version": "0.0.4",
+                  "version": "0.0.5",
 
                   "category": "Arduino",
                   "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_duo.tar.bz2?raw=true",
                   "archiveFileName": "Arduino_nuvoton_duo.tar.bz2",
-                  "checksum": "SHA-256:c41e5f94f87363225dbf4167403540f4870e7a45c6156573a0454b53fd41cf73",
-                  "size": "33505260",
+                  "checksum": "SHA-256:5cfdb32f9cde4bc0ba49830e9d22f5c8cb4f63023ac9d8f9c182f32d177dea82",
+                  "size": "33414002",
                   "boards": [
                     {"name": "NuMaker-DUO-M4"}
     
