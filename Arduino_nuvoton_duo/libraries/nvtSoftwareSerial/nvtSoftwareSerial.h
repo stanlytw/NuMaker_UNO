@@ -72,15 +72,12 @@ private:
   volatile uint32_t * _p_transmit_pin;
   
   
-  uint8_t _RXPin;
-  uint8_t _TXPin;
-  // Expressed as 4-cycle delays (must never be 0!)
-  //uint16_t _rx_delay_centering;
-  //uint16_t _rx_delay_intrabit;
-  //uint16_t _rx_delay_stopbit;
-  //uint16_t _tx_delay;
+  uint8_t _rxPin;
+  uint8_t _txPin;
 
-  uint16_t _buffer_overflow;//:1;
+  // Use TIMER to replace AVR delay computation code.
+  
+  volatile uint16_t _buffer_overflow;  // Shared between ISR and main code
   uint16_t _inverse_logic;//:1;
 
   // static data

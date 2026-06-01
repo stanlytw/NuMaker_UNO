@@ -41,8 +41,9 @@ http://arduiniana.org.
 // 
 #include <Arduino.h>
 #include <nvtSoftwareSerial.h>
-
+#ifndef GPIO_BASE
 #define GPIO_BASE (GPIOA_BASE)
+#endif
 //
 // Statics
 //
@@ -51,21 +52,19 @@ uint8_t SoftwareSerial::_receive_buffer[_SS_MAX_RX_BUFF];
 volatile uint8_t SoftwareSerial::_receive_buffer_tail = 0;
 volatile uint8_t SoftwareSerial::_receive_buffer_head = 0;
 
-extern volatile uint8_t g_u8Softserail_enable;
-extern volatile uint8_t g_u8Softserail_port_num;
-extern volatile uint8_t g_u8Softserail_pin_num;
-extern GPIO_T* g_u8Softserail_port_base;
+extern volatile uint8_t g_u8SoftSerial_enable;
+extern volatile uint8_t g_u8SoftSerial_port_num;
+extern volatile uint8_t g_u8SoftSerial_pin_num;
+extern GPIO_T* g_pSoftSerial_port_base;
 
 //
 // Debugging
 //
-// This function generates a brief pulse
-// for debugging or measuring on an oscilloscope.
+// This function initializes the timer clock source for software serial.
+// Note: Actual baud rate timing is configured by ConfigBaudRate().
 
-static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
+static void InitBaudRateSrcClock(void)
 {    
-    
-#if defined(__M460__) 
     SYS_UnlockReg();
     
     #if (SOFTWARE_UART_TIMER_SELECT==(0))
@@ -86,47 +85,41 @@ static void BSP_TimerDelaySetting(uint32_t u32DelayUs)
            
     SYS_LockReg();
     
+    /* DEPRECATED AVR-style delay code below - now using ConfigBaudRate() instead */
 
-     /*For 50MHz CPU->200MHz*/
-    //SOFTWARE_UART_TIMER->CTL = 0;
-    
-    /* For 50MHz->200MHz CPU: 1 us / 1 tick */
-    //SOFTWARE_UART_TIMER->CTL |=  TIMER_ONESHOT_MODE | (200-1); 
-    
-    //SOFTWARE_UART_TIMER->CMP = u32DelayUs;
-    
-	//nvtEthernet_printf("BSP_TimerDelaySetting\r\n");
-#endif
 }
 
-static inline void BPS_delay() //using systick
+// Wait for one UART bit period using hardware timer.
+// This blocking function provides precise bit-timing delay for software UART TX/RX.
+// Timer is configured by ConfigBaudRate() to match the desired baud rate.
+static inline void WaitOneBitTime()
 {
-
-#if defined(__M460__)
-    //nvtEthernet_printf("BPS_delay start\r\n");
-    SOFTWARE_UART_TIMER->INTSTS = TIMER_INTSTS_TIF_Msk;
-    SOFTWARE_UART_TIMER->CTL |= TIMER_CTL_CNTEN_Msk;
-    //__NOP(); //for 48MHz CPU
+    // Clear timer interrupt flag
+    SOFTWARE_UART_TIMER->INTSTS = TIMER_INTSTS_TIF_Msk;  
+    // Start timer
+    SOFTWARE_UART_TIMER->CTL |= TIMER_CTL_CNTEN_Msk;     
     
-    while(SOFTWARE_UART_TIMER->CTL & TIMER_CTL_ACTSTS_Msk);
-    while(!(SOFTWARE_UART_TIMER->INTSTS & TIMER_INTSTS_TIF_Msk));
-	//nvtEthernet_printf("BPS_delay end\r\n");
-#endif
+    // Wait for timer to start
+    while(SOFTWARE_UART_TIMER->CTL & TIMER_CTL_ACTSTS_Msk);       
+    // Wait for timer to complete
+    while(!(SOFTWARE_UART_TIMER->INTSTS & TIMER_INTSTS_TIF_Msk)); 
+    //nvtEthernet_printf("WaitOneBitTime end\r\n");
+
 }
 
 static inline uint32_t digitalPinToPort(uint32_t pin_num)
 {
-    //Serial.print("digitalPinToPort:");
-	//Serial.println(((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40), DEC);
-	return ((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40);
+    // calculate the port number of Digital Pin	
+    return ((uint32_t)(GPIO_Desc[BoardToPinInfo[pin_num].pin].P - (uint32_t)GPIO_BASE)/0x40);
 }
 
 static inline uint32_t PortToPortNum(GPIO_T* port)
 {
+    // calculate the port number of GPIO_T* port
     return ((uint32_t)((uint32_t)port - (uint32_t)GPIO_BASE)/0x40);
 }
 
-static inline uint32_t digitalPinToPinNum(uint32_t tx)
+static inline int32_t digitalPinToPinNum(uint32_t tx)
 {   
     /*calculate the pin number of Digital Pin*/
     for(int i=0 ; i<16 /* GPIO pin maximum */; i++)
@@ -134,15 +127,17 @@ static inline uint32_t digitalPinToPinNum(uint32_t tx)
         if((GPIO_Desc[BoardToPinInfo[tx].pin].bit>>i)&0x1) return i;
     }
     
-    return 0xDEADBEEF; //error
+    return -1; //error
 }
 
-
-static inline uint32_t BaudSetbyTimer(uint32_t u32Baud)
+// Configure hardware timer for software UART bit-timing based on baud rate.
+// Calculates and sets timer prescaler and compare value to generate precise bit periods.
+// Returns the actual achieved baud rate after configuration.
+static inline uint32_t ConfigBaudRate(uint32_t u32Baud)
 {
     uint32_t u32Clk = TIMER_GetModuleClock(SOFTWARE_UART_TIMER);
     uint32_t u32Cmpr = 0UL, u32Prescale = 0UL;
-    //nvtEthernet_printf("\n\n u32Clk = %d \r\n", u32Clk);
+    
     /* Fastest possible timer working freq is (u32Clk / 2). While cmpr = 2, prescaler = 0. */
     if(u32Baud > (u32Clk / 2UL))
     {
@@ -156,11 +151,11 @@ static inline uint32_t BaudSetbyTimer(uint32_t u32Baud)
             u32Cmpr = u32Cmpr / (u32Prescale + 1UL);
     }
 
+    // Configure timer for one-shot mode with calculated prescaler 
     SOFTWARE_UART_TIMER->CTL = TIMER_ONESHOT_MODE | u32Prescale;
+    // Set compare value for desired baud rate timing
     SOFTWARE_UART_TIMER->CMP = u32Cmpr;
 
-	//nvtEthernet_printf("\n\n u32Prescale = %d \r\n", u32Prescale);
-	//nvtEthernet_printf("\n\n u32Cmpr = %d \r\n", u32Cmpr);
     return(u32Clk / (u32Cmpr * (u32Prescale + 1UL)));
 }
 
@@ -171,15 +166,14 @@ static inline uint32_t BaudSetbyTimer(uint32_t u32Baud)
 
 /* static */ 
 inline void SoftwareSerial::tunedDelay() { 
-   BPS_delay();
+   WaitOneBitTime();
 }
 
 // This function sets the current object as the "listening"
 // one and returns true if it replaces another 
 bool SoftwareSerial::listen()
 { 
-  //if (!_rx_delay_stopbit)
-  //  return false;
+
   //nvtEthernet_printf("SoftwareSerial listen\r\n");  
   if (active_object != this)
   {
@@ -193,18 +187,17 @@ bool SoftwareSerial::listen()
     //to fit Arduino Framework.: 
     //The following global will referenced by attachInterrupt API.
     //They must be set before calling attachInterrupt API.
-    g_u8Softserail_enable = 1;
-    g_u8Softserail_pin_num = this->_receivePinNum;
-    g_u8Softserail_port_num = PortToPortNum(this->_pu32ReceivePort);;
-    g_u8Softserail_port_base = _pu32ReceivePort;
+    g_u8SoftSerial_enable = 1;
+    g_u8SoftSerial_pin_num = this->_receivePinNum;
+    g_u8SoftSerial_port_num = PortToPortNum(this->_pu32ReceivePort);
+    g_pSoftSerial_port_base = _pu32ReceivePort;
     
     //nvtEthernet_printf("SoftwareSerial listen attachInterrupt\r\n");
+    // For normal logic: idle=HIGH, start bit=LOW  → FALLING edge
+    // For inverse logic: idle=LOW, start bit=HIGH → RISING edge
     attachInterrupt(this->_receiveBoardPin , 
                     this->handle_interrupt, 
-                    FALLING);  
-   
-    //nvtEthernet_printf("SoftwareSerial listen attachInterrupt end\r\n");
-
+                    _inverse_logic ? RISING : FALLING);  
     return true;
   } 
      
@@ -236,35 +229,43 @@ void SoftwareSerial::recv()
     {
         uint8_t u8RcvByteTmp=0;
 
-        //if (_inverse_logic ? !rx_pin_read() : rx_pin_read())
-        //{
-            //START bit
-		//	nvtEthernet_printf("SoftwareSerial recv error\r\n");
-			//nvtEthernet_printf("_inverse_logic = %d \r\n", _inverse_logic);
-			//nvtEthernet_printf("rx_pin_read() = %d \r\n", rx_pin_read());
-        //    return; //error
-        //} else 
-		{ //START bit
+        // Check for start bit. If it's not there, 
+        // then interrupt is probably not ready 
+        //and we should just return.
+        if (_inverse_logic ? !rx_pin_read() : rx_pin_read())
+        {
+            //START bit check fail.
+            //nvtEthernet_printf("SoftwareSerial recv error\r\n");
+            //nvtEthernet_printf("_inverse_logic = %d \r\n", _inverse_logic);
+            //nvtEthernet_printf("rx_pin_read() = %d \r\n", rx_pin_read());
+            return; //error
+        } 
+        else 
+        {   //START bit
             uint32_t bit_cnt;
             uint32_t idx_next=(_receive_buffer_tail+1)%_SS_MAX_RX_BUFF;
             setRxIntMsk(false);
             
             tunedDelay();
-            for(bit_cnt=0 ; bit_cnt < 8 ; bit_cnt++) {
-				//nvtEthernet_printf("rx_pin_read() = %d \r\n", rx_pin_read());
+            // read each of the 8 bits
+            for(bit_cnt=0 ; bit_cnt < 8 ; bit_cnt++) 
+            {
+                //nvtEthernet_printf("rx_pin_read() = %d \r\n", rx_pin_read());
                 u8RcvByteTmp |= (rx_pin_read()?1:0)<<bit_cnt;
-				//nvtEthernet_printf("%d th SoftwareSerial rxing u8RcvByteTmp = 0x%x\r\n", bit_cnt, u8RcvByteTmp);
-                tunedDelay();
+               //nvtEthernet_printf("%d th SoftwareSerial rxing u8RcvByteTmp = 0x%x\r\n", bit_cnt, u8RcvByteTmp);
+              tunedDelay();
             }
-            //nvtEthernet_printf("Final SoftwareSerial rxing u8RcvByteTmp = 0x%x\r\n", u8RcvByteTmp);
-            //nvtEthernet_printf("Final SoftwareSerial str   u8RcvByteTmp = %s\r\n", u8RcvByteTmp);			
-            //if (_inverse_logic)
-            //    u8RcvByteTmp = ~u8RcvByteTmp;
             
-            if(idx_next!=_receive_buffer_head){
+            if (_inverse_logic)
+                u8RcvByteTmp = ~u8RcvByteTmp;
+            
+            if(idx_next!=_receive_buffer_head)
+            {
                 _receive_buffer[idx_next] = u8RcvByteTmp;
                 _receive_buffer_tail=idx_next;
-            } else {
+            } 
+            else 
+            {
                 _buffer_overflow=true;
             }
             
@@ -300,20 +301,17 @@ inline void SoftwareSerial::handle_interrupt()
 // Constructor
 //
 SoftwareSerial::SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic) : 
-//  _rx_delay_centering(0),
-// _rx_delay_intrabit(0),
-//  _rx_delay_stopbit(0),
-// _tx_delay(0),
   _buffer_overflow(false),
-  _inverse_logic(false)
+  _inverse_logic(inverse_logic)
 {
     //nvtEthernet_printf("SoftwareSerial constructor start\r\n");
-	//nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", receivePin, transmitPin);
-	//setTX(transmitPin);
-    //setRX(receivePin);
-	_RXPin = receivePin;
-    _TXPin = transmitPin;
-	//nvtEthernet_printf("SoftwareSerial constructor end\r\n");
+    //nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", receivePin, transmitPin);
+    _rxPin = receivePin;
+    _txPin = transmitPin;
+
+    //Do _rxPin and _txPin GPIO confguration in begin() instead of constructor,
+    // to fit Arduino Framework.
+    //nvtEthernet_printf("SoftwareSerial constructor end\r\n");
 }
 
 //
@@ -327,179 +325,124 @@ SoftwareSerial::~SoftwareSerial()
 
 void SoftwareSerial::setTX(uint8_t tx)
 {
-  // First write, then set output. If we do this the other way around,
-  // the pin would be output low for a short while before switching to
-  // output high. Now, it is input with pullup for a short while, which
-  // is fine. With inverse logic, either order is fine.
-  digitalWrite(tx, _inverse_logic ? LOW : HIGH);
-  //digitalWrite(tx, LOW);
-  pinMode(tx, OUTPUT);
+    // First write, then set output. If we do this the other way around,
+    // the pin would be output low for a short while before switching to
+    // output high. Now, it is input with pullup for a short while, which
+    // is fine. With inverse logic, either order is fine.
+    digitalWrite(tx, _inverse_logic ? LOW : HIGH);
+    //digitalWrite(tx, LOW);
+    pinMode(tx, OUTPUT);
  
-  _transmitBitMask = GPIO_Desc[BoardToPinInfo[tx].pin].bit;
-  uint8_t port = digitalPinToPort(tx);
-  _transmitPinNum = digitalPinToPinNum(tx);
-  _p_transmit_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_transmitPinNum)<<2)));
-  _pu32TransmitPort = GPIO_Desc[BoardToPinInfo[tx].pin].P;
-  _transmitBoardPin = tx;
-  //nvtEthernet_printf("SoftwareSerial setTX\r\n");
+    _transmitBitMask = GPIO_Desc[BoardToPinInfo[tx].pin].bit;
+    uint8_t port = digitalPinToPort(tx);
+    int32_t transmitPinNum = digitalPinToPinNum(tx);
+    if (transmitPinNum < 0)
+        return;
+    _transmitPinNum = (uint8_t)transmitPinNum;
+    _p_transmit_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_transmitPinNum)<<2)));
+    _pu32TransmitPort = GPIO_Desc[BoardToPinInfo[tx].pin].P;
+    _transmitBoardPin = tx;
+    //nvtEthernet_printf("SoftwareSerial setTX\r\n");
 }
 
 void SoftwareSerial::setRX(uint8_t rx)
 {
-  pinMode(rx, INPUT);
-  if (!_inverse_logic)
-    digitalWrite(rx, HIGH);  // pullup for normal logic!
-  _receivePinNum = digitalPinToPinNum(rx);
-  _receiveBitMask = GPIO_Desc[BoardToPinInfo[rx].pin].bit;
+    pinMode(rx, INPUT);
+    if (!_inverse_logic)
+      digitalWrite(rx, HIGH);  // pullup for normal logic!
+    int32_t receivePinNum = digitalPinToPinNum(rx);
+    if (receivePinNum < 0)
+        return;
+    _receivePinNum = (uint8_t)receivePinNum;
+    _receiveBitMask = GPIO_Desc[BoardToPinInfo[rx].pin].bit;
   
-  uint8_t port = digitalPinToPort(rx);
-  _p_receive_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_receivePinNum)<<2)));
-  _pu32ReceivePort = GPIO_Desc[BoardToPinInfo[rx].pin].P;
-  _receiveBoardPin = rx;
-  //nvtEthernet_printf("SoftwareSerial setRx\r\n");
+    uint8_t port = digitalPinToPort(rx);
+    _p_receive_pin = ((volatile uint32_t *)((GPIO_PIN_DATA_BASE+(0x40*(port))) + ((_receivePinNum)<<2)));
+    _pu32ReceivePort = GPIO_Desc[BoardToPinInfo[rx].pin].P;
+    _receiveBoardPin = rx;
+    //nvtEthernet_printf("SoftwareSerial setRx\r\n");
 }
 
-uint16_t SoftwareSerial::subtract_cap(uint16_t num, uint16_t sub) {
-  if (num > sub)
-    return num - sub;
-  else
-    return 1;
+uint16_t SoftwareSerial::subtract_cap(uint16_t num, uint16_t sub) 
+{
+    if (num > sub)
+        return num - sub;
+    else
+        return 1;
 }
 
 //
 // Public methods
 //
-
 void SoftwareSerial::begin(long speed)
 {
-  //_rx_delay_centering = _rx_delay_intrabit = _rx_delay_stopbit = _tx_delay = 0;
-
-  // Precalculate the various delays, in number of 4-cycle delays
-  //uint16_t bit_delay = (F_CPU / speed) / 4;
-  //uint16_t bit_time = 1000000/speed; 
-
-  BSP_TimerDelaySetting(0);
-  uint32_t ss = BaudSetbyTimer((uint32_t)(speed));
-  //nvtEthernet_printf("\n\n ss = %d \r\n", ss);
+    // DEPRECATED: Use TIMER to replace AVR delay computation code.
+    // ConfigBaudRate() using hardware timer to implement.
+      
+    // Initialize timer clock source for software UART bit-timing.
+    InitBaudRateSrcClock();
   
+    // 
+    uint32_t ss = ConfigBaudRate((uint32_t)(speed));
+    //nvtEthernet_printf("\n\n ss = %d \r\n", ss);
   
-  // 12 (gcc 4.8.2) or 13 (gcc 4.3.2) cycles from start bit to first bit,
-  // 15 (gcc 4.8.2) or 16 (gcc 4.3.2) cycles between bits,
-  // 12 (gcc 4.8.2) or 14 (gcc 4.3.2) cycles from last bit to stop bit
-  // These are all close enough to just use 15 cycles, since the inter-bit
-  // timings are the most critical (deviations stack 8 times)
-  //_tx_delay = subtract_cap(bit_delay, 15 / 4);
-
-  // Only setup rx when we have a valid PCINT for this pin
-  /*
-    if (digitalPinToPCICR(_receivePin)) {
-    #if GCC_VERSION > 40800
-    // Timings counted from gcc 4.8.2 output. This works up to 115200 on
-    // 16Mhz and 57600 on 8Mhz.
-    //
-    // When the start bit occurs, there are 3 or 4 cycles before the
-    // interrupt flag is set, 4 cycles before the PC is set to the right
-    // interrupt vector address and the old PC is pushed on the stack,
-    // and then 75 cycles of instructions (including the RJMP in the
-    // ISR vector table) until the first delay. After the delay, there
-    // are 17 more cycles until the pin value is read (excluding the
-    // delay in the loop).
-    // We want to have a total delay of 1.5 bit time. Inside the loop,
-    // we already wait for 1 bit time - 23 cycles, so here we wait for
-    // 0.5 bit time - (71 + 18 - 22) cycles.
-    _rx_delay_centering = subtract_cap(bit_delay / 2, (4 + 4 + 75 + 17 - 23) / 4);
-
-    // There are 23 cycles in each loop iteration (excluding the delay)
-    _rx_delay_intrabit = subtract_cap(bit_delay, 23 / 4);
-
-    // There are 37 cycles from the last bit read to the start of
-    // stopbit delay and 11 cycles from the delay until the interrupt
-    // mask is enabled again (which _must_ happen during the stopbit).
-    // This delay aims at 3/4 of a bit time, meaning the end of the
-    // delay will be at 1/4th of the stopbit. This allows some extra
-    // time for ISR cleanup, which makes 115200 baud at 16Mhz work more
-    // reliably
-    _rx_delay_stopbit = subtract_cap(bit_delay * 3 / 4, (37 + 11) / 4);
-    #else // Timings counted from gcc 4.3.2 output
-    // Note that this code is a _lot_ slower, mostly due to bad register
-    // allocation choices of gcc. This works up to 57600 on 16Mhz and
-    // 38400 on 8Mhz.
-    _rx_delay_centering = subtract_cap(bit_delay / 2, (4 + 4 + 97 + 29 - 11) / 4);
-    _rx_delay_intrabit = subtract_cap(bit_delay, 11 / 4);
-    _rx_delay_stopbit = subtract_cap(bit_delay * 3 / 4, (44 + 17) / 4);
-    #endif
-
-
-    // Enable the PCINT for the entire port here, but never disable it
-    // (others might also need it, so we disable the interrupt by using
-    // the per-pin PCMSK register).
-    *digitalPinToPCICR(_receivePin) |= _BV(digitalPinToPCICRbit(_receivePin));
-    // Precalculate the pcint mask register and value, so setRxIntMask
-    // can be used inside the ISR without costing too much time.
-    _pcint_maskreg = digitalPinToPCMSK(_receivePin);
-    _pcint_maskvalue = _BV(digitalPinToPCMSKbit(_receivePin));
-
-    tunedDelay(_tx_delay); // if we were low this establishes the end
-  }*/
-  setTX(_TXPin);
-  setRX(_RXPin);   
-  listen();
-  nvtEthernet_printf("SoftwareSerial begin\r\n");
-  nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", this->_receivePinNum, this->_transmitPinNum);
-  nvtEthernet_printf("rxPort=0x%x, txPort=0x%x \r\n", this->_pu32ReceivePort, this->_pu32TransmitPort);
-  uint8_t _transmitPinNum;
+    setTX(_txPin);
+    setRX(_rxPin);   
+    listen();
+    //nvtEthernet_printf("rxPin=%d, txPin=%d \r\n", this->_receivePinNum, this->_transmitPinNum);
+    //nvtEthernet_printf("rxPort=0x%x, txPort=0x%x \r\n", this->_pu32ReceivePort, this->_pu32TransmitPort);
 }
 
 void SoftwareSerial::setRxIntMsk(bool enable)
 {
-    if (enable) {
-      GPIO_EnableInt( this->_pu32ReceivePort, 
-                      this->_receivePinNum, 
-                      GPIO_INT_FALLING);
-    } else {
-      GPIO_DisableInt(this->_pu32ReceivePort, this->_receivePinNum);;
+    if (enable) 
+    {
+        GPIO_EnableInt( this->_pu32ReceivePort, 
+                       this->_receivePinNum, 
+                      _inverse_logic ? GPIO_INT_RISING : GPIO_INT_FALLING);
+    } 
+    else 
+    {
+        GPIO_DisableInt(this->_pu32ReceivePort, this->_receivePinNum);;
     }
-	//nvtEthernet_printf("SoftwareSerial setRxIntMsk\r\n");
+    //nvtEthernet_printf("SoftwareSerial setRxIntMsk\r\n");
 }
 
 
 
 void SoftwareSerial::end()
 {
-  stopListening();
+    stopListening();
 }
 
 
 // Read data from buffer
-
 int SoftwareSerial::read()
 {
 
-  if (!isListening())
-    return -1;
+    if (!isListening())
+        return -1;
 
-  // Empty buffer?
-  if (_receive_buffer_head == _receive_buffer_tail)
-    return -1;
+    // Empty buffer?
+    if (_receive_buffer_head == _receive_buffer_tail)
+        return -1;
 
-  // Read from "head"
-  uint32_t idx_fetch = (_receive_buffer_head + 1) % _SS_MAX_RX_BUFF;
-  uint8_t d = _receive_buffer[idx_fetch]; // grab next byte
-  _receive_buffer_head = idx_fetch;
-  //nvtEthernet_printf("SoftwareSerial read end, return %s \r\n", d);
-  return d;
+    // Read from "head"
+    uint32_t idx_fetch = (_receive_buffer_head + 1) % _SS_MAX_RX_BUFF;
+    uint8_t d = _receive_buffer[idx_fetch]; // grab next byte
+    _receive_buffer_head = idx_fetch;
+    //nvtEthernet_printf("SoftwareSerial read end, return %s \r\n", d);
+    return d;
 }
 
 int SoftwareSerial::available()
 {
-  if (!isListening())
-    return 0;
-  //nvtEthernet_printf("SoftwareSerial available\r\n");
-  //nvtEthernet_printf("_receive_buffer_tail  = %d \r\n", _receive_buffer_tail );
-  //nvtEthernet_printf("_receive_buffer_head  = %d \r\n", _receive_buffer_head );
-  uint32_t tt = (_receive_buffer_tail + _SS_MAX_RX_BUFF - _receive_buffer_head) % _SS_MAX_RX_BUFF;
-  //nvtEthernet_printf("available = %d \r\n", tt );
-  return (_receive_buffer_tail + _SS_MAX_RX_BUFF - _receive_buffer_head) % _SS_MAX_RX_BUFF;
+    if (!isListening())
+        return 0;
+    //nvtEthernet_printf("SoftwareSerial available\r\n");
+    uint32_t tt = (_receive_buffer_tail + _SS_MAX_RX_BUFF - _receive_buffer_head) % _SS_MAX_RX_BUFF;
+    //nvtEthernet_printf("available = %d \r\n", tt );
+    return (_receive_buffer_tail + _SS_MAX_RX_BUFF - _receive_buffer_head) % _SS_MAX_RX_BUFF;
 }
 
 
@@ -512,25 +455,28 @@ size_t SoftwareSerial::write(uint8_t b)
     if (inv)
         b = ~b;
     
-    //cli();  // turn off interrupts for a clean txmit
     __set_PRIMASK(1); // turn off interrupts for a clean txmit
-    //setRxIntMsk(false);
+
 
     if (inv)
-	{
+    {
         *(this->_p_transmit_pin)=1; //START bit
-		//nvtEthernet_printf("SoftwareSerial write 1\r\n");
+        //nvtEthernet_printf("SoftwareSerial write 1\r\n");
     }
-	else
-	{
+    else
+    {
         *(this->_p_transmit_pin)=0; //START bit
-		//nvtEthernet_printf("SoftwareSerial write 0\r\n");
+        //nvtEthernet_printf("SoftwareSerial write 0\r\n");
     }
+
     tunedDelay();
 
-    for(uint8_t i=0 ;i < 8; i++) {
+    for(uint8_t i=0 ;i < 8; i++) 
+    {
         *(this->_p_transmit_pin) = (b >> i) & 0x1;
-		//nvtEthernet_printf("SoftwareSerial write 0x%x\r\n", (b >> i) & 0x1);
+         //nvtEthernet_printf("SoftwareSerial write 0x%x\r\n", (b >> i) & 0x1);
+        
+        // Wait for one bit time before sending the next bit
         tunedDelay();
     }
     
@@ -541,35 +487,35 @@ size_t SoftwareSerial::write(uint8_t b)
         *(this->_p_transmit_pin)=1;
     
     __set_PRIMASK(0); // turn interrupts back on
-    //setRxIntMsk(true);
+    
     tunedDelay();
     //nvtEthernet_printf("SoftwareSerial write\r\n");
-	//nvtEthernet_printf("this->_p_transmit_pin=0x%x\r\n", this->_p_transmit_pin);
-  return 1;
+    //nvtEthernet_printf("this->_p_transmit_pin=0x%x\r\n", this->_p_transmit_pin);
+    return 1;
 }
 
 
 
 void SoftwareSerial::flush()
 {
-  // There is no tx buffering, simply return
+    // There is no tx buffering, simply return
 }
 
 
 
 int SoftwareSerial::peek()
 {
-  if (!isListening())
-    return -1;
+    if (!isListening())
+      return -1;
 
-  // Empty buffer?
-  if (_receive_buffer_head == _receive_buffer_tail)
-    return -1;
+    // Empty buffer?
+    if (_receive_buffer_head == _receive_buffer_tail)
+        return -1;
 
-  uint32_t idx_peek = (_receive_buffer_head + 1) % _SS_MAX_RX_BUFF;
+    uint32_t idx_peek = (_receive_buffer_head + 1) % _SS_MAX_RX_BUFF;
 
-  // Read from "head"
-  return _receive_buffer[idx_peek];
+    // Read from "head"
+    return _receive_buffer[idx_peek];
 }
 
 

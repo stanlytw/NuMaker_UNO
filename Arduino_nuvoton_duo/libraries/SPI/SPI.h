@@ -24,7 +24,9 @@
 #define SPI_MODE1 SPI_MODE_1
 #define SPI_MODE2 SPI_MODE_2
 #define SPI_MODE3 SPI_MODE_3
-#define SPI_MODE_Msk (SPI_MODE_0|SPI_MODE_1|SPI_MODE_2|SPI_MODE_3)
+#define SPI_MODE_Msk      (SPI_MODE_0|SPI_MODE_1|SPI_MODE_2|SPI_MODE_3)
+#define SPI_DEFAULT_CLOCK 4000000UL
+#define USPI_DEFAULT_CLOCK SPI_DEFAULT_CLOCK//For name compatibility, default clock is 4MHz.
 
 enum SPITransferMode {
 	SPI_CONTINUE,
@@ -33,94 +35,83 @@ enum SPITransferMode {
 
 class SPISettings {
 public:
-	SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
-		if (__builtin_constant_p(clock)) {
-			init_AlwaysInline(clock, bitOrder, dataMode);
-		} else {
-			init_MightInline(clock, bitOrder, dataMode);
-		}
-	}
+    SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode)
+        : clock(clock), border(bitOrder), datmode(dataMode) {}
 
-	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0); }
+    SPISettings()
+        : clock(SPI_DEFAULT_CLOCK), border(MSBFIRST), datmode(SPI_MODE0) {}
+
 private:
-	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
-		init_AlwaysInline(clock, bitOrder, dataMode);
-	}
-	void init_AlwaysInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) __attribute__((__always_inline__)) {
-		border = bitOrder;
-		clock = clock;
-		datmode = dataMode;
-	}
-	uint32_t datmode;
-	uint32_t clock;
-	BitOrder border;
-	friend class SPIClass;
+    uint32_t clock;
+    uint8_t  datmode;
+    BitOrder border;
+    friend class SPIClass;
 };
 
 class SPIClass {
   public:
-	SPIClass(void *_spi,uint32_t module,uint32_t clksel,IRQn_Type _id, void(*_initCb)(void));
+    SPIClass(void *_spi,uint32_t module,uint32_t clksel,IRQn_Type _id, void(*_initCb)(void));
 
-	byte transfer(byte _channel, uint8_t _data, SPITransferMode _mode = SPI_LAST);
-	uint16_t transfer16(byte _pin, uint16_t _data, SPITransferMode _mode = SPI_LAST);
-	void transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _mode = SPI_LAST);
-	byte transfer(uint8_t _data, SPITransferMode _mode = SPI_LAST) { return transfer(SS, _data, _mode); }
-	uint16_t transfer16(uint16_t _data, SPITransferMode _mode = SPI_LAST) { return transfer16(BOARD_SPI_DEFAULT_SS, _data, _mode); }
-	void transfer(void *_buf, size_t _count, SPITransferMode _mode = SPI_LAST) { transfer(BOARD_SPI_DEFAULT_SS, _buf, _count, _mode); }
-	
+    byte transfer(byte pin, uint8_t data, SPITransferMode mode = SPI_LAST);
+    uint16_t transfer16(byte pin, uint16_t data, SPITransferMode mode = SPI_LAST);
+    void transfer(byte pin, void *buf, size_t count, SPITransferMode mode = SPI_LAST);
+    byte transfer(uint8_t data, SPITransferMode mode = SPI_LAST) { return transfer(SS, data, mode); }
+    uint16_t transfer16(uint16_t data, SPITransferMode mode = SPI_LAST) { return transfer16(BOARD_SPI_DEFAULT_SS, data, mode); }
+    void transfer(void *buf, size_t count, SPITransferMode mode = SPI_LAST) { transfer(BOARD_SPI_DEFAULT_SS, buf, count, mode); }
 
-	// Transaction Functions
-	void usingInterrupt(uint8_t interruptNumber);
-	void beginTransaction(SPISettings settings) { beginTransaction(BOARD_SPI_DEFAULT_SS, settings); }
-	void beginTransaction(uint8_t pin, SPISettings settings);
-	void endTransaction(void);
-	
-	// SPI Configuration methods
-	void attachInterrupt(void);
-	void detachInterrupt(void);
 
-	void begin(void);
-	void end(void);
+    // Transaction Functions
+    void usingInterrupt(uint8_t interruptNumber);
+    void beginTransaction(SPISettings settings) { beginTransaction(BOARD_SPI_DEFAULT_SS, settings); }
+    void beginTransaction(uint8_t pin, SPISettings settings);
+    void endTransaction(void);
 
-	// Attach/Detach pin to/from SPI controller
-	void begin(uint8_t _pin);
-	void end(uint8_t _pin);
+    // SPI Configuration methods
+    void attachInterrupt(void);
+    void detachInterrupt(void);
 
-	// These methods sets a parameter on a single pin
-	void setBitOrder(uint8_t _pin, BitOrder);
-	void setDataMode(uint8_t _pin, uint8_t);
-	void setClockDivider(uint8_t _pin, uint8_t);
+    void begin(void);
+    void end(void);
 
-	// These methods sets the same parameters but on default pin BOARD_SPI_DEFAULT_SS
-	void setBitOrder(BitOrder _order) { setBitOrder(SS, _order); };
-	void setDataMode(uint8_t _mode) { setDataMode(SS, _mode); };
-	void setClockDivider(uint8_t _div) { setClockDivider(SS, _div); };
+    // Attach/Detach pin to/from SPI controller (pin kept for Arduino API compatibility)
+    void begin(uint8_t pin);
+    void end(uint8_t pin);
+
+    // These methods sets a parameter on a single pin
+    void setBitOrder(uint8_t pin, BitOrder);
+    void setDataMode(uint8_t pin, uint8_t);
+    void setClockDivider(uint8_t pin, uint8_t);
+
+    // These methods sets the same parameters but on default pin BOARD_SPI_DEFAULT_SS
+    void setBitOrder(BitOrder order) { setBitOrder(SS, order); };
+    void setDataMode(uint8_t mode) { setDataMode(SS, mode); };
+    void setClockDivider(uint8_t div) { setClockDivider(SS, div); };
 
   private:
-	union{
-		void *_vspi;
-		SPI_T *spi;
+    union{
+       void *_vspi;
+       SPI_T *spi;
  
-		USPI_T *uspi;
+       USPI_T *uspi;
 
-	};
-	uint32_t module;
-	uint32_t clksel;
-	IRQn_Type id;
-	//BitOrder bitOrder[SPI_CHANNELS_NUM];
-	//uint32_t divider[SPI_CHANNELS_NUM];
-	//uint32_t mode[SPI_CHANNELS_NUM];
-	void (*initCb)(void);
+    };
+    uint32_t module;
+    uint32_t clksel;
+    IRQn_Type id;
+    //BitOrder bitOrder[SPI_CHANNELS_NUM];
+    //uint32_t divider[SPI_CHANNELS_NUM];
+    //uint32_t mode[SPI_CHANNELS_NUM];
+    void (*initCb)(void);
 };
 
 #if SPI_MAX_COUNT > 0
-	extern SPIClass SPI;
+    extern SPIClass SPI;
 #endif
 #if SPI_MAX_COUNT > 1
-	extern SPIClass SPI1;
+    extern SPIClass SPI1;
 #endif
 
-// For compatibility with sketches designed for Nuvoton @ 12 MHz
+// DEPRECATED: For compatibility with sketches designed for Nuvoton @ 12 MHz
 // New programs should use SPI.beginTransaction to set the SPI clock
 #define SPI_CLOCK_DIV1	 0
 #define SPI_CLOCK_DIV2	 1

@@ -28,11 +28,11 @@ static interruptCB callbacksGPE[GNUM];
 static interruptCB callbacksGPF[GNUM];
 
 /* for software serial */
-uint8_t g_u8Softserail_enable=0;
-uint8_t g_u8Softserail_port_num;
-uint8_t g_u8Softserail_pin_num;
+volatile uint8_t g_u8SoftSerial_enable = 0;
+volatile uint8_t g_u8SoftSerial_port_num;
+volatile uint8_t g_u8SoftSerial_pin_num;
 static interruptCB pfn_software_uart_handler = NULL;
-GPIO_T* g_u8Softserail_port_base;
+GPIO_T* g_pSoftSerial_port_base;
 
 /* Configure GPIO interrupt sources */
 static void __initialize() 
@@ -80,14 +80,14 @@ void attachInterrupt(uint32_t pin, void (*callback)(void), uint32_t mode)
 	for (t = mask; t>1; t>>=1, pos++);
 
 
-    /*special mode for Softserial*/
-    if(   (g_u8Softserail_enable)
-        &&(pio == g_u8Softserail_port_base) 
-        &&(pos == g_u8Softserail_pin_num) 
-    ) { //check if the softserial rx pin
-        pfn_software_uart_handler = callback;
+	/*special mode for Softserial*/
+	if(   (g_u8SoftSerial_enable)
+		&&(pio == g_pSoftSerial_port_base) 
+		&&(pos == g_u8SoftSerial_pin_num) 
+	) { //check if the softserial rx pin
+		pfn_software_uart_handler = callback;
         
-    } else { //origin path
+	} else { //origin path
 
 
 	// Set callback function
@@ -146,13 +146,13 @@ void detachInterrupt(uint32_t pin)
 	GPIO_DisableInt(pio,pos);
 	
 
-    /*special mode for Softserial*/
-    if( (g_u8Softserail_enable) && (pio == g_u8Softserail_port_base) && (pos == g_u8Softserail_pin_num))
+	/*special mode for Softserial*/
+	if( (g_u8SoftSerial_enable) && (pio == g_pSoftSerial_port_base) && (pos == g_u8SoftSerial_pin_num))
 	{ //check if the softserial rx pin
-        g_u8Softserail_enable=0;
-        pfn_software_uart_handler = NULL;
+		g_u8SoftSerial_enable = 0;
+		pfn_software_uart_handler = NULL;
         
-    } 
+	} 
 	else 
 	{ //orign path
 

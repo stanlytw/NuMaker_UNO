@@ -12,14 +12,9 @@
 					
 
 SPIClass::SPIClass(void*_spi,uint32_t _module,uint32_t _clksel, IRQn_Type _id, void(*_initCb)(void)) :
-	_vspi(_spi), id(_id), initCb(_initCb)
-{		
-	  initCb();		  
-	  _vspi=_spi;
-	  clksel=_clksel;
-	  module=_module;
-	  id=_id;
-
+	_vspi(_spi), module(_module), clksel(_clksel), id(_id), initCb(_initCb)
+{
+	initCb();
 }
 
 void SPIClass::begin() {		
@@ -43,17 +38,19 @@ void SPIClass::begin() {
 
 	if ((_vspi == SPI0 ) || (_vspi == SPI2 ))
 	{
-		SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, 4000000); 
+		SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, SPI_DEFAULT_CLOCK); 
 		
 		/*
-		    For Arduino application, skip auuto-SS. If required, umcomment following code.
+		    For Arduino application, skip auto-SS. If required, umcomment following code.
 		*/
 		//SPI_EnableAutoSS(spi, SPI_SS, SPI_SS_ACTIVE_LOW);
 		
 	}
 	else if(_vspi == USPI0)
 	{
-		USPI_Open(uspi, USPI_MASTER, USPI_MODE_0, 8, 4000000); 
+		USPI_Open(uspi, USPI_MASTER, USPI_MODE_0, 8, USPI_DEFAULT_CLOCK); 
+		USPI_ClearRxBuf(uspi);
+		USPI_ClearTxBuf(uspi);
 	}
 
 	setBitOrder(SS, MSBFIRST);  
@@ -78,14 +75,14 @@ void SPIClass::begin(uint8_t _pin) {
 
 	if( (_vspi == SPI0 ) || (_vspi == SPI2 ))
 	{
-		SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, 4000000);
+		SPI_Open(spi, SPI_MASTER, SPI_MODE_0, 8, SPI_DEFAULT_CLOCK);
 				
-		SPI_SetFIFO(spi, 12, 12); 
+		SPI_SetFIFO(spi, 2, 2); 
 		SPI_ClearRxFIFO(spi);
 	}
 	else if(_vspi == USPI0)
 	{
-		USPI_Open(uspi, USPI_MASTER, USPI_MODE_0, 8, 4000000); 
+		USPI_Open(uspi, USPI_MASTER, USPI_MODE_0, 8, USPI_DEFAULT_CLOCK); 
 		USPI_ClearRxBuf(uspi);
 		USPI_ClearTxBuf(uspi);
 	}
@@ -133,7 +130,6 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	if(init_flag==0) init();
 
 
-
 	if ((_vspi == SPI0 ) || (_vspi == SPI2 ) )
 	{
 		SPI_Open(spi, SPI_MASTER, settings.datmode, 8, settings.clock); 
@@ -143,7 +139,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 		USPI_Open(uspi, USPI_MASTER, settings.datmode, 8, settings.clock); 
 	}
 
-	setBitOrder(SS, settings.border);
+	setBitOrder(pin, settings.border);
 
 
 
@@ -161,7 +157,17 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 
 void SPIClass::endTransaction(void)
 {
-	
+	if ((_vspi == SPI0 ) || (_vspi == SPI2 ) )
+	{
+		while(SPI_IS_BUSY(spi));
+		SPI_ClearRxFIFO(spi);
+	}
+	else if(_vspi == USPI0)
+	{
+		while(USPI_IS_BUSY(uspi));
+		USPI_ClearRxBuf(uspi);
+		USPI_ClearTxBuf(uspi);
+	}
 }
 
 void SPIClass::setBitOrder(uint8_t _pin, BitOrder _bitOrder) {	
@@ -229,11 +235,16 @@ byte SPIClass::transfer(byte _pin, uint8_t _data, SPITransferMode _mode) {
 		return (USPI_READ_RX(uspi) & 0xff);
 	}
 
+	return 0;
 
 }			
 
+// NOTE:
+// transfer16() currently guarantees correct behavior only for MSBFIRST.
+// This matches the default configuration in begin() and SPISettings(), both of which default to MSBFIRST.
+// LSBFIRST with transfer16() is not fully supported yet because byte order handling is fixed in this implementation.
 uint16_t SPIClass::transfer16(byte _pin, uint16_t _data, SPITransferMode _mode) {
-	uint32_t rdata;
+	uint32_t rdata = 0;
 
 
 	if ((_vspi == SPI0 ) || (_vspi == SPI2 ) )
@@ -264,12 +275,18 @@ void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _m
 	uint8_t *buf;
 	buf=(uint8_t *)_buf;
 
+	if ((_buf == NULL) || (_count == 0U))
+	{
+		return;
+	}
+
 	if ((_vspi == SPI0 ) || (_vspi == SPI2 ) )
 	{
 		for(i=0;i<_count;i++)
 		{	
 			SPI_WRITE_TX(spi, buf[i]);
 			while(SPI_IS_BUSY(spi));
+			buf[i] = (uint8_t)(SPI_READ_RX(spi) & 0xff);
 		}
 	}
 	else if(_vspi == USPI0)
@@ -278,6 +295,7 @@ void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _m
 		{	
 			USPI_WRITE_TX(uspi, buf[i]);
 			while(USPI_IS_BUSY(uspi));
+			buf[i] = (uint8_t)(USPI_READ_RX(uspi) & 0xff);
 		}
 
 	}
@@ -285,11 +303,11 @@ void SPIClass::transfer(byte _pin, void *_buf, size_t _count, SPITransferMode _m
 }
 
 void SPIClass::attachInterrupt(void) {
-	// Should be enableInterrupt()
+	// Not supported in current implementation.
 }
 
 void SPIClass::detachInterrupt(void) {
-	// Should be disableInterrupt()
+	// Not supported in current implementation.
 }
 
 #if SPI_MAX_COUNT > 0
