@@ -81,6 +81,29 @@
                       "version": "7-2017q4"
                     }
                   ]
+                },
+				{
+                  "name": "NuMaker DUO BOARDOZA",
+                  "architecture": "nuvoton_duo_boardoza",
+                  "version": "0.0.1",
+
+                  "category": "Arduino",
+                  "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_duo_boardoza.tar.bz2?raw=true",
+                  "archiveFileName": "Arduino_nuvoton_duo_boardoza.tar.bz2",
+                  "checksum": "SHA-256:783db56cd6dc011ef6bf039c39c117512539695c0aad2ffda8ce1e344957b490",
+                  "size": "33416112",
+                  "boards": [
+                    {"name": "NuMaker-BOARDOZA-DUO-M4"}
+    
+                    						
+                  ],
+                  "toolsDependencies": [
+                    {
+                      "packager": "arduino",
+                      "name": "arm-none-eabi-gcc",
+                      "version": "7-2017q4"
+                    }
+                  ]
                 }
             ],
             "tools": [],
