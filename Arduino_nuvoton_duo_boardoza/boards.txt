@@ -1,4 +1,4 @@
-nuvoton_m467sd.name=NuMaker-DUO-M4
+nuvoton_m467sd.name=NuMaker-BOARDOZA-DUO-M4
 nuvoton_m467sd.upload.tool=isp_m460
 #nuvoton_m467sd.upload.tool=nulinkburn_m460
 nuvoton_m467sd.upload.protocol=nuc-ba
@@ -9,7 +9,7 @@ nuvoton_m467sd.upload.native_usb=false
 nuvoton_m467sd.build.mcu=cortex-m4
 nuvoton_m467sd.build.f_cpu=200000000L
 nuvoton_m467sd.build.core=nuvoton
-nuvoton_m467sd.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__NVT_BOARD_DUO__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
+nuvoton_m467sd.build.extra_flags=-D__M460__ -D__M460MINIMA__ -D__NVT_BOARD_DUO_BOARDOZA__ -mthumb -DUSB_PID={build.pid} -DUSB_VID={build.vid} -DUSBCON
 nuvoton_m467sd.build.board=__NUVOTON__ 
 nuvoton_m467sd.build.ldscript=linker_scripts/gcc/1024K_512K_flash.ld
 nuvoton_m467sd.build.variant_system_lib=../../system/{build.def}/libchip_M460_gcc_rel.a
