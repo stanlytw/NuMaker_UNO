@@ -1,6 +1,6 @@
 nuvoton_m467sd.name=NuMaker-BOARDOZA-DUO-M4
-nuvoton_m467sd.upload.tool=isp_m460
-#nuvoton_m467sd.upload.tool=nulinkburn_m460
+#nuvoton_m467sd.upload.tool=isp_m460
+nuvoton_m467sd.upload.tool=nulinkburn_m460
 nuvoton_m467sd.upload.protocol=nuc-ba
 nuvoton_m467sd.upload.maximum_size=524288
 nuvoton_m467sd.upload.use_1200bps_touch=false

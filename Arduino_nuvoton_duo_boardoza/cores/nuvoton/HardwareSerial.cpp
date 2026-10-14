@@ -84,11 +84,11 @@ void UART0_IRQHandler(void)
 {
     while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
     {
-        int i = (unsigned int)(rx_buffer2.head + 1) % SERIAL_BUFFER_SIZE;
-        if (i != rx_buffer2.tail)
+        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer1.tail)
         {
-            rx_buffer2.buffer[rx_buffer2.head] = UART0->DAT;
-            rx_buffer2.head = i;
+            rx_buffer1.buffer[rx_buffer1.head] = UART0->DAT;
+            rx_buffer1.head = i;
         }
 		else//i == rx_buffer1.tail
 		{
@@ -104,13 +104,13 @@ void UART6_IRQHandler(void)
 {
     while (UART_GET_INT_FLAG(UART6, UART_INTEN_RDAIEN_Msk))
     {
-        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
-        if (i != rx_buffer1.tail)
+        int i = (unsigned int)(rx_buffer2.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer2.tail)
         {
-            rx_buffer1.buffer[rx_buffer1.head] = UART6->DAT;
-            rx_buffer1.head = i;
+            rx_buffer2.buffer[rx_buffer2.head] = UART6->DAT;
+            rx_buffer2.head = i;
         }
-		else//i == rx_buffer1.tail
+		else//i == rx_buffer2.tail
 		{
 			unsigned char dummy = UART6->DAT;
 		}

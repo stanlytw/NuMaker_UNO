@@ -270,7 +270,7 @@ do { \
 }while(0);
 
 /*========== UART definition ==========*/
-#define UART_MAX_COUNT 1// __DUO__
+#define UART_MAX_COUNT 3// __DUO__
 extern UARTPinDescription UART_Desc[];
 extern PinType DEPin_Desc[];
 #define UART_RX 0
