@@ -1,0 +1,44 @@
+{
+  "packages": [
+    {
+      "name": "nuvoton",
+      "maintainer": "Nuvoton",
+      "websiteUrl": "http://www.nuvoton.com",
+      "Url": "https://raw.githubusercontent.com/stanlytw/NuMaker_UNO/master/package_nuvoton_index.json",
+      "email": "",
+      "platforms": [
+        {
+          "name": "NuMaker DUO",
+          "architecture": "nuvoton_duo",
+          "version": "0.0.5",
+          "deprecated": false,
+          "category": "Arduino",
+          "url": "https://github.com/stanlytw/NuMaker_UNO/blob/master/Arduino_nuvoton_duo.tar.bz2?raw=true",
+          "archiveFileName": "Arduino_nuvoton_duo.tar.bz2",
+          "checksum": "SHA-256:42bfecb719fe74cd667316d377f80e0cb39db7f1b8dd615974db02517a4dc5ed",
+          "size": "33419482",
+          "boards": [
+            {
+              "name": "NuMaker-DUO-M4"
+            }
+          ],
+          "help": {},
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            }
+          ],
+          "discoveryDependencies": [],
+          "monitorDependencies": []
+        }
+      ],
+      "tools": [],
+      "help": {
+        "online": "http://www.nuvoton.com"
+      }
+    }
+  ],
+  "IsTrusted": false
+}
