@@ -19,10 +19,10 @@
 #define _PINS_ARDUINO_H_
 #include "m460.h"
 #define USE_BoardToPin
-#if defined(__NVT_BOARD_DUO__)
-#include "Pins_M467_DUO_arduino.h"
+#if defined(__NVT_BOARD_DUO_BOARDOZA__)
+#include "Pins_M467_DUO_Boardoza_arduino.h"
 #else
-#error "This BSP currently supports DUO only; define __NVT_BOARD_DUO__."
+#error "This BSP currently supports DUO_BOARDOZA only; define __NVT_BOARD_DUO_BOARDOZA__."
 #endif
 
 #endif // end of _PINS_ARDUINO_H_

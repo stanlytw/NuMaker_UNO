@@ -1,0 +1,240 @@
+/*
+  Copyright (c) 2011 Arduino.  All right reserved.
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+#include "Arduino.h"
+#include "Pins_arduino.h"
+
+#ifdef USE_BoardToPin
+//[2025-11-25] BoardToPin updated
+BoardToPin BoardToPinInfo[] =
+{
+    //{pin, type, num}//
+	//This table use mainly for PWM. 
+	{ GPIO_DESC_IDX_PA6, PWM_TYPE,  PWM_DESC_IDX_NOUSE   },// 0:       (D0/PA6/)
+    { GPIO_DESC_IDX_PA7, PWM_TYPE,  PWM_DESC_IDX_NOUSE   },// 1:       (D1/PA7/)
+    { GPIO_DESC_IDX_PC6, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, // 2:      (D2/PC6/)
+    { GPIO_DESC_IDX_PC7, PWM_TYPE,  PWM_DESC_IDX0        }, // 3:      (D3/PC7/)
+    { GPIO_DESC_IDX_PC5, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, // 4:      (D4/PC5/)
+    
+	{ GPIO_DESC_IDX_PC4,  PWM_TYPE,  PWM_DESC_IDX1        }, // 5:      (D5/PC4/)
+    { GPIO_DESC_IDX_PA14, PWM_TYPE,  PWM_DESC_IDX2        }, // 6:      (D6/PA14/)
+    { GPIO_DESC_IDX_PA13, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, // 7:      (D7/PA13/)
+    { GPIO_DESC_IDX_PC14, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, // 8:      (D8/PC14/)
+    { GPIO_DESC_IDX_PA15, PWM_TYPE , PWM_DESC_IDX3        }, // 9:      (D9/PA15/)
+    
+    //If run PWM on D10,D11, SPI[1] pinned at connector is not work.    
+    { GPIO_DESC_IDX_PA3,  PWM_TYPE,  PWM_DESC_IDX4        }, //10:      (D10/PA3/SPI0_CS)
+    { GPIO_DESC_IDX_PA0,  PWM_TYPE,  PWM_DESC_IDX5        }, //11:      (D11/PA0/SPI0_MOSI)
+
+	
+    { GPIO_DESC_IDX_PA1,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //12:      (D12/PA1/SPI0_MISO)
+    { GPIO_DESC_IDX_PA2,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //13:      (D13/PA2/SPI0_SCK)
+	{ GPIO_DESC_IDX_PB12, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //14:      (D14/PB12), also A0
+    
+	{ GPIO_DESC_IDX_PB13, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //15:      (D15/PB13), also A1
+    { GPIO_DESC_IDX_PB14, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //16:      (D16/PB14), also A2
+    { GPIO_DESC_IDX_PB15, PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //17:      (D17/PB15), also A3 
+    { GPIO_DESC_IDX_PF1,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //18:      (D18/PF1) , also A4
+    { GPIO_DESC_IDX_PF0,  PWM_TYPE,  PWM_DESC_IDX_NOUSE   }, //19:      (D19/PF0) , also A5 
+    { GPIO_DESC_IDX_PA12, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //20:      (D20/PA12/)
+    { GPIO_DESC_IDX_PA11, GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //21:      (D21/PA11/) 
+	{ GPIO_DESC_IDX_PF6,  GPIO_TYPE, PWM_DESC_IDX_NOUSE   }, //22:      (D22/PF6/) 
+
+};
+#endif
+
+/*
+    Note for M460 Multi-Function Pins, the SYS_GPx_MFP namings as follow:
+    P0~P3  : MPF0
+    P4~P7  : MPF1
+    P8~P11 : MPF2
+    P12~P15: MPF3
+*/
+//[2025-02-17] GPIO pins updated
+GPIOPinDescription GPIO_Desc[] =
+{
+    {NULL, 0, {0, 0, 0}}, //0-->0
+	{PB, BIT6,  {(uint32_t) &SYS->GPB_MFP1, SYS_GPB_MFP1_PB6MFP_Msk,  SYS_GPB_MFP1_PB6MFP_GPIO}}, //1(GPIO_DESC_IDX_PB6)
+    {PB, BIT5, {(uint32_t)  &SYS->GPB_MFP1, SYS_GPB_MFP1_PB5MFP_Msk,  SYS_GPB_MFP1_PB5MFP_GPIO}}, //2
+    {PB, BIT4, {(uint32_t)  &SYS->GPB_MFP1, SYS_GPB_MFP1_PB4MFP_Msk,  SYS_GPB_MFP1_PB4MFP_GPIO}}, //3
+    {PB, BIT3, {(uint32_t)  &SYS->GPB_MFP0, SYS_GPB_MFP0_PB3MFP_Msk,  SYS_GPB_MFP0_PB3MFP_GPIO}}, //4
+    {PB, BIT2, {(uint32_t)  &SYS->GPB_MFP0, SYS_GPB_MFP0_PB2MFP_Msk,  SYS_GPB_MFP0_PB2MFP_GPIO }}, //5
+	{PB, BIT1, {(uint32_t)  &SYS->GPB_MFP0, SYS_GPB_MFP0_PB1MFP_Msk,  SYS_GPB_MFP0_PB1MFP_GPIO}}, //6(GPIO_DESC_IDX_PB1)
+    {PB, BIT0, {(uint32_t)  &SYS->GPB_MFP0, SYS_GPB_MFP0_PB0MFP_Msk,  SYS_GPB_MFP0_PB0MFP_GPIO }}, //7
+	{PA, BIT11, {(uint32_t) &SYS->GPA_MFP2, SYS_GPA_MFP2_PA11MFP_Msk, SYS_GPA_MFP2_PA11MFP_GPIO }}, //8
+	{PA, BIT10, {(uint32_t) &SYS->GPA_MFP2, SYS_GPA_MFP2_PA10MFP_Msk, SYS_GPA_MFP2_PA10MFP_GPIO }}, //9
+	{PA, BIT9, {(uint32_t)  &SYS->GPA_MFP2, SYS_GPA_MFP2_PA9MFP_Msk,  SYS_GPA_MFP2_PA9MFP_GPIO }}, //10
+    {PA, BIT8, {(uint32_t)  &SYS->GPA_MFP2, SYS_GPA_MFP2_PA8MFP_Msk,  SYS_GPA_MFP2_PA8MFP_GPIO }}, //11(GPIO_DESC_IDX_PA8)
+    {PF, BIT6, {(uint32_t)  &SYS->GPF_MFP1, SYS_GPF_MFP1_PF6MFP_Msk, SYS_GPF_MFP1_PF6MFP_GPIO }}, //12
+	{NULL, 0, {0, 0, 0}},//13, VBat
+    {PF, BIT5, {(uint32_t)  &SYS->GPF_MFP1, SYS_GPF_MFP1_PF5MFP_Msk, SYS_GPF_MFP1_PF5MFP_GPIO }}, //14
+    {PF, BIT4, {(uint32_t)  &SYS->GPF_MFP1, SYS_GPF_MFP1_PF4MFP_Msk, SYS_GPF_MFP1_PF4MFP_GPIO }}, //15
+    {PF, BIT3, {(uint32_t)  &SYS->GPF_MFP0, SYS_GPF_MFP0_PF3MFP_Msk, SYS_GPF_MFP0_PF3MFP_GPIO }}, //16(GPIO_DESC_IDX_PF3)
+    {PF, BIT2, {(uint32_t)  &SYS->GPF_MFP0, SYS_GPF_MFP0_PF2MFP_Msk, SYS_GPF_MFP0_PF2MFP_GPIO }}, //17
+    {PC, BIT7, {(uint32_t)  &SYS->GPC_MFP1, SYS_GPC_MFP1_PC7MFP_Msk, SYS_GPC_MFP1_PC7MFP_GPIO }}, //18
+    {PC, BIT6, {(uint32_t)  &SYS->GPC_MFP1, SYS_GPC_MFP1_PC6MFP_Msk, SYS_GPC_MFP1_PC6MFP_GPIO }}, //19
+    {PA, BIT7, {(uint32_t)  &SYS->GPA_MFP1, SYS_GPA_MFP1_PA7MFP_Msk, SYS_GPA_MFP1_PA7MFP_GPIO }}, //20
+    {PA, BIT6, {(uint32_t)  &SYS->GPA_MFP1, SYS_GPA_MFP1_PA6MFP_Msk, SYS_GPA_MFP1_PA6MFP_GPIO }}, //21
+	{NULL, 0, {0, 0, 0}}, //22, Vdd
+    {NULL, 0, {0, 0, 0}}, //23, Vss
+    {NULL, 0, {0, 0, 0}}, //24, LDO cap
+	{PA, BIT5, {(uint32_t) &SYS->GPA_MFP1, SYS_GPA_MFP1_PA5MFP_Msk, SYS_GPA_MFP1_PA5MFP_GPIO }}, //25
+    {PA, BIT4, {(uint32_t) &SYS->GPA_MFP1, SYS_GPA_MFP1_PA4MFP_Msk, SYS_GPA_MFP1_PA4MFP_GPIO }}, //26
+    {PA, BIT3, {(uint32_t) &SYS->GPA_MFP0, SYS_GPA_MFP0_PA3MFP_Msk, SYS_GPA_MFP0_PA3MFP_GPIO }}, //27
+    {PA, BIT2, {(uint32_t) &SYS->GPA_MFP0, SYS_GPA_MFP0_PA2MFP_Msk, SYS_GPA_MFP0_PA2MFP_GPIO }}, //28
+    {PA, BIT1, {(uint32_t) &SYS->GPA_MFP0, SYS_GPA_MFP0_PA1MFP_Msk, SYS_GPA_MFP0_PA1MFP_GPIO }}, //29
+    {PA, BIT0, {(uint32_t) &SYS->GPA_MFP0, SYS_GPA_MFP0_PA0MFP_Msk, SYS_GPA_MFP0_PA0MFP_GPIO }}, //30
+    {NULL, 0, {0, 0, 0}}, //31, Vddio
+	{NULL, 0, {0, 0, 0}}, //32, nRst
+	{PF, BIT0, {(uint32_t) &SYS->GPF_MFP0, SYS_GPF_MFP0_PF0MFP_Msk, SYS_GPF_MFP0_PF0MFP_GPIO }}, //33
+    {PF, BIT1, {(uint32_t) &SYS->GPF_MFP0, SYS_GPF_MFP0_PF1MFP_Msk, SYS_GPF_MFP0_PF1MFP_GPIO }}, //34
+    {PC, BIT5, {(uint32_t) &SYS->GPC_MFP1, SYS_GPC_MFP1_PC5MFP_Msk, SYS_GPC_MFP1_PC5MFP_GPIO }}, //35
+    {PC, BIT4, {(uint32_t) &SYS->GPC_MFP1, SYS_GPC_MFP1_PC4MFP_Msk, SYS_GPC_MFP1_PC4MFP_GPIO }}, //36
+	{PA, BIT12, {(uint32_t) &SYS->GPA_MFP3, SYS_GPA_MFP3_PA12MFP_Msk, SYS_GPA_MFP3_PA12MFP_GPIO }}, //37
+	{PA, BIT13, {(uint32_t) &SYS->GPA_MFP3, SYS_GPA_MFP3_PA13MFP_Msk, SYS_GPA_MFP3_PA13MFP_GPIO }}, //38
+	{PA, BIT14, {(uint32_t) &SYS->GPA_MFP3, SYS_GPA_MFP3_PA14MFP_Msk, SYS_GPA_MFP3_PA14MFP_GPIO }}, //39
+	{PA, BIT15, {(uint32_t) &SYS->GPA_MFP3, SYS_GPA_MFP3_PA15MFP_Msk, SYS_GPA_MFP3_PA15MFP_GPIO }}, //40
+	{NULL, 0, {0, 0, 0}}, //41 
+    {NULL, 0, {0, 0, 0}}, //42
+    {NULL, 0, {0, 0, 0}}, //43
+    {NULL, 0, {0, 0, 0}}, //44
+    {NULL, 0, {0, 0, 0}}, //45
+    {NULL, 0, {0, 0, 0}}, //46
+    {NULL, 0, {0, 0, 0}}, //47
+	{NULL, 0, {0, 0, 0}}, //48
+	{NULL, 0, {0, 0, 0}}, //49
+	{NULL, 0, {0, 0, 0}}, //50
+	{NULL, 0, {0, 0, 0}}, //51
+	    
+	{PC, BIT14, {(uint32_t) &SYS->GPC_MFP3, SYS_GPC_MFP3_PC14MFP_Msk, SYS_GPC_MFP3_PC14MFP_GPIO }}, //52
+    {PB, BIT15, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB15MFP_Msk, SYS_GPB_MFP3_PB15MFP_GPIO }}, //53
+    {PB, BIT14, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB14MFP_Msk, SYS_GPB_MFP3_PB14MFP_GPIO }}, //54
+    {PB, BIT13, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB13MFP_Msk, SYS_GPB_MFP3_PB13MFP_GPIO }}, //55
+    {PB, BIT12, {(uint32_t) &SYS->GPB_MFP3, SYS_GPB_MFP3_PB12MFP_Msk, SYS_GPB_MFP3_PB12MFP_GPIO }}, //56
+	
+	{NULL, 0, {0, 0, 0}}, //57
+	{NULL, 0, {0, 0, 0}}, //58
+	{NULL, 0, {0, 0, 0}}, //59
+	
+	{PB, BIT11, {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB11MFP_Msk, SYS_GPB_MFP2_PB11MFP_GPIO }}, //60
+    {PB, BIT10, {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB10MFP_Msk, SYS_GPB_MFP2_PB10MFP_GPIO }}, //61
+    {PB, BIT9,  {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB9MFP_Msk,  SYS_GPB_MFP2_PB9MFP_GPIO  }}, //62
+    {PB, BIT8,  {(uint32_t) &SYS->GPB_MFP2, SYS_GPB_MFP2_PB8MFP_Msk,  SYS_GPB_MFP2_PB8MFP_GPIO  }}, //63
+    {PB, BIT7,  {(uint32_t) &SYS->GPB_MFP1, SYS_GPB_MFP1_PB7MFP_Msk,  SYS_GPB_MFP1_PB7MFP_GPIO  }}, //64
+
+   
+};
+
+//[2025-11-25] PWM sync R4, update done.
+EPWMPinDescription PWM_Desc[] = 
+{
+    //D3,
+	{(EPWM_T  *)(EPWM1), (uint32_t)EPWM1_MODULE, PWM_USE_EPWM, EPWM1P0_IRQn, \
+    PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PC7, SYS_GPC_MFP1_PC7MFP_EPWM1_CH2  }}, //PC7   EPWM1_CH2 
+    //D5, 
+	{(EPWM_T  *)(EPWM1), (uint32_t)EPWM1_MODULE, PWM_USE_EPWM, EPWM1P0_IRQn, \
+    PWM_CHANNEL_CH1, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PC4, SYS_GPC_MFP1_PC4MFP_EPWM1_CH1  }}, //PC4   EPWM1_CH1 
+	//D6, 
+    {(EPWM_T  *)(BPWM1), (uint32_t)BPWM1_MODULE, PWM_USE_BPWM, BPWM1_IRQn,   \
+    PWM_CHANNEL_CH4, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PA14, SYS_GPA_MFP3_PA14MFP_BPWM1_CH4 }}, //PA14, BPWM1_CH4
+	//D9, 
+    {(EPWM_T  *)(BPWM1), (uint32_t)BPWM1_MODULE, PWM_USE_BPWM, BPWM1_IRQn,   \
+    PWM_CHANNEL_CH5, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PA15, SYS_GPA_MFP3_PA15MFP_BPWM1_CH5  }}, //PA15  BPWM1_CH5 
+	//D10,
+    {(EPWM_T  *)(EPWM0), (uint32_t)EPWM0_MODULE, PWM_USE_EPWM, EPWM0P0_IRQn, \
+    PWM_CHANNEL_CH2, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PA3, SYS_GPA_MFP0_PA3MFP_EPWM0_CH2  }}, //PA3,  EPWM0_CH2
+	//D11,
+    {(EPWM_T  *)(BPWM0), (uint32_t)BPWM0_MODULE, PWM_USE_BPWM, BPWM0_IRQn,   \
+    PWM_CHANNEL_CH0, PWM_FREQUENCY_500HZ, { GPIO_DESC_IDX_PA0, SYS_GPA_MFP0_PA0MFP_BPWM0_CH0  }}, //PA0,  BPWM0_CH0
+
+};
+
+//[2025-11-25] ADC pins update done. 
+ADCPinDescription ADC_Desc[] =
+{
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH12, { GPIO_DESC_IDX_PB12, SYS_GPB_MFP3_PB12MFP_EADC0_CH12 }},  //A0 PB12(EADC0_CH12, 10b)
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH13, { GPIO_DESC_IDX_PB13, SYS_GPB_MFP3_PB13MFP_EADC0_CH13 }},  //A1 PB13(EADC0_CH13, 10b)
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH14, { GPIO_DESC_IDX_PB14, SYS_GPB_MFP3_PB14MFP_EADC0_CH14 }},  //A2 PB14(EADC0_CH14, 10b)
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH15, { GPIO_DESC_IDX_PB15, SYS_GPB_MFP3_PB15MFP_EADC0_CH15 }},  //A3 PB15(EADC0_CH15, 10b)
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH0,  { GPIO_DESC_IDX_PB0,  SYS_GPB_MFP0_PB0MFP_EADC0_CH0   }},  //A4 PB0 (EADC0_CH0,  10b)
+    {EADC0, EADC0_MODULE, ADC_CHANNEL_CH6,  { GPIO_DESC_IDX_PB6,  SYS_GPB_MFP1_PB6MFP_EADC0_CH6   }},  //A5 PB6 (EADC0_CH6,  10b) 
+};
+
+
+//[2025-11-25] Default will enable the SPI for WiFi
+SPIPinDescription SPI_Desc[] =
+{
+    //For NSP2340
+	{
+        SPI2, (uint32_t)SPI2_MODULE, SPI2_IRQn, CLK_CLKSEL3_SPI2SEL_PCLK1,
+        {   {GPIO_DESC_IDX_PA10, SYS_GPA_MFP2_PA10MFP_SPI2_CLK }, {GPIO_DESC_IDX_PA8, SYS_GPA_MFP2_PA8MFP_SPI2_MOSI},
+            {GPIO_DESC_IDX_PA9, SYS_GPA_MFP2_PA9MFP_SPI2_MISO },  {GPIO_DESC_IDX_PA11, SYS_GPA_MFP2_PA11MFP_SPI2_SS }
+        }
+    },
+	//For Sheild Extension
+	{
+        SPI0, (uint32_t)SPI0_MODULE, SPI0_IRQn, CLK_CLKSEL2_SPI0SEL_PCLK1,
+        {   {GPIO_DESC_IDX_PA2, SYS_GPA_MFP0_PA2MFP_SPI0_CLK }, {GPIO_DESC_IDX_PA0, SYS_GPA_MFP0_PA0MFP_SPI0_MOSI},
+            {GPIO_DESC_IDX_PA1, SYS_GPA_MFP0_PA1MFP_SPI0_MISO}, {GPIO_DESC_IDX_PA3, SYS_GPA_MFP0_PA3MFP_SPI0_SS  }
+        }
+    },
+	
+
+};
+//[2025-02-25] UART pins update done.
+/*UART0, 1, 3 and 4 related pins are defined. Check pins for UART3/CANFD */
+UARTPinDescription UART_Desc[] =
+{
+
+    //Serial: VCOM
+    {(UART_T *)(0),  (uint32_t)(0), (uint32_t)(UART_USE_VCOM), (IRQn_Type)(0), {{GPIO_DESC_IDX_NOUSE, (uint32_t)(0) }, {GPIO_DESC_IDX_NOUSE, (uint32_t)(0) }},  (uint32_t)(0), UART_CLKDIV_1},   //(USE VCOM)
+	
+    //Serial1: PA4, PA5
+    {UART0, (uint32_t)UART0_MODULE, (uint32_t)(UART_USE_UART0), UART0_IRQn, {{GPIO_DESC_IDX_PA4, SYS_GPA_MFP1_PA4MFP_UART0_RXD  }, {GPIO_DESC_IDX_PA5, SYS_GPA_MFP1_PA5MFP_UART0_TXD }},  CLK_CLKSEL1_UART1SEL_HIRC, UART_CLKDIV_1},   //(T/R = PA5/PA4)
+    
+    //Serial2: PC6, PC7
+    {UART6, (uint32_t)UART6_MODULE, (uint32_t)(UART_USE_UART6), UART6_IRQn, {{GPIO_DESC_IDX_PC6, SYS_GPC_MFP1_PC6MFP_UART6_RXD },  {GPIO_DESC_IDX_PC7, SYS_GPC_MFP1_PC7MFP_UART6_TXD }},  CLK_CLKSEL1_UART0SEL_HIRC, UART_CLKDIV_1},   //(T/R = PC7/PC6)
+	
+};
+
+//[2025-11-25] RS485 AUD
+//nRTS(DE) Pin assignment
+PinType DEPin_Desc[] = 
+{
+    {GPIO_DESC_IDX_NOUSE , SYS_GPC_MFP1_PC6MFP_UART0_nRTS },//VCOM,  dummy, UART0_nRTS
+    {GPIO_DESC_IDX_NOUSE , SYS_GPC_MFP1_PC6MFP_UART0_nRTS },//VCOM,  dummy, UART0_nRTS
+    {GPIO_DESC_IDX_NOUSE , SYS_GPC_MFP1_PC6MFP_UART0_nRTS },//VCOM,  dummy, UART0_nRTS
+	/*Left for other DE pin resource*/
+	
+};
+
+
+//[2025-02-18] I2C pins updated, sync R4(SDA,SCL)
+I2CPinDescription I2C_Desc[] =
+{
+    {I2C1, I2C1_MODULE, {{GPIO_DESC_IDX_PF0 , SYS_GPF_MFP0_PF0MFP_I2C1_SCL}, {GPIO_DESC_IDX_PF1 , SYS_GPF_MFP0_PF1MFP_I2C1_SDA }}},
+	//{I2C2, I2C2_MODULE, {{29 , SYS_GPA_MFP0_PA1MFP_I2C2_SCL}, {30 , SYS_GPA_MFP0_PA0MFP_I2C2_SDA }}},
+};
+
+//[2025-11-25] CANFD pins updated, sync R4(D5, D4)
+CANFDPinDescription CANFD_Desc[] =
+{
+    {CANFD0, (uint32_t)CANFD0_MODULE, (uint32_t)(CANFD_USE_CANFD0), CANFD00_IRQn, {{GPIO_DESC_IDX_PC4, SYS_GPC_MFP1_PC4MFP_CAN0_RXD },  {GPIO_DESC_IDX_PC5, SYS_GPC_MFP1_PC5MFP_CAN0_TXD }}},//,  CLK_CLKSEL0_CANFD0SEL_HCLK, CANFD_CLKDIV_1},
+
+};
+
+

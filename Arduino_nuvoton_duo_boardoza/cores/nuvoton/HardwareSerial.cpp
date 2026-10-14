@@ -78,28 +78,8 @@ volatile int8_t gi8BulkOutReady = 0;
 extern "C" {
 #endif
 
-#if defined(__NVT_BOARD_DUO__)//VCOM, UART5, UART0, UART_Desc[x] to IP dependency for DUO board.
+#if defined(__NVT_BOARD_DUO_BOARDOZA__)//VCOM, UART0, UART6, set UART_MAX_COUNT to 3, board dependency.
 #if(UART_MAX_COUNT>1)
-void UART5_IRQHandler(void)
-{
-    while (UART_GET_INT_FLAG(UART5, UART_INTEN_RDAIEN_Msk))
-    {
-        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
-        if (i != rx_buffer1.tail)
-        {
-            rx_buffer1.buffer[rx_buffer1.head] = UART5->DAT;
-            rx_buffer1.head = i;
-        }
-		else//i == rx_buffer1.tail
-		{
-			unsigned char dummy = UART5->DAT;
-		}
-    }
-
-}
-#endif  
-
-#if(UART_MAX_COUNT>2)
 void UART0_IRQHandler(void)
 {
     while (UART_GET_INT_FLAG(UART0, UART_INTEN_RDAIEN_Msk))
@@ -119,7 +99,29 @@ void UART0_IRQHandler(void)
 }
 #endif
 
-#endif//defined(__NVT_BOARD_DUO__)
+#if(UART_MAX_COUNT>2)
+void UART6_IRQHandler(void)
+{
+    while (UART_GET_INT_FLAG(UART6, UART_INTEN_RDAIEN_Msk))
+    {
+        int i = (unsigned int)(rx_buffer1.head + 1) % SERIAL_BUFFER_SIZE;
+        if (i != rx_buffer1.tail)
+        {
+            rx_buffer1.buffer[rx_buffer1.head] = UART6->DAT;
+            rx_buffer1.head = i;
+        }
+		else//i == rx_buffer1.tail
+		{
+			unsigned char dummy = UART6->DAT;
+		}
+    }
+
+}
+#endif  
+
+
+
+#endif//defined(__NVT_BOARD_DUO_BOARDOZA__)
 
 #ifdef __cplusplus
 }
@@ -246,7 +248,11 @@ void HardwareSerial::begin(uint32_t baud)
 	else if(uart_device == UART5)
 	{	
         CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART5(u32ClkDiv));
-	}   
+	}
+    else if(uart_device == UART6)
+	{	
+        CLK_SetModuleClock(UART_Desc[u32Idx].module, u32ClkSrc, CLK_CLKDIV4_UART6(u32ClkDiv));
+	}
 	/* Reset IP */
     //SYS_ResetModule(UART_Desc[u32Idx].module);
 
@@ -340,6 +346,8 @@ int HardwareSerial::availableForWrite(void)
                 return (UART3_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
             else if(uart_device == UART5)
                 return (UART5_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
+            else if(uart_device == UART6)
+                return (UART6_FIFO_SIZE - ((uart_device->FIFOSTS & UART_FIFOSTS_TXPTR_Msk) >> UART_FIFOSTS_TXPTR_Pos));
         }
 	}
 
