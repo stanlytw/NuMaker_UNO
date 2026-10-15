@@ -2,6 +2,8 @@
 ![Arduino_Bsp UNO](https://github.com/stanlytw/Numaker_UNO/actions/workflows/UNO-bsp.yml/badge.svg)
 
 - [NuMaker M4 board package for Arduino IDE](#numaker-m4-board-package-for-arduino-ide)
+- [NuMaker DUO board package for Arduino IDE](#numaker-duo-board-package-for-arduino-ide)
+- [NuMaker DUO Boardoza board package for Arduino IDE](#numaker-duo-boardoza-board-package-for-arduino-ide)
 - [Board Package Installation Steps](#board-package-installation-steps)
 - [VCOM Driver Installation Steps (Optional for M032BT)](#vcom-driver-installation-steps-optional-for-m032bt)
 - [Compatible Versions of Arduino IDE](#compatible-versions-of-arduino-ide)
@@ -17,13 +19,34 @@ This package contains the NuMaker M4 IOT/UNO/DUO board descriptors.
 | -------------- | ---------------- | ------|----------------------------------------------- |------|----|----|
 | **[NuMaker-IOT-M467](https://direct.nuvoton.com/en/numaker-iot-m467)**       | ✔️  | ✔️| ✔️| ✔️| ✔️ | ✔️                                            ||
 |  **[NuMaker-UNO-M4](https://direct.nuvoton.com/en/numaker-uno-m4)**       |✔️              | ✔️                              | ❌  | ✔️| ✔️| ✔️| ✔️                               ||
-| NuMaker-DUO-M4<br>       |✔️              | ✔️                              | ❌  | ✔️| ✔️| ✔️| ✔️                               ||
+
+
+
+
+# NuMaker DUO board package for Arduino IDE
+This package contains the NuMaker M4 DUO board descriptors.
+
+## Supported Boards & Features
+
+| NuMaker Boards | Rich GPIO | Embedded SD |Embedded CAN/FD<br>nvtCAN(*Note1)  | RS485 | Ethernet | Firmware Upload<br>by ISP(*Note2) |
+| -------------- | --------- | ------------|---------------------------------- |-------|----------|----|
+| NuMaker-DUO-M4 |✔️         | ✔️         | ❌                                | ✔️   | ✔️       | ✔️||
+
+# NuMaker DUO Boardoza board package for Arduino IDE
+This package contains the NuMaker M4 DUO board descriptors.
+
+## Supported Boards & Features
+
+| NuMaker Boards | Rich GPIO | SD over SPI(*Note3) |Embedded CAN/FD<br>nvtCAN(*Note1)  | RS485 | Ethernet | Firmware Upload<br>by ISP(*Note2) |
+| -------------- | --------- | ------------|---------------------------------- |-------|----------|----|
+| NuMaker-Boardoza-DUO-M4 |✔️         | ✔️         | ❌                                | ❌   | ✔️       | ✔️||
 
 
 Note1: Compatible to [Seeed_Arduino_CAN](https://github.com/Seeed-Studio/Seeed_Arduino_CAN)
 
 Note2: Require dedicated loader and application code.
 
+Note3: SD in SPI mode. Compatible to Arduino [official_SD_library](https://docs.arduino.cc/libraries/sd/).
 
 
 # Board Package Installation Steps
